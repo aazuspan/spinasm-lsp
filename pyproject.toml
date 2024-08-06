@@ -9,7 +9,7 @@ description = "A Language Server Protocol implementation for SpinASM"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = []
-dependencies = [ "pygls", "lsprotocol",]
+dependencies = [ "pygls", "lsprotocol", "lark" ]
 [[project.authors]]
 name = "Aaron Zuspan"
 
@@ -33,7 +33,7 @@ select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF",]
 dependencies = [ "pre-commit",]
 
 [tool.hatch.envs.test]
-dependencies = [ "pytest", "pytest-cov",]
+dependencies = [ "pytest", "pytest-cov"]
 
 [tool.ruff.lint.isort]
 known-first-party = [ "spinasm_lsp",]

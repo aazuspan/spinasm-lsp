@@ -1,0 +1,35 @@
+program: (instruction | assignment | label)*
+
+instruction: OPCODE [args] NEWLINE
+args: expr (","+ expr)*
+expr: value (OPERATOR value)*
+value: [NEGATIVE] (NAME | HEX_NUM | DEC_NUM | BIT_VECTOR)
+
+assignment: (equ | mem) NEWLINE
+equ: IDENT "EQU"i expr | "EQU"i IDENT expr
+mem: IDENT "MEM"i expr | "MEM"i IDENT expr
+
+label: IDENT ":"
+
+// OPCODE cannot be MEM or EQU to avoid ambiguity between assignments and instructions
+OPCODE: /(?!(MEM|EQU)\b)/ IDENT
+// NAME can be suffixed with ^ or # to modify memory addressing
+NAME: OPCODE [ADDR_MODIFIER]
+ADDR_MODIFIER: ["^" | "#"]
+NEGATIVE: "-"
+COMMENT: ";" /[^\n]/*
+OPERATOR: "+" | "-" | "*" | "/" | "|" | "&"
+HEX_NUM: "0x"i HEXDIGIT+ | "$" HEXDIGIT+
+// Binary number prefixed by % with optional underscores, e.g. %00000000_00000001_00000000
+BIT_VECTOR: "%" /[01](_?[01])*/
+
+%import common.WS_INLINE
+%import common.WS
+%import common.NEWLINE
+%import common.HEXDIGIT
+%import common.CNAME        -> IDENT
+%import common.NUMBER       -> DEC_NUM
+
+%ignore WS
+%ignore WS_INLINE
+%ignore COMMENT
