@@ -61,9 +61,8 @@ def test_whitespace_ignored():
     assert FV1Program(" MULX 0  \n B EQU A*2 \n   ")
 
 
-@pytest.mark.xfail()
 @pytest.mark.parametrize("patch", TEST_PATCHES, ids=lambda x: x.stem)
 def test_example_patches(patch):
     """Test that the example patches from SpinASM parse correctly."""
-    with open(patch) as f:
+    with open(patch, encoding="utf-8-sig") as f:
         FV1Program(f.read())
