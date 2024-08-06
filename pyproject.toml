@@ -35,6 +35,12 @@ dependencies = [ "pre-commit",]
 [tool.hatch.envs.test]
 dependencies = [ "pytest", "pytest-cov", "mistletoe" ]
 
+[tool.hatch.envs.test_matrix]
+template = "test"
+
+[[tool.hatch.envs.test_matrix.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12"]
+
 [tool.ruff.lint.isort]
 known-first-party = [ "spinasm_lsp",]
 
