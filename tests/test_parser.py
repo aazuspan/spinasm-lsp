@@ -8,6 +8,7 @@ import pytest
 
 from spinasm_lsp.parser import (
     Assignment,
+    Expression,
     FV1Program,
     Instruction,
     Label,
@@ -23,23 +24,44 @@ from .conftest import TEST_PATCHES
 )
 def test_number_representations(expr):
     """Test supported number representations."""
-    assert FV1Program(f"OP {expr}").statements[0].args[0] == 42
+    assert FV1Program(f"MULX {expr}").statements[0].args[0] == 42
 
 
-@pytest.mark.parametrize("stmt", [None, "SOF 0", "x EQU 4"], ids=["none", "op", "equ"])
+def test_combined_statements():
+    """Test a program with multiple statements."""
+    code = r"""
+    ; This is a comment
+    start: Tmp EQU 4
+    EQU Tmp2 5
+    MULX 0+1
+    SOF -1,TMP
+    end:
+    """
+
+    assert FV1Program(code).statements == [
+        Label("START"),
+        Assignment("equ", "TMP", 4),
+        Assignment("equ", "TMP2", 5),
+        Instruction("MULX", args=[Expression([0, "+", 1])]),
+        Instruction("SOF", args=[Expression([-1]), Expression(["TMP"])]),
+        Label("END"),
+    ]
+
+
+@pytest.mark.parametrize("stmt", ["", "SOF 0", "x EQU 4"], ids=["none", "op", "equ"])
 def test_parse_label(stmt: str | None):
     """Test that labels are parsed, with and without following statements."""
-    prog = FV1Program(f"myLabel: {stmt}")
+    prog = FV1Program(f"myLabel:{stmt}")
     assert len(prog.statements) == 2 if stmt else 1
-    assert prog.statements[0] == Label("myLabel")
+    assert prog.statements[0] == Label("MYLABEL")
 
 
 @pytest.mark.parametrize("n_args", [0, 1, 3], ids=lambda x: f"{x} args")
 def test_parse_instruction(n_args):
     """Test that instructions with varying number of arguments are parsed correctly."""
     args = [random.randint(0, 100) for _ in range(n_args)]
-    code = f"OP {','.join(map(str, args))}"
-    assert FV1Program(code).statements[0] == Instruction("OP", args=args)
+    code = f"MULX {','.join(map(str, args))}"
+    assert FV1Program(code).statements[0] == Instruction("MULX", args=args)
 
 
 @pytest.mark.parametrize("type", ["equ", "mem"])

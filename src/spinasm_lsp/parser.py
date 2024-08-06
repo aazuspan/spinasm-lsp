@@ -94,19 +94,10 @@ class FV1ProgramTransformer(Transformer):
         # Remove the % prefix and optional underscores
         return int(token[1:].replace("_", ""), base=2)
 
-    def NAME(self, name) -> str:
-        # if name not in self.local_vars:
-        # TODO: This doesn't work because labels can be used before they are defined.
-        # Probably the simplest fix is making a special grammar for SKP since that's
-        # the only instruction that uses labels. Alternatively, maybe we keep a dict
-        # with all the defined and used labels and variables (separately) and their
-        # line numbers, and go through and resolve them after parsing.
-        # raise ParsingError(f"`{name}` is undefined.")
-
-        # NOTE: identifiers are case-insensitive. asfv1 warns when you redefine, while
-        # the original FV-1 assembler errors out. Both store labels as uppercase.
-        return name.upper()
-        # return self.local_vars.get(name, str(name))
+    def IDENT(self, token) -> str:
+        # Identifiers are case-insensitive and are stored in uppercase for consistency
+        # with the FV-1 assembler.
+        return token.upper()
 
     @v_args(inline=False)
     def args(self, tokens):
@@ -119,8 +110,6 @@ class FV1ProgramTransformer(Transformer):
     @v_args(inline=False)
     def program(self, tokens):
         return list(tokens)
-
-    IDENT = OPERATOR = OPCODE = str
 
 
 class FV1Program:
@@ -205,9 +194,9 @@ class FV1Program:
             package="spinasm_lsp",
             grammar_path="spinasm.lark",
             start="program",
-            # parser="lalr",
-            # strict=True,
-            # transformer=self.transformer
+            parser="lalr",
+            strict=False,
+            transformer=self.transformer,
         )
 
         # Make sure the code ends with a newline to properly parse the last line
@@ -215,30 +204,10 @@ class FV1Program:
             code += "\n"
 
         try:
-            self.tree = self.parser.parse(code)
-            self.statements: list[dict] = self.transformer.transform(self.tree)
+            self.statements = self.parser.parse(code)
         except VisitError as e:
             # Unwrap errors thrown by FV1ProgramTransformer
             if wrapped_err := e.__context__:
                 raise wrapped_err from None
 
             raise e
-
-
-if __name__ == "__main__":
-    code = r"""
-    Tmp EQU 4
-    """
-
-    with open("./demos/test.spn") as src:
-        code = src.read()
-
-    program = FV1Program(code)
-
-    # print(program)
-    print("program.statements =")
-    for statement in program.statements:
-        print("\t", statement)
-
-    print(f"{program.local_vars = }")
-    print(f"{program.memory = }")
