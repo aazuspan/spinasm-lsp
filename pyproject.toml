@@ -33,7 +33,7 @@ select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF",]
 dependencies = [ "pre-commit",]
 
 [tool.hatch.envs.test]
-dependencies = [ "pytest", "pytest-cov"]
+dependencies = [ "pytest", "pytest-cov", "mistletoe" ]
 
 [tool.ruff.lint.isort]
 known-first-party = [ "spinasm_lsp",]
