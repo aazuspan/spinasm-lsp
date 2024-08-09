@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "spinasm-lsp"
 dynamic = [ "version",]
-description = "A Language Server Protocol implementation for SpinASM"
+description = "A Language Server Protocol implementation for SPINAsm"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = []
-dependencies = [ "pygls", "lsprotocol", "lark" ]
+dependencies = [ "pygls", "lsprotocol", "asfv1" ]
 [[project.authors]]
 name = "Aaron Zuspan"
 

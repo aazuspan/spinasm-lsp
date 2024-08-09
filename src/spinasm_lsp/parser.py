@@ -1,213 +1,162 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Literal
+from asfv1 import fv1parse
+from lsprotocol import types as lsp
 
-from lark import Lark, Transformer, v_args
-from lark.exceptions import VisitError
-
-
-class ParsingError(Exception): ...
+from spinasm_lsp.utils import CallbackDict, Token, TokenRegistry
 
 
-@dataclass
-class Expression:
-    expression: list[int | float | str]
+class SPINAsmParser(fv1parse):
+    """A modified version of fv1parse optimized for use with LSP."""
 
-    def __eq__(self, other):
-        # If the expression has a single value, match against that
-        if len(self.expression) == 1:
-            return self.expression[0] == other
+    def __init__(self, source: str):
+        self.diagnostics: list[lsp.Diagnostic] = []
+        self.definitions: dict[str, lsp.Position] = {}
+        self.col: int = 0
+        self.prevcol: int = 0
+        self.token_registry = TokenRegistry()
 
-        # Otherwise, match the expression as a concated string of values and operators
-        return " ".join(map(str, self.expression)) == other
-
-
-@dataclass
-class Instruction:
-    opcode: str
-    args: list[Expression]
-
-
-@dataclass
-class Assignment:
-    type: Literal["equ", "mem"]
-    name: str
-    value: Expression
-
-
-@dataclass
-class Label:
-    name: str
-
-
-@v_args(inline=True)
-class FV1ProgramTransformer(Transformer):
-    local_vars: dict[str, float]
-    memory: dict[str, float]
-
-    def __init__(
-        self,
-        local_vars: dict[str, float],
-        memory: dict[str, float],
-        visit_tokens: bool = True,
-    ) -> None:
-        self.local_vars = local_vars
-        self.memory = memory
-        super().__init__(visit_tokens=visit_tokens)
-
-    def instruction(self, opcode: str, args: list | None, _) -> Instruction:
-        return Instruction(opcode, args or [])
-
-    def assignment(self, mapping, _):
-        return mapping
-
-    def label(self, name) -> Label:
-        return Label(name)
-
-    def equ(self, name: str, value) -> Assignment:
-        self.local_vars[name] = value
-        return Assignment(type="equ", name=name, value=value)
-
-    def mem(self, name: str, value) -> Assignment:
-        self.memory[name] = value
-        return Assignment(type="mem", name=name, value=value)
-
-    def value(self, negative: str | None, value: float) -> float:
-        """A negated value."""
-        if negative:
-            value *= -1
-
-        return value
-
-    def DEC_NUM(self, token) -> int | float:
-        if "." in token:
-            return float(token)
-        return int(token)
-
-    def HEX_NUM(self, token) -> int:
-        # Hex numbers can be written with either $ or 0x prefix
-        token = token.replace("$", "0x")
-        return int(token, base=16)
-
-    def BIT_VECTOR(self, token) -> int:
-        # Remove the % prefix and optional underscores
-        return int(token[1:].replace("_", ""), base=2)
-
-    def IDENT(self, token) -> str:
-        # Identifiers are case-insensitive and are stored in uppercase for consistency
-        # with the FV-1 assembler.
-        return token.upper()
-
-    @v_args(inline=False)
-    def args(self, tokens):
-        return tokens
-
-    @v_args(inline=False)
-    def expr(self, tokens):
-        return Expression(tokens)
-
-    @v_args(inline=False)
-    def program(self, tokens):
-        return list(tokens)
-
-
-class FV1Program:
-    constants = {
-        "SIN0_RATE": 0x00,
-        "SIN0_RANGE": 0x01,
-        "SIN1_RATE": 0x02,
-        "SIN1_RANGE": 0x03,
-        "RMP0_RATE": 0x04,
-        "RMP0_RANGE": 0x05,
-        "RMP1_RATE": 0x06,
-        "RMP1_RANGE": 0x07,
-        "POT0": 0x10,
-        "POT1": 0x11,
-        "POT2": 0x12,
-        "ADCL": 0x14,
-        "ADCR": 0x15,
-        "DACL": 0x16,
-        "DACR": 0x17,
-        "ADDR_PTR": 0x18,
-        "REG0": 0x20,
-        "REG1": 0x21,
-        "REG2": 0x22,
-        "REG3": 0x23,
-        "REG4": 0x24,
-        "REG5": 0x25,
-        "REG6": 0x26,
-        "REG7": 0x27,
-        "REG8": 0x28,
-        "REG9": 0x29,
-        "REG10": 0x2A,
-        "REG11": 0x2B,
-        "REG12": 0x2C,
-        "REG13": 0x2D,
-        "REG14": 0x2E,
-        "REG15": 0x2F,
-        "REG16": 0x30,
-        "REG17": 0x31,
-        "REG18": 0x32,
-        "REG19": 0x33,
-        "REG20": 0x34,
-        "REG21": 0x35,
-        "REG22": 0x36,
-        "REG23": 0x37,
-        "REG24": 0x38,
-        "REG25": 0x39,
-        "REG26": 0x3A,
-        "REG27": 0x3B,
-        "REG28": 0x3C,
-        "REG29": 0x3D,
-        "REG30": 0x3E,
-        "REG31": 0x3F,
-        "SIN0": 0x00,
-        "SIN1": 0x01,
-        "RMP0": 0x02,
-        "RMP1": 0x03,
-        "RDA": 0x00,
-        "SOF": 0x02,
-        "RDAL": 0x03,
-        "SIN": 0x00,
-        "COS": 0x01,
-        "REG": 0x02,
-        "COMPC": 0x04,
-        "COMPA": 0x08,
-        "RPTR2": 0x10,
-        "NA": 0x20,
-        "RUN": 0x10,
-        "ZRC": 0x08,
-        "ZRO": 0x04,
-        "GEZ": 0x02,
-        "NEG": 0x01,
-    }
-    local_vars: dict[str, float] = {**constants}
-    memory: dict[str, float] = {}
-
-    def __init__(self, code: str):
-        self.transformer = FV1ProgramTransformer(
-            local_vars=self.local_vars, memory=self.memory
+        super().__init__(
+            source=source,
+            clamp=True,
+            spinreals=False,
+            # Ignore the callbacks in favor of overriding their callers
+            wfunc=lambda *args, **kwargs: None,
+            efunc=lambda *args, **kwargs: None,
         )
 
-        self.parser = Lark.open_from_package(
-            package="spinasm_lsp",
-            grammar_path="spinasm.lark",
-            start="program",
-            parser="lalr",
-            strict=False,
-            transformer=self.transformer,
+        # Keep an unchanged copy of the original source
+        self._source: list[str] = self.source.copy()
+
+        # Wrap the dictionaries to record whenever a definition is added
+        self.jmptbl: CallbackDict = CallbackDict(
+            self.jmptbl, callback=self._on_definition
+        )
+        self.symtbl: CallbackDict = CallbackDict(
+            self.symtbl, callback=self._on_definition
         )
 
-        # Make sure the code ends with a newline to properly parse the last line
-        if not code.endswith("\n"):
-            code += "\n"
+    def _on_definition(self, label: str):
+        """Record the program location when a definition is added."""
+        # Don't record the position of constants that are defined at program
+        # initialization.
+        if self.current_line == -1:
+            return
 
+        # Due to the parsing order, the current line will be correct for labels but
+        # incorrect for assignments, which need to use previous line instead.
+        line = self.current_line if label in self.jmptbl else self.previous_line
+
+        # Try to find the position of the label on the definition line. Remove address
+        # modifiers from the label name, since those are defined implicitly by the
+        # parser rather than in the source.
         try:
-            self.statements = self.parser.parse(code)
-        except VisitError as e:
-            # Unwrap errors thrown by FV1ProgramTransformer
-            if wrapped_err := e.__context__:
-                raise wrapped_err from None
+            col = (
+                self._source[line]
+                .upper()
+                .index(label.replace("#", "").replace("^", ""))
+            )
+        except ValueError:
+            col = 0
 
-            raise e
+        self.definitions[label] = lsp.Position(line, col)
+
+    def __mkopcodes__(self):
+        """
+        No-op.
+
+        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
+        """
+
+    def _record_diagnostic(
+        self, msg: str, line: int, col: int, severity: lsp.DiagnosticSeverity
+    ):
+        """Record a diagnostic message for the LSP."""
+        self.diagnostics.append(
+            lsp.Diagnostic(
+                range=lsp.Range(
+                    start=lsp.Position(line, character=col),
+                    end=lsp.Position(line, character=col),
+                ),
+                message=msg,
+                severity=severity,
+                source="SPINAsm",
+            )
+        )
+
+    def parseerror(self, msg: str, line: int | None = None):
+        """Override to record parsing errors as LSP diagnostics."""
+        if line is None:
+            line = self.prevline
+
+        # Offset the line from the parser's 1-indexed line to the 0-indexed line
+        self._record_diagnostic(
+            msg, line - 1, col=self.col, severity=lsp.DiagnosticSeverity.Error
+        )
+
+    def scanerror(self, msg: str):
+        """Override to record scanning errors as LSP diagnostics."""
+        self._record_diagnostic(
+            msg, self.current_line, col=self.col, severity=lsp.DiagnosticSeverity.Error
+        )
+
+    def parsewarn(self, msg: str, line: int | None = None):
+        """Override to record parsing warnings as LSP diagnostics."""
+        if line is None:
+            line = self.prevline
+
+        # Offset the line from the parser's 1-indexed line to the 0-indexed line
+        self._record_diagnostic(
+            msg, line - 1, col=self.col, severity=lsp.DiagnosticSeverity.Warning
+        )
+
+    @property
+    def sline(self):
+        return self._sline
+
+    @sline.setter
+    def sline(self, value):
+        """Update the current line and reset the column."""
+        self._sline = value
+
+        # Reset the column to 0 when we move to a new line
+        self.prevcol = self.col
+        self.col = 0
+
+    @property
+    def current_line(self):
+        """Get the zero-indexed current line."""
+        return self.sline - 1
+
+    @property
+    def previous_line(self):
+        """Get the zero-indexed previous line."""
+        return self.prevline - 1
+
+    def __next__(self):
+        """Parse the next symbol and update the column."""
+        super().__next__()
+        # TODO: Make sure super().__next__ can't get stuck in an infinite loop since I
+        # removed the maxerr check
+        self._update_column()
+
+        token_width = len(self.sym["txt"] or "")
+        token = Token(self.sym, self.current_line, self.col, self.col + token_width)
+        self.token_registry.register_token(token)
+
+    def _update_column(self):
+        """Set the current column based on the last parsed symbol."""
+        current_line_txt = self._source[self.current_line]
+        current_symbol = self.sym.get("txt", None) or ""
+
+        self.prevcol = self.col
+        try:
+            # Start at the current column to skip previous duplicates of the symbol
+            self.col = current_line_txt.index(current_symbol, self.col)
+        except ValueError:
+            self.col = 0
+
+    def parse(self) -> SPINAsmParser:
+        """Parse and return the parser."""
+        super().parse()
+        return self

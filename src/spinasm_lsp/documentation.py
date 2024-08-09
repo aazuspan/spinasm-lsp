@@ -21,8 +21,8 @@ class MarkdownFile:
 class DocMap(UserDict):
     """A mapping of instructions to markdown documentation strings."""
 
-    def __init__(self, folder: str):
-        self.dir = Path(str(DOC_DIR.joinpath(folder)))
+    def __init__(self, folders: list[str]):
+        self.folders = [Path(str(DOC_DIR.joinpath(folder))) for folder in folders]
         self.data = self.load_markdown()
 
     @staticmethod
@@ -40,15 +40,13 @@ class DocMap(UserDict):
 
     def load_markdown(self) -> dict[str, str]:
         data = {}
-        files = self.dir.glob("*.md")
-        for file in files:
-            md = MarkdownFile(file)
-            # Store with lowercase keys to allow case-insensitive searches
-            data[md.name.lower()] = md.read()
+        for folder in self.folders:
+            if not folder.exists():
+                raise FileNotFoundError(f"Folder {folder} does not exist.")
+            files = folder.glob("*.md")
+            for file in files:
+                md = MarkdownFile(file)
+                # Store with lowercase keys to allow case-insensitive searches
+                data[md.name.lower()] = md.read()
 
         return data
-
-
-if __name__ == "__main__":
-    instructions = DocMap(folder="instructions")
-    print(instructions["RDAX"])
