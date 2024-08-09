@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from typing import Any
+
 from lsprotocol import types as lsp
 from pygls.server import LanguageServer
 from pygls.workspace import TextDocument
 
 from . import __version__
 from .documentation import DocMap
-from .logging import ServerLogger
 from .parser import SPINAsmParser
 
 
@@ -15,26 +16,38 @@ class SPINAsmLanguageServer(LanguageServer):
         super().__init__(*args, name="spinasm-lsp", version=__version__, **kwargs)
         self.parser: SPINAsmParser = None
 
+    def debug(self, msg: Any) -> None:
+        """Log a debug message."""
+        self.show_message_log(str(msg), lsp.MessageType.Debug)
+
+    def info(self, msg: Any) -> None:
+        """Log an info message."""
+        self.show_message_log(str(msg), lsp.MessageType.Info)
+
+    def warning(self, msg: Any) -> None:
+        """Log a warning message."""
+        self.show_message_log(str(msg), lsp.MessageType.Warning)
+
+    def error(self, msg: Any) -> None:
+        """Log an error message."""
+        self.show_message_log(str(msg), lsp.MessageType.Error)
+
+    async def parse(self, document: TextDocument) -> SPINAsmParser:
+        """Parse a document and publish diagnostics."""
+        try:
+            self.parser = SPINAsmParser(document.source).parse()
+            diagnostics = self.parser.diagnostics
+        except Exception as e:
+            self.error(e)
+            diagnostics = []
+
+        self.publish_diagnostics(document.uri, diagnostics)
+        return self.parser
+
 
 LSP_SERVER = SPINAsmLanguageServer(max_workers=5)
 # TODO: Probably load async as part of a custom language server subclass
 DOCUMENTATION = DocMap(folders=["instructions", "assemblers"])
-LOGGER = ServerLogger(LSP_SERVER)
-
-
-async def _get_diagnostics(document: TextDocument) -> list[lsp.Diagnostic]:
-    """Parse a document and return diagnostics."""
-    try:
-        parser = SPINAsmParser(document.source).parse()
-        diagnostics = parser.diagnostics
-
-        # Store the last parsed state to avoid needing to re-parse for hover
-        LSP_SERVER.parser = parser
-    except Exception as e:
-        LOGGER.error(e)
-        diagnostics = []
-
-    return diagnostics
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CHANGE)
@@ -43,34 +56,31 @@ async def did_change(
 ):
     """Run diagnostics on changed document."""
     document = ls.workspace.get_text_document(params.text_document.uri)
-    diagnostics = await _get_diagnostics(document)
-    ls.publish_diagnostics(document.uri, diagnostics)
+    await ls.parse(document)
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
 async def did_save(ls: SPINAsmLanguageServer, params: lsp.DidSaveTextDocumentParams):
     """Run diagnostics on saved document."""
     document = ls.workspace.get_text_document(params.text_document.uri)
-    diagnostics = await _get_diagnostics(document)
-
-    ls.publish_diagnostics(document.uri, diagnostics)
+    await ls.parse(document)
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
 async def did_open(ls: SPINAsmLanguageServer, params: lsp.DidOpenTextDocumentParams):
     """Run diagnostics on open document."""
     document = ls.workspace.get_text_document(params.text_document.uri)
-    diagnostics = await _get_diagnostics(document)
-
-    ls.publish_diagnostics(document.uri, diagnostics)
+    await ls.parse(document)
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
-def did_close(params: lsp.DidCloseTextDocumentParams) -> None:
-    """LSP handler for textDocument/didClose request."""
-    text_document = LSP_SERVER.workspace.get_text_document(params.text_document.uri)
+def did_close(
+    ls: SPINAsmLanguageServer, params: lsp.DidCloseTextDocumentParams
+) -> None:
+    """Clear the diagnostics on close."""
+    text_document = ls.workspace.get_text_document(params.text_document.uri)
     # Clear the diagnostics on close
-    LSP_SERVER.publish_diagnostics(text_document.uri, [])
+    ls.publish_diagnostics(text_document.uri, [])
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_HOVER)
@@ -78,9 +88,6 @@ def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | Non
     """Retrieve documentation from symbols on hover."""
     pos = params.position
 
-    # TODO: Fix. Not exactly sure what the issue is, but it seems like I'm not getting
-    # hover for some symbols towards the end of lines, I think?
-    # I bet get_token_at_position doesn't work with the last token due to indexing
     token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
         return None
@@ -188,16 +195,14 @@ def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenameParams):
     is a valid operation."""
     pos = params.position
 
-    # TODO: Fix. Not exactly sure what the issue is, but it seems like I'm not getting
-    # hover for some symbols towards the end of lines, I think?
     token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
-        LOGGER.debug(f"No token to rename at {pos}.")
+        ls.debug(f"No token to rename at {pos}.")
         return None
 
     # Only user-defined labels should support renaming
     if str(token) not in ls.parser.definitions:
-        LOGGER.debug(f"Can't rename non-user defined token {token}.")
+        ls.debug(f"Can't rename non-user defined token {token}.")
         return None
 
     return lsp.PrepareRenameResult_Type2(default_behavior=True)
@@ -209,8 +214,6 @@ def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenameParams):
 def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
     pos = params.position
 
-    # TODO: Fix. Not exactly sure what the issue is, but it seems like I'm not getting
-    # hover for some symbols towards the end of lines, I think?
     token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
         return None
