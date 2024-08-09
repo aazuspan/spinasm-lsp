@@ -10,6 +10,6 @@ A Language Server Protocol (LSP) server to provide language support for the [SPI
 - **Renaming**: Allows renaming of labels and defined values.
 - **Go to definition**: Jumps to the definition of a label or defined value.
 
-## Disclaimer
+------
 
-This is an unofficial project and is not affiliated with Spin Semiconductor. Included documentation and examples are Copyright © 2018 Spin Semiconductor.
+*This project is unaffiliated with Spin Semiconductor. Included documentation and examples are Copyright © 2018 Spin Semiconductor.*
