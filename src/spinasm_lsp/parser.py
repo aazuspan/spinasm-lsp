@@ -4,18 +4,21 @@ from __future__ import annotations
 
 import bisect
 import copy
-from typing import Literal, TypedDict, cast
+from typing import Literal, TypedDict
 
 import lsprotocol.types as lsp
 from asfv1 import fv1parse
 
 
 class Symbol(TypedDict):
-    """The token specification used by asfv1."""
+    """
+    The token specification used by asfv1.
+
+    Note that we exclude EOF tokens, as they are ignored by the LSP.
+    """
 
     type: Literal[
         "ASSEMBLER",
-        "EOF",
         "INTEGER",
         "LABEL",
         "TARGET",
@@ -24,8 +27,8 @@ class Symbol(TypedDict):
         "FLOAT",
         "ARGSEP",
     ]
-    txt: str | None
-    stxt: str | None
+    txt: str
+    stxt: str
     val: int | float | None
 
 
@@ -59,16 +62,16 @@ class Token:
         self, symbol: Symbol, start: lsp.Position, end: lsp.Position | None = None
     ):
         if end is None:
-            width = max(len(symbol["stxt"] or "") - 1, 0)
-            end = lsp.Position(line=start.line, character=start.character + width)
+            width = len(symbol["stxt"])
+            end = lsp.Position(line=start.line, character=start.character + width - 1)
 
         self.symbol: Symbol = symbol
         self.range: lsp.Range = lsp.Range(start=start, end=end)
         self.next_token: Token | None = None
         self.prev_token: Token | None = None
 
-    def __repr__(self):
-        return self.symbol["stxt"] or "Empty token"
+    def __repr__(self) -> str:
+        return self.symbol["stxt"]
 
     def concatenate(self, other: Token) -> Token:
         """
@@ -83,8 +86,8 @@ class Token:
         ):
             raise TypeError("Only MNEMONIC and LABEL symbols can be concatenated.")
 
-        self.symbol["txt"] = f"{self.symbol['txt']} {other.symbol['txt']}"
-        self.symbol["stxt"] = f"{self.symbol['stxt']} {other.symbol['stxt']}"
+        self.symbol["txt"] += f" {other.symbol['txt']}"
+        self.symbol["stxt"] += f" {other.symbol['stxt']}"
         self.range.end = other.range.end
         return self
 
@@ -100,7 +103,7 @@ class Token:
             return self
 
         token = self._clone()
-        token.symbol["stxt"] = cast(str, token.symbol["stxt"])[:-1]
+        token.symbol["stxt"] = token.symbol["stxt"][:-1]
         token.range.end.character -= 1
 
         return token
@@ -291,6 +294,9 @@ class SPINAsmParser(fv1parse):
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
         super().__next__()
+        if self.sym["type"] == "EOF":
+            return
+
         self._update_column()
 
         token_start = lsp.Position(
