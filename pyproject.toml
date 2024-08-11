@@ -23,6 +23,9 @@ file = "LICENSE"
 [project.urls]
 Homepage = "https://github.com/aazuspan/spinasm-lsp"
 
+[project.scripts]
+spinasm-lsp = "spinasm_lsp.server:start"
+
 [tool.ruff]
 fix = true
 show-fixes = true
@@ -37,7 +40,7 @@ select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF",]
 dependencies = [ "pre-commit",]
 
 [tool.hatch.envs.test]
-dependencies = [ "pytest", "pytest-cov", "mistletoe" ]
+dependencies = [ "pytest", "pytest-cov", "mistletoe", "pytest-lsp" ]
 
 [tool.hatch.envs.test_matrix]
 template = "test"

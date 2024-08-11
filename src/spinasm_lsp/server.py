@@ -1,24 +1,36 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import Any
 
 from lsprotocol import types as lsp
 from pygls.server import LanguageServer
-from pygls.workspace import TextDocument
 
 from . import __version__
 from .documentation import DocMap
 from .parser import SPINAsmParser
 
 
+@lru_cache(maxsize=1)
+def _parse_document(source: str) -> SPINAsmParser:
+    """
+    Parse a document and return the parser.
+
+    Parser are cached based on the source code to speed up subsequent parsing.
+    """
+    return SPINAsmParser(source).parse()
+
+
 class SPINAsmLanguageServer(LanguageServer):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
+        self._prev_parser: SPINAsmParser | None = None
         super().__init__(*args, name="spinasm-lsp", version=__version__, **kwargs)
-        self.parser: SPINAsmParser = None
 
     def debug(self, msg: Any) -> None:
         """Log a debug message."""
-        self.show_message_log(str(msg), lsp.MessageType.Debug)
+        # MessageType.Debug is a proposed feature of 3.18.0, and isn't fully supported
+        # yet.
+        self.show_message_log(str(msg), lsp.MessageType.Log)
 
     def info(self, msg: Any) -> None:
         """Log an info message."""
@@ -32,63 +44,60 @@ class SPINAsmLanguageServer(LanguageServer):
         """Log an error message."""
         self.show_message_log(str(msg), lsp.MessageType.Error)
 
-    async def parse(self, document: TextDocument) -> SPINAsmParser:
-        """Parse a document and publish diagnostics."""
-        try:
-            self.parser = SPINAsmParser(document.source).parse()
-            diagnostics = self.parser.diagnostics
-        except Exception as e:
-            self.error(e)
-            diagnostics = []
+    async def get_parser(self, uri: str) -> SPINAsmParser:
+        """Return a parser for the document, caching if possible."""
+        document = self.workspace.get_text_document(uri)
+        parser = _parse_document(document.source)
 
-        self.publish_diagnostics(document.uri, diagnostics)
-        return self.parser
+        # Skip publishing diagnostics if the parser is unchanged
+        if parser is not self._prev_parser:
+            self.publish_diagnostics(document.uri, parser.diagnostics)
+            self._prev_parser = parser
+
+        return parser
 
 
-LSP_SERVER = SPINAsmLanguageServer(max_workers=5)
+server = SPINAsmLanguageServer(max_workers=5)
 # TODO: Probably load async as part of a custom language server subclass
 DOCUMENTATION = DocMap(folders=["instructions", "assemblers"])
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CHANGE)
+@server.feature(lsp.TEXT_DOCUMENT_DID_CHANGE)
 async def did_change(
     ls: SPINAsmLanguageServer, params: lsp.DidChangeTextDocumentParams
 ):
     """Run diagnostics on changed document."""
-    document = ls.workspace.get_text_document(params.text_document.uri)
-    await ls.parse(document)
+    await ls.get_parser(params.text_document.uri)
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
+@server.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
 async def did_save(ls: SPINAsmLanguageServer, params: lsp.DidSaveTextDocumentParams):
     """Run diagnostics on saved document."""
-    document = ls.workspace.get_text_document(params.text_document.uri)
-    await ls.parse(document)
+    await ls.get_parser(params.text_document.uri)
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
+@server.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
 async def did_open(ls: SPINAsmLanguageServer, params: lsp.DidOpenTextDocumentParams):
     """Run diagnostics on open document."""
-    document = ls.workspace.get_text_document(params.text_document.uri)
-    await ls.parse(document)
+    await ls.get_parser(params.text_document.uri)
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
+@server.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
 def did_close(
     ls: SPINAsmLanguageServer, params: lsp.DidCloseTextDocumentParams
 ) -> None:
     """Clear the diagnostics on close."""
-    text_document = ls.workspace.get_text_document(params.text_document.uri)
-    # Clear the diagnostics on close
-    ls.publish_diagnostics(text_document.uri, [])
+    ls.publish_diagnostics(params.text_document.uri, [])
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_HOVER)
-def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | None:
+@server.feature(lsp.TEXT_DOCUMENT_HOVER)
+async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | None:
     """Retrieve documentation from symbols on hover."""
+    parser = await ls.get_parser(params.text_document.uri)
+
     pos = params.position
 
-    token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
         return None
 
@@ -101,24 +110,28 @@ def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | Non
 
     hover_msg = None
     if token_type in ("LABEL", "TARGET"):
-        # Label definitions and targets
-        if token_val in LSP_SERVER.parser.jmptbl:
-            hover_definition = LSP_SERVER.parser.jmptbl[token_val.upper()]
-            hover_msg = f"(label) {token_val}: Offset[**{hover_definition}**]"
-        # Variable and memory definitions
-        elif token_val in LSP_SERVER.parser.symtbl:
-            hover_definition = LSP_SERVER.parser.symtbl[token_val.upper()]
-            hover_msg = f"(constant) {token_val}: Literal[**{hover_definition}**]"
         # Special case for hovering over the second word of a CHO instruction, which
         # should be treated as part of the instruction for retrieving documentation.
-        if token_val in ("SOF", "RDAL", "RDA") and str(token.prev_token) == "CHO":
+        if token_val == "RDA" and str(token.prev_token) == "CHO":
             token_val = f"CHO {token_val}"
             hover_msg = DOCUMENTATION.get(token_val, "")
+        # Label definitions and targets
+        elif token_val in parser.jmptbl:
+            hover_definition = parser.jmptbl[token_val.upper()]
+            hover_msg = f"(label) {token_val}: Offset[**{hover_definition}**]"
+        # Variable and memory definitions
+        elif token_val in parser.symtbl:
+            hover_definition = parser.symtbl[token_val.upper()]
+            hover_msg = f"(constant) {token_val}: Literal[**{hover_definition}**]"
     # Opcodes and assignments
     elif token_type in ("ASSEMBLER", "MNEMONIC"):
+        # Special case for hovering over the second word of a CHO instruction, which
+        # should be treated as part of the instruction for retrieving documentation.
+        if token_val in ("SOF", "RDA") and str(token.prev_token) == "CHO":
+            token_val = f"CHO {token_val}"
         # CHO is a special opcode that treats its first argument as part of the
         # instruction, for the sake of documentation.
-        if token_val == "CHO" and token.next_token is not None:
+        elif token_val == "CHO" and token.next_token is not None:
             token_val = f"CHO {str(token.next_token)}"
 
         hover_msg = DOCUMENTATION.get(token_val, "")
@@ -132,15 +145,17 @@ def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | Non
     )
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_COMPLETION)
-def completions(
-    ls: SPINAsmLanguageServer, params: lsp.CompletionParams | None = None
+@server.feature(lsp.TEXT_DOCUMENT_COMPLETION)
+async def completions(
+    ls: SPINAsmLanguageServer, params: lsp.CompletionParams
 ) -> lsp.CompletionList:
     """Returns completion items."""
+    parser = await ls.get_parser(params.text_document.uri)
+
     opcodes = [k.upper() for k in DOCUMENTATION]
-    symbols = list(ls.parser.symtbl.keys())
-    labels = list(ls.parser.jmptbl.keys())
-    mem = list(ls.parser.mem.keys())
+    symbols = list(parser.symtbl.keys())
+    labels = list(parser.jmptbl.keys())
+    mem = list(parser.mem.keys())
 
     opcode_items = [
         lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Function)
@@ -163,62 +178,68 @@ def completions(
     )
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DEFINITION)
-def definition(
+@server.feature(lsp.TEXT_DOCUMENT_DEFINITION)
+async def definition(
     ls: SPINAsmLanguageServer, params: lsp.DefinitionParams
 ) -> lsp.Location | None:
     """Returns the definition location of a symbol."""
+    parser = await ls.get_parser(params.text_document.uri)
+
     document = ls.workspace.get_text_document(params.text_document.uri)
     pos = params.position
 
-    # TODO: Probably switch to token registry
+    # TODO: Probably switch to token registry. Note that when I do, it might break
+    # definitions for addresses with # and ^, maybe?
     try:
         word = document.word_at_position(pos).upper()
     except IndexError:
         return None
 
-    if word in ls.parser.definitions:
+    if word in parser.definitions:
         return lsp.Location(
             uri=document.uri,
             range=lsp.Range(
-                start=ls.parser.definitions[word],
-                end=ls.parser.definitions[word],
+                start=parser.definitions[word],
+                end=parser.definitions[word],
             ),
         )
 
     return None
 
 
-@LSP_SERVER.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
-def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenameParams):
+@server.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
+async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenameParams):
     """Called by the client to determine if renaming the symbol at the given location
     is a valid operation."""
-    pos = params.position
+    parser = await ls.get_parser(params.text_document.uri)
 
-    token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
+    pos = params.position
+    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
-        ls.debug(f"No token to rename at {pos}.")
+        ls.info(f"No token to rename at {pos}.")
         return None
 
     # Only user-defined labels should support renaming
-    if str(token) not in ls.parser.definitions:
-        ls.debug(f"Can't rename non-user defined token {token}.")
+    if str(token) not in parser.definitions:
+        ls.info(f"Can't rename non-user defined token {token}.")
         return None
 
     return lsp.PrepareRenameResult_Type2(default_behavior=True)
 
 
-@LSP_SERVER.feature(
+@server.feature(
     lsp.TEXT_DOCUMENT_RENAME, options=lsp.RenameOptions(prepare_provider=True)
 )
-def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
+async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
+    parser = await ls.get_parser(params.text_document.uri)
+
     pos = params.position
 
-    token = ls.parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
     if token is None:
         return None
 
-    matching_tokens = ls.parser.token_registry.get_matching_tokens(str(token))
+    matching_tokens = parser.token_registry.get_matching_tokens(str(token))
 
     edits = [
         lsp.TextEdit(
@@ -235,7 +256,7 @@ def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
 
 
 def start() -> None:
-    LSP_SERVER.start_io()
+    server.start_io()
 
 
 if __name__ == "__main__":

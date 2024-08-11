@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import bisect
+import copy
 from collections import UserDict
 from dataclasses import dataclass
-from typing import Callable, Literal, TypedDict
+from typing import Callable, Literal, TypedDict, cast
 
 # Types of tokens defined by asfv1
 TokenType = Literal[
@@ -94,9 +95,18 @@ class TokenRegistry:
         self.lines[token.line].append(token)
         self._prev_token = token
 
-        # Store user-defined tokens in the registry. Other token types could be stored,
+        # Store user-defined tokens in the directory. Other token types could be stored,
         # but currently there's no use case for retrieving their positions.
         if token.value["type"] in ("LABEL", "TARGET"):
+            # Remove address modifiers when storing tokens in the directory. This allows
+            # for renaming modified tokens along with the original.
+            if str(token).endswith("#") or str(token).endswith("^"):
+                token = copy.deepcopy(token)
+                token.value["stxt"] = cast(str, token.value["stxt"])[:-1]
+                # We need to truncate the range to exclude the modifier, or else it will
+                # be removed during renaming.
+                token.col_end -= 1
+
             if str(token) not in self.directory:
                 self.directory[str(token)] = []
             self.directory[str(token)].append(token)
