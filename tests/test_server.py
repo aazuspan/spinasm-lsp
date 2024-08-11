@@ -4,7 +4,7 @@ import pytest_lsp
 from pytest_lsp import ClientServerConfig, LanguageClient
 
 from .conftest import (
-    ASSIGNMENTS,
+    DEFINITIONS,
     HOVERS,
     PATCH_DIR,
     PREPARE_RENAMES,
@@ -32,7 +32,7 @@ async def client(request, lsp_client: LanguageClient):
 
 
 @pytest.mark.asyncio()
-@pytest.mark.parametrize("assignment", ASSIGNMENTS, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("assignment", DEFINITIONS, ids=lambda x: x["symbol"])
 async def test_definition(assignment: dict, client: LanguageClient):
     """Test that the definition location of different assignments is correct."""
     uri = assignment["defined"].uri

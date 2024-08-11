@@ -63,7 +63,7 @@ class Token:
     ):
         if end is None:
             width = len(symbol["stxt"])
-            end = lsp.Position(line=start.line, character=start.character + width - 1)
+            end = lsp.Position(line=start.line, character=start.character + width)
 
         self.symbol: Symbol = symbol
         self.range: lsp.Range = lsp.Range(start=start, end=end)

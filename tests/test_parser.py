@@ -43,19 +43,21 @@ def test_get_token_from_registry(sentence_token_registry):
     """Test that tokens are correctly retrieved by position from a registry."""
     sentence, reg = sentence_token_registry
 
-    # Manually build a mapping of column indexes to expected token words
+    # Manually build a mapping of column indexes to expected token words. Note that
+    # each word includes the whitespace immediately after it, which is consistent with
+    # other LSPs, and that all other whitespace is None.
     token_positions = {i: None for i in range(len(sentence))}
-    for i in range(0, 4):
+    for i in range(0, 5):
         token_positions[i] = "This"
-    for i in range(7, 9):
+    for i in range(7, 10):
         token_positions[i] = "is"
-    for i in range(10, 11):
+    for i in range(10, 12):
         token_positions[i] = "a"
-    for i in range(12, 16):
+    for i in range(12, 17):
         token_positions[i] = "line"
-    for i in range(20, 24):
+    for i in range(20, 25):
         token_positions[i] = "with"
-    for i in range(25, 31):
+    for i in range(25, 32):
         token_positions[i] = "words."
 
     for i, word in token_positions.items():
@@ -106,5 +108,5 @@ def test_concatenate_cho_rdal_tokens():
     }
 
     assert cho_rdal.range == lsp.Range(
-        start=lsp.Position(line=0, character=0), end=lsp.Position(line=0, character=13)
+        start=lsp.Position(line=0, character=0), end=lsp.Position(line=0, character=14)
     )

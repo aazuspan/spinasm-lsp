@@ -45,7 +45,7 @@ class RenameDict(TypedDict):
 
 
 # Example assignments from the "Basic.spn" patch, for testing definition locations
-ASSIGNMENTS: list[AssignmentDict] = [
+DEFINITIONS: list[AssignmentDict] = [
     {
         # Variable
         "symbol": "apout",
@@ -54,7 +54,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=23, character=4),
-                end=lsp.Position(line=23, character=8),
+                end=lsp.Position(line=23, character=9),
             ),
         ),
     },
@@ -66,7 +66,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=16, character=4),
-                end=lsp.Position(line=16, character=8),
+                end=lsp.Position(line=16, character=9),
             ),
         ),
     },
@@ -79,7 +79,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=16, character=4),
-                end=lsp.Position(line=16, character=8),
+                end=lsp.Position(line=16, character=9),
             ),
         ),
     },
@@ -91,7 +91,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=41, character=0),
-                end=lsp.Position(line=41, character=5),
+                end=lsp.Position(line=41, character=6),
             ),
         ),
     },
@@ -181,16 +181,16 @@ RENAMES: list[RenameDict] = [
         "position": lsp.Position(line=8, character=4),
         "changes": [
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 6)),
+                range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 7)),
                 new_text="FOO",
             ),
             # This symbol is `ap1#``, and should be matched when renaming `ap1`
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(51, 4), end=lsp.Position(51, 6)),
+                range=lsp.Range(start=lsp.Position(51, 4), end=lsp.Position(51, 7)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(52, 5), end=lsp.Position(52, 7)),
+                range=lsp.Range(start=lsp.Position(52, 5), end=lsp.Position(52, 8)),
                 new_text="FOO",
             ),
         ],
@@ -201,11 +201,11 @@ RENAMES: list[RenameDict] = [
         "position": lsp.Position(line=41, character=0),
         "changes": [
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 13)),
+                range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 14)),
                 new_text="END",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(41, 0), end=lsp.Position(41, 5)),
+                range=lsp.Range(start=lsp.Position(41, 0), end=lsp.Position(41, 6)),
                 new_text="END",
             ),
         ],
@@ -217,15 +217,15 @@ RENAMES: list[RenameDict] = [
         "changes": [
             # Renaming `lap1a#` should also rename `lap1a`
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 8)),
+                range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 9)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(61, 4), end=lsp.Position(61, 8)),
+                range=lsp.Range(start=lsp.Position(61, 4), end=lsp.Position(61, 9)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(62, 5), end=lsp.Position(62, 9)),
+                range=lsp.Range(start=lsp.Position(62, 5), end=lsp.Position(62, 10)),
                 new_text="FOO",
             ),
         ],
