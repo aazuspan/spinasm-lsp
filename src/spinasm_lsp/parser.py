@@ -138,7 +138,7 @@ class SPINAsmParser(fv1parse):
         super().__next__()
         self._update_column()
 
-        token_width = len(self.sym["txt"] or "")
+        token_width = max(len(self.sym["txt"] or "") - 1, 0)
         token_range = lsp.Range(
             start=lsp.Position(line=self.current_line, character=self.col),
             end=lsp.Position(line=self.current_line, character=self.col + token_width),

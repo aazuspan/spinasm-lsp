@@ -111,29 +111,29 @@ HOVERS: list[HoverDict] = [
         "contains": "## `SKP CMASK,N`",
     },
     {
-        "symbol": "label",
-        "position": lsp.Position(line=37, character=14),
+        "symbol": "endclr",
+        "position": lsp.Position(line=37, character=13),
         "contains": "(label) ENDCLR: Offset[**4**]",
     },
     {
-        "symbol": "variable",
+        "symbol": "mono",
         "position": lsp.Position(line=47, character=5),
         "contains": "(constant) MONO: Literal[**32**]",
     },
     {
-        "symbol": "modified_address",
+        "symbol": "lap2b#",
         "position": lsp.Position(line=73, character=4),
         "contains": "(constant) LAP2B#: Literal[**9802**]",
     },
     {
         # CHO RDA, hovering over CHO
-        "symbol": "cho_rda",
+        "symbol": "CHO_rda",
         "position": lsp.Position(line=85, character=0),
         "contains": "## `CHO RDA N, C, D`",
     },
     {
         # CHO RDA, hovering over RDA
-        "symbol": "cho_rda",
+        "symbol": "cho_RDA",
         "position": lsp.Position(line=85, character=4),
         "contains": "## `CHO RDA N, C, D`",
     },
@@ -174,31 +174,31 @@ RENAMES: list[RenameDict] = [
         "position": lsp.Position(line=8, character=4),
         "changes": [
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 7)),
+                range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 6)),
                 new_text="FOO",
             ),
             # This symbol is `ap1#``, and should be matched when renaming `ap1`
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(51, 4), end=lsp.Position(51, 7)),
+                range=lsp.Range(start=lsp.Position(51, 4), end=lsp.Position(51, 6)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(52, 5), end=lsp.Position(52, 8)),
+                range=lsp.Range(start=lsp.Position(52, 5), end=lsp.Position(52, 7)),
                 new_text="FOO",
             ),
         ],
     },
     {
-        "symbol": "label",
+        "symbol": "endclr",
         "rename_to": "END",
         "position": lsp.Position(line=41, character=0),
         "changes": [
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 14)),
+                range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 13)),
                 new_text="END",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(41, 0), end=lsp.Position(41, 6)),
+                range=lsp.Range(start=lsp.Position(41, 0), end=lsp.Position(41, 5)),
                 new_text="END",
             ),
         ],
@@ -210,15 +210,15 @@ RENAMES: list[RenameDict] = [
         "changes": [
             # Renaming `lap1a#` should also rename `lap1a`
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 9)),
+                range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 8)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(61, 4), end=lsp.Position(61, 9)),
+                range=lsp.Range(start=lsp.Position(61, 4), end=lsp.Position(61, 8)),
                 new_text="FOO",
             ),
             lsp.TextEdit(
-                range=lsp.Range(start=lsp.Position(62, 5), end=lsp.Position(62, 10)),
+                range=lsp.Range(start=lsp.Position(62, 5), end=lsp.Position(62, 9)),
                 new_text="FOO",
             ),
         ],

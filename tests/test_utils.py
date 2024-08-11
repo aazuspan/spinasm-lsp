@@ -72,7 +72,7 @@ def test_get_token_from_registry(sentence_token_registry):
 
     for i, word in token_positions.items():
         found_tok = reg.get_token_at_position(lsp.Position(line=0, character=i))
-        found_val = found_tok.value["txt"] if found_tok is not None else found_tok
+        found_val = found_tok.symbol["txt"] if found_tok is not None else found_tok
         msg = f"Expected token `{word}` at col {i}, found `{found_val}`"
         assert found_val == word, msg
 

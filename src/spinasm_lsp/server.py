@@ -99,8 +99,8 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     if token is None:
         return None
 
-    token_val = token.value["stxt"]
-    token_type = token.value["type"]
+    token_val = token.symbol["stxt"]
+    token_type = token.symbol["type"]
 
     # stxt should only be None for EOF tokens, but check to be sure.
     if token_type == "EOF" or not isinstance(token_val, str):

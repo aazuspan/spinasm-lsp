@@ -34,7 +34,7 @@ class CallbackDict(UserDict):
         self.callback(key)
 
 
-class TokenValue(TypedDict):
+class Symbol(TypedDict):
     """The token specification used by asfv1."""
 
     type: TokenType
@@ -47,13 +47,13 @@ class TokenValue(TypedDict):
 class Token:
     """A token and its position in a source file."""
 
-    value: TokenValue
+    symbol: Symbol
     range: lsp.Range
     next_token: Token | None = None
     prev_token: Token | None = None
 
     def __str__(self):
-        return self.value["stxt"] or "Empty token"
+        return self.symbol["stxt"] or "Empty token"
 
     def __repr__(self):
         return str(self)
@@ -70,7 +70,7 @@ class Token:
             return self
 
         token = self.clone()
-        token.value["stxt"] = cast(str, token.value["stxt"])[:-1]
+        token.symbol["stxt"] = cast(str, token.symbol["stxt"])[:-1]
         token.range.end.character -= 1
 
         return token
@@ -113,7 +113,7 @@ class TokenRegistry:
 
         # Store user-defined tokens together by name. Other token types could be stored,
         # but currently there's no use case for retrieving their positions.
-        if token.value["type"] in ("LABEL", "TARGET"):
+        if token.symbol["type"] in ("LABEL", "TARGET"):
             # Tokens are stored by name without address modifiers, so that e.g. Delay#
             # and Delay can be retrieved with the same query. This allows for renaming
             # all instances of a memory token.
