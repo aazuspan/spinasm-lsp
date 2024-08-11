@@ -26,6 +26,8 @@ def _parse_document(source: str) -> SPINAsmParser:
 class SPINAsmLanguageServer(LanguageServer):
     def __init__(self, *args, **kwargs) -> None:
         self._prev_parser: SPINAsmParser | None = None
+        self.documentation = DocMap(folders=["instructions", "assemblers"])
+
         super().__init__(*args, name="spinasm-lsp", version=__version__, **kwargs)
 
     def debug(self, msg: Any) -> None:
@@ -60,8 +62,6 @@ class SPINAsmLanguageServer(LanguageServer):
 
 
 server = SPINAsmLanguageServer(max_workers=5)
-# TODO: Probably load async as part of a custom language server subclass
-DOCUMENTATION = DocMap(folders=["instructions", "assemblers"])
 
 
 @server.feature(lsp.TEXT_DOCUMENT_DID_CHANGE)
@@ -114,7 +114,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         # should be treated as part of the instruction for retrieving documentation.
         if token_val == "RDA" and str(token.prev_token) == "CHO":
             token_val = f"CHO {token_val}"
-            hover_msg = DOCUMENTATION.get(token_val, "")
+            hover_msg = ls.documentation.get(token_val, "")
         # Label definitions and targets
         elif token_val in parser.jmptbl:
             hover_definition = parser.jmptbl[token_val.upper()]
@@ -134,7 +134,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         elif token_val == "CHO" and token.next_token is not None:
             token_val = f"CHO {str(token.next_token)}"
 
-        hover_msg = DOCUMENTATION.get(token_val, "")
+        hover_msg = ls.documentation.get(token_val, "")
 
     return (
         None
@@ -152,15 +152,22 @@ async def completions(
     """Returns completion items."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    opcodes = [k.upper() for k in DOCUMENTATION]
+    opcodes = [k.upper() for k in ls.documentation]
     symbols = list(parser.symtbl.keys())
     labels = list(parser.jmptbl.keys())
     mem = list(parser.mem.keys())
 
     opcode_items = [
-        lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Function)
+        lsp.CompletionItem(
+            label=k,
+            kind=lsp.CompletionItemKind.Function,
+            documentation=lsp.MarkupContent(
+                kind=lsp.MarkupKind.Markdown, value=ls.documentation[k.upper()]
+            ),
+        )
         for k in opcodes
     ]
+    # TODO: Set details for all the completions below using the same info as the hover.
     symbol_items = [
         lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Constant)
         for k in symbols
