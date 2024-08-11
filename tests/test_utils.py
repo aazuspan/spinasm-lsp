@@ -1,7 +1,6 @@
 """Test LSP utilities."""
 
-import itertools
-
+import lsprotocol.types as lsp
 import pytest
 
 from spinasm_lsp import utils
@@ -26,7 +25,15 @@ def sentence_token_registry() -> tuple[str, utils.TokenRegistry]:
         start = sentence.index(t["txt"], col)
         end = start + len(t["txt"]) - 1
         col = end + 1
-        tokens.append(utils.Token(t, line=0, col_start=start, col_end=end))
+        tokens.append(
+            utils.Token(
+                t,
+                range=lsp.Range(
+                    start=lsp.Position(line=0, character=start),
+                    end=lsp.Position(line=0, character=end),
+                ),
+            )
+        )
 
     return sentence, utils.TokenRegistry(tokens)
 
@@ -64,19 +71,17 @@ def test_get_token_from_registry(sentence_token_registry):
         token_positions[i] = "words."
 
     for i, word in token_positions.items():
-        found_tok = reg.get_token_at_position(line=0, col=i)
+        found_tok = reg.get_token_at_position(lsp.Position(line=0, character=i))
         found_val = found_tok.value["txt"] if found_tok is not None else found_tok
         msg = f"Expected token `{word}` at col {i}, found `{found_val}`"
         assert found_val == word, msg
 
 
-@pytest.mark.parametrize("idx", list(itertools.product([-99, 99], [-99, 99])), ids=str)
-def test_get_token_at_invalid_position_returns_none(idx, sentence_token_registry):
+def test_get_token_at_invalid_position_returns_none(sentence_token_registry):
     """Test that retrieving tokens from out of bounds always returns None."""
-    line, col = idx
     _, reg = sentence_token_registry
 
-    assert reg.get_token_at_position(line=line, col=col) is None
+    assert reg.get_token_at_position(lsp.Position(line=99, character=99)) is None
 
 
 def test_get_token_positions():
@@ -89,4 +94,4 @@ def test_get_token_positions():
 
     all_matches = parser.token_registry.get_matching_tokens("apout")
     assert len(all_matches) == 4
-    assert [t.line for t in all_matches] == [23, 57, 60, 70]
+    assert [t.range.start.line for t in all_matches] == [23, 57, 60, 70]

@@ -136,12 +136,14 @@ class SPINAsmParser(fv1parse):
     def __next__(self):
         """Parse the next symbol and update the column."""
         super().__next__()
-        # TODO: Make sure super().__next__ can't get stuck in an infinite loop since I
-        # removed the maxerr check
         self._update_column()
 
         token_width = len(self.sym["txt"] or "")
-        token = Token(self.sym, self.current_line, self.col, self.col + token_width)
+        token_range = lsp.Range(
+            start=lsp.Position(line=self.current_line, character=self.col),
+            end=lsp.Position(line=self.current_line, character=self.col + token_width),
+        )
+        token = Token(self.sym, range=token_range)
         self.token_registry.register_token(token)
 
     def _update_column(self):

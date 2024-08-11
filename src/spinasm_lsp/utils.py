@@ -6,6 +6,8 @@ from collections import UserDict
 from dataclasses import dataclass
 from typing import Callable, Literal, TypedDict, cast
 
+import lsprotocol.types as lsp
+
 # Types of tokens defined by asfv1
 TokenType = Literal[
     "ASSEMBLER",
@@ -41,15 +43,12 @@ class TokenValue(TypedDict):
     val: int | float | None
 
 
-# TODO: Probably use lsp.Position and lsp.Range to define the token location
 @dataclass
 class Token:
     """A token and its position in a source file."""
 
     value: TokenValue
-    line: int
-    col_start: int
-    col_end: int
+    range: lsp.Range
     next_token: Token | None = None
     prev_token: Token | None = None
 
@@ -83,8 +82,8 @@ class TokenRegistry:
         # will break `get_token_at_position`. I could check if prev token was CHO when
         # I register RDAL, SOF, or RDA, and if so register them as one and unregister
         # the previous?
-        if token.line not in self.lines:
-            self.lines[token.line] = []
+        if token.range.start.line not in self.lines:
+            self.lines[token.range.start.line] = []
 
         # Record the previous and next token for each token to allow traversing
         if self._prev_token:
@@ -92,7 +91,7 @@ class TokenRegistry:
             self._prev_token.next_token = token
 
         # Store the token on its line
-        self.lines[token.line].append(token)
+        self.lines[token.range.start.line].append(token)
         self._prev_token = token
 
         # Store user-defined tokens in the directory. Other token types could be stored,
@@ -105,7 +104,7 @@ class TokenRegistry:
                 token.value["stxt"] = cast(str, token.value["stxt"])[:-1]
                 # We need to truncate the range to exclude the modifier, or else it will
                 # be removed during renaming.
-                token.col_end -= 1
+                token.range.end.character -= 1
 
             if str(token) not in self.directory:
                 self.directory[str(token)] = []
@@ -115,26 +114,26 @@ class TokenRegistry:
         """Retrieve all tokens with a given name in the program."""
         return self.directory.get(token_name.upper(), [])
 
-    def get_token_at_position(self, line: int, col: int) -> Token | None:
+    def get_token_at_position(self, position: lsp.Position) -> Token | None:
         """Retrieve the token at the given line and column index."""
-        if line not in self.lines:
+        if position.line not in self.lines:
             return None
 
-        line_tokens = self.lines[line]
-        token_starts = [t.col_start for t in line_tokens]
-        token_ends = [t.col_end for t in line_tokens]
+        line_tokens = self.lines[position.line]
+        token_starts = [t.range.start.character for t in line_tokens]
+        token_ends = [t.range.end.character for t in line_tokens]
 
-        pos = bisect.bisect_left(token_starts, col)
+        idx = bisect.bisect_left(token_starts, position.character)
 
-        # The index returned by bisect_left points to the start value >= col. This will
-        # either be the first character of the token or the start of the next token.
-        # First check if we're out of bounds, then shift left unless we're at the first
-        # character of the token.
-        if pos == len(line_tokens) or token_starts[pos] != col:
-            pos -= 1
+        # The index returned by bisect_left points to the start value >= character. This
+        # will either be the first character of the token or the start of the next
+        # token. First check if we're out of bounds, then shift left unless we're at the
+        # first character of the token.
+        if idx == len(line_tokens) or token_starts[idx] != position.character:
+            idx -= 1
 
         # If the col falls after the end of the token, we're not inside a token.
-        if col > token_ends[pos]:
+        if position.character > token_ends[idx]:
             return None
 
-        return line_tokens[pos]
+        return line_tokens[idx]

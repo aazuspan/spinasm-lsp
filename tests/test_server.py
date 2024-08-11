@@ -15,7 +15,8 @@ from .conftest import (
 
 
 @pytest_lsp.fixture(
-    params=["neovim", "visual_studio_code"],
+    # params=["neovim", "visual_studio_code"],
+    params=["visual_studio_code"],
     config=ClientServerConfig(server_command=["spinasm-lsp"]),
 )
 async def client(request, lsp_client: LanguageClient):

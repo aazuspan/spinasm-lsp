@@ -95,9 +95,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     """Retrieve documentation from symbols on hover."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    pos = params.position
-
-    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(params.position)
     if token is None:
         return None
 
@@ -186,9 +184,8 @@ async def definition(
     parser = await ls.get_parser(params.text_document.uri)
 
     document = ls.workspace.get_text_document(params.text_document.uri)
-    pos = params.position
 
-    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(params.position)
 
     if str(token) not in parser.definitions:
         return None
@@ -208,10 +205,9 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
     is a valid operation."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    pos = params.position
-    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(params.position)
     if token is None:
-        ls.info(f"No token to rename at {pos}.")
+        ls.info(f"No token to rename at {params.position}.")
         return None
 
     # Only user-defined labels should support renaming
@@ -228,9 +224,7 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
 async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
     parser = await ls.get_parser(params.text_document.uri)
 
-    pos = params.position
-
-    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
+    token = parser.token_registry.get_token_at_position(params.position)
     if token is None:
         return None
 
@@ -238,10 +232,7 @@ async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
 
     edits = [
         lsp.TextEdit(
-            range=lsp.Range(
-                start=lsp.Position(t.line, t.col_start),
-                end=lsp.Position(t.line, t.col_end),
-            ),
+            range=t.range,
             new_text=params.new_name,
         )
         for t in matching_tokens
