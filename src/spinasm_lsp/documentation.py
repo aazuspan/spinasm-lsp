@@ -1,3 +1,5 @@
+"""Documentation utilities for the SPINAsm LSP."""
+
 from __future__ import annotations
 
 from collections import UserDict

@@ -1,3 +1,5 @@
+"""The SPINAsm Language Server Protocol implementation."""
+
 from __future__ import annotations
 
 from functools import lru_cache
