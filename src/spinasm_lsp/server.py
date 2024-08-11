@@ -113,21 +113,34 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
-    hover_msg = None
     if token.symbol["type"] in ("LABEL", "TARGET"):
         hover_msg = _get_defined_hover(str(token), parser=parser)
 
-    elif token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
+        return (
+            None
+            if not hover_msg
+            else lsp.Hover(
+                # Format as Python to get color coding for literals
+                contents={"language": "python", "value": f"{hover_msg}"},
+                range=token.range,
+            )
+        )
+
+    if token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
         hover_msg = ls.documentation.get(str(token), "")
 
-    return (
-        None
-        if not hover_msg
-        else lsp.Hover(
-            contents=lsp.MarkupContent(kind=lsp.MarkupKind.Markdown, value=hover_msg),
-            range=token.range,
+        return (
+            None
+            if not hover_msg
+            else lsp.Hover(
+                contents=lsp.MarkupContent(
+                    kind=lsp.MarkupKind.Markdown, value=hover_msg
+                ),
+                range=token.range,
+            )
         )
-    )
+
+    return None
 
 
 @server.feature(lsp.TEXT_DOCUMENT_COMPLETION)
