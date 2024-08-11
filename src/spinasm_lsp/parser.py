@@ -14,8 +14,8 @@ class SPINAsmParser(fv1parse):
     def __init__(self, source: str):
         self.diagnostics: list[lsp.Diagnostic] = []
         self.definitions: dict[str, lsp.Range] = {}
-        self.col: int = 0
-        self.prevcol: int = 0
+        self.current_character: int = 0
+        self.previous_character: int = 0
         self.token_registry = TokenRegistry()
 
         super().__init__(
@@ -38,14 +38,14 @@ class SPINAsmParser(fv1parse):
         """
 
     def _record_diagnostic(
-        self, msg: str, line: int, col: int, severity: lsp.DiagnosticSeverity
+        self, msg: str, line: int, character: int, severity: lsp.DiagnosticSeverity
     ):
         """Record a diagnostic message for the LSP."""
         self.diagnostics.append(
             lsp.Diagnostic(
                 range=lsp.Range(
-                    start=lsp.Position(line, character=col),
-                    end=lsp.Position(line, character=col),
+                    start=lsp.Position(line, character=character),
+                    end=lsp.Position(line, character=character),
                 ),
                 message=msg,
                 severity=severity,
@@ -60,13 +60,19 @@ class SPINAsmParser(fv1parse):
 
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
-            msg, line - 1, col=self.col, severity=lsp.DiagnosticSeverity.Error
+            msg,
+            line=line - 1,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Error,
         )
 
     def scanerror(self, msg: str):
         """Override to record scanning errors as LSP diagnostics."""
         self._record_diagnostic(
-            msg, self.current_line, col=self.col, severity=lsp.DiagnosticSeverity.Error
+            msg,
+            line=self.current_line,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Error,
         )
 
     def parsewarn(self, msg: str, line: int | None = None):
@@ -76,7 +82,10 @@ class SPINAsmParser(fv1parse):
 
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
-            msg, line - 1, col=self.col, severity=lsp.DiagnosticSeverity.Warning
+            msg,
+            line=line - 1,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Warning,
         )
 
     @property
@@ -89,8 +98,8 @@ class SPINAsmParser(fv1parse):
         self._sline = value
 
         # Reset the column to 0 when we move to a new line
-        self.prevcol = self.col
-        self.col = 0
+        self.previous_character = self.current_character
+        self.current_character = 0
 
     @property
     def current_line(self):
@@ -107,12 +116,11 @@ class SPINAsmParser(fv1parse):
         super().__next__()
         self._update_column()
 
-        token_width = max(len(self.sym["txt"] or "") - 1, 0)
-        token_range = lsp.Range(
-            start=lsp.Position(line=self.current_line, character=self.col),
-            end=lsp.Position(line=self.current_line, character=self.col + token_width),
+        token_start = lsp.Position(
+            line=self.current_line, character=self.current_character
         )
-        token = Token(self.sym, range=token_range)
+
+        token = Token(self.sym, start=token_start)
         self.token_registry.register_token(token)
 
         base_token = token.without_address_modifier()
@@ -133,12 +141,14 @@ class SPINAsmParser(fv1parse):
         current_line_txt = self._source[self.current_line]
         current_symbol = self.sym.get("txt", None) or ""
 
-        self.prevcol = self.col
+        self.previous_character = self.current_character
         try:
             # Start at the current column to skip previous duplicates of the symbol
-            self.col = current_line_txt.index(current_symbol, self.col)
+            self.current_character = current_line_txt.index(
+                current_symbol, self.current_character
+            )
         except ValueError:
-            self.col = 0
+            self.current_character = 0
 
     def parse(self) -> SPINAsmParser:
         """Parse and return the parser."""

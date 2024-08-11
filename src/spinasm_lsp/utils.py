@@ -2,48 +2,44 @@ from __future__ import annotations
 
 import bisect
 import copy
-from dataclasses import dataclass
 from typing import Literal, TypedDict, cast
 
 import lsprotocol.types as lsp
-
-# Types of tokens defined by asfv1
-TokenType = Literal[
-    "ASSEMBLER",
-    "EOF",
-    "INTEGER",
-    "LABEL",
-    "TARGET",
-    "MNEMONIC",
-    "OPERATOR",
-    "FLOAT",
-    "ARGSEP",
-]
 
 
 class Symbol(TypedDict):
     """The token specification used by asfv1."""
 
-    type: TokenType
+    type: Literal[
+        "ASSEMBLER",
+        "EOF",
+        "INTEGER",
+        "LABEL",
+        "TARGET",
+        "MNEMONIC",
+        "OPERATOR",
+        "FLOAT",
+        "ARGSEP",
+    ]
     txt: str | None
     stxt: str | None
     val: int | float | None
 
 
-@dataclass
 class Token:
     """A token and its position in a source file."""
 
-    symbol: Symbol
-    range: lsp.Range
-    next_token: Token | None = None
-    prev_token: Token | None = None
+    def __init__(self, symbol: Symbol, start: lsp.Position) -> None:
+        width = max(len(symbol["stxt"] or "") - 1, 0)
+        end = lsp.Position(line=start.line, character=start.character + width)
+
+        self.symbol: Symbol = symbol
+        self.range: lsp.Range = lsp.Range(start=start, end=end)
+        self.next_token: Token | None = None
+        self.prev_token: Token | None = None
 
     def __str__(self):
         return self.symbol["stxt"] or "Empty token"
-
-    def __repr__(self):
-        return str(self)
 
     def _clone(self) -> Token:
         """Return a clone of the token to avoid mutating the original."""

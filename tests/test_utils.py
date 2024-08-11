@@ -23,17 +23,10 @@ def sentence_token_registry() -> tuple[str, utils.TokenRegistry]:
 
     for t in token_vals:
         start = sentence.index(t["txt"], col)
-        end = start + len(t["txt"]) - 1
-        col = end + 1
-        tokens.append(
-            utils.Token(
-                t,
-                range=lsp.Range(
-                    start=lsp.Position(line=0, character=start),
-                    end=lsp.Position(line=0, character=end),
-                ),
-            )
-        )
+        token = utils.Token(t, start=lsp.Position(line=0, character=start))
+        col = token.range.end.character + 1
+
+        tokens.append(token)
 
     return sentence, utils.TokenRegistry(tokens)
 
