@@ -110,13 +110,8 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
 
     hover_msg = None
     if token_type in ("LABEL", "TARGET"):
-        # Special case for hovering over the second word of a CHO instruction, which
-        # should be treated as part of the instruction for retrieving documentation.
-        if token_val == "RDA" and str(token.prev_token) == "CHO":
-            token_val = f"CHO {token_val}"
-            hover_msg = ls.documentation.get(token_val, "")
         # Label definitions and targets
-        elif token_val in parser.jmptbl:
+        if token_val in parser.jmptbl:
             hover_definition = parser.jmptbl[token_val.upper()]
             hover_msg = f"(label) {token_val}: Offset[**{hover_definition}**]"
         # Variable and memory definitions
@@ -125,15 +120,6 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
             hover_msg = f"(constant) {token_val}: Literal[**{hover_definition}**]"
     # Opcodes and assignments
     elif token_type in ("ASSEMBLER", "MNEMONIC"):
-        # Special case for hovering over the second word of a CHO instruction, which
-        # should be treated as part of the instruction for retrieving documentation.
-        if token_val in ("SOF", "RDA") and str(token.prev_token) == "CHO":
-            token_val = f"CHO {token_val}"
-        # CHO is a special opcode that treats its first argument as part of the
-        # instruction, for the sake of documentation.
-        elif token_val == "CHO" and token.next_token is not None:
-            token_val = f"CHO {str(token.next_token)}"
-
         hover_msg = ls.documentation.get(token_val, "")
 
     return (

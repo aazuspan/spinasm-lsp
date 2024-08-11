@@ -30,19 +30,63 @@ class Symbol(TypedDict):
 
 
 class Token:
-    """A token and its position in a source file."""
+    """
+    A parsed token.
 
-    def __init__(self, symbol: Symbol, start: lsp.Position) -> None:
-        width = max(len(symbol["stxt"] or "") - 1, 0)
-        end = lsp.Position(line=start.line, character=start.character + width)
+    Parameters
+    ----------
+    symbol : Symbol
+        The symbol parsed by asfv1 representing the token.
+    start : lsp.Position
+        The start position of the token in the source file.
+    end : lsp.Position, optional
+        The end position of the token in the source file. If not provided, the end
+        position is calculated based on the width of the symbol's stxt.
+
+    Attributes
+    ----------
+    symbol : Symbol
+        The symbol parsed by asfv1 representing the token.
+    range : lsp.Range
+        The location range of the token in the source file.
+    next_token : Token | None
+        The token that follows this token in the source file.
+    prev_token : Token | None
+        The token that precedes this token in the source file.
+    """
+
+    def __init__(
+        self, symbol: Symbol, start: lsp.Position, end: lsp.Position | None = None
+    ):
+        if end is None:
+            width = max(len(symbol["stxt"] or "") - 1, 0)
+            end = lsp.Position(line=start.line, character=start.character + width)
 
         self.symbol: Symbol = symbol
         self.range: lsp.Range = lsp.Range(start=start, end=end)
         self.next_token: Token | None = None
         self.prev_token: Token | None = None
 
-    def __str__(self):
+    def __repr__(self):
         return self.symbol["stxt"] or "Empty token"
+
+    def concatenate(self, other: Token) -> Token:
+        """
+        Concatenate by merging with another token, in place.
+
+        In practice, this is used for the multi-word opcodes that are parsed as separate
+        tokens: CHO RDA, CHO RDAL, and CHO SOF.
+        """
+        if any(
+            symbol_type not in ("MNEMONIC", "LABEL")
+            for symbol_type in (self.symbol["type"], other.symbol["type"])
+        ):
+            raise TypeError("Only MNEMONIC and LABEL symbols can be concatenated.")
+
+        self.symbol["txt"] = f"{self.symbol['txt']} {other.symbol['txt']}"
+        self.symbol["stxt"] = f"{self.symbol['stxt']} {other.symbol['stxt']}"
+        self.range.end = other.range.end
+        return self
 
     def _clone(self) -> Token:
         """Return a clone of the token to avoid mutating the original."""
@@ -79,12 +123,12 @@ class TokenRegistry:
 
     def register_token(self, token: Token) -> None:
         """Add a token to the registry."""
-        # TODO: Maybe handle multi-word CHO instructions here, by merging with the next
-        # token? The tricky part is that the next token would still end up getting
-        # registered unless we prevent it... If we end up with overlapping tokens, that
-        # will break `get_token_at_position`. I could check if prev token was CHO when
-        # I register RDAL, SOF, or RDA, and if so register them as one and unregister
-        # the previous?
+        # Handle multi-word CHO instructions by merging the second token with the first
+        # and skipping the second token.
+        if str(self._prev_token) == "CHO" and str(token) in ("RDA", "RDAL", "SOF"):
+            self._prev_token.concatenate(token)  # type: ignore
+            return
+
         if token.range.start.line not in self._tokens_by_line:
             self._tokens_by_line[token.range.start.line] = []
 
@@ -287,3 +331,9 @@ class SPINAsmParser(fv1parse):
         """Parse and return the parser."""
         super().parse()
         return self
+
+
+if __name__ == "__main__":
+    code = r"""cho rda,sin0,sin|reg|compc,0"""
+    parsed = SPINAsmParser(code).parse()
+    print(parsed.token_registry._tokens_by_line[0])

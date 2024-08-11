@@ -83,3 +83,28 @@ def test_get_token_positions():
     all_matches = parser.token_registry.get_matching_tokens("apout")
     assert len(all_matches) == 4
     assert [t.range.start.line for t in all_matches] == [23, 57, 60, 70]
+
+
+def test_concatenate_cho_rdal_tokens():
+    """Test that CHO and RDAL tokens are concatenated correctly into CHO RDAL."""
+    cho_rdal = Token(
+        symbol={"type": "MNEMONIC", "txt": "cho", "stxt": "CHO", "val": None},
+        start=lsp.Position(line=0, character=0),
+    ).concatenate(
+        Token(
+            symbol={"type": "LABEL", "txt": "rdal", "stxt": "RDAL", "val": None},
+            # Put whitespace between CHO and RDAL to test that range is calculated
+            start=lsp.Position(line=0, character=10),
+        )
+    )
+
+    assert cho_rdal.symbol == {
+        "type": "MNEMONIC",
+        "txt": "cho rdal",
+        "stxt": "CHO RDAL",
+        "val": None,
+    }
+
+    assert cho_rdal.range == lsp.Range(
+        start=lsp.Position(line=0, character=0), end=lsp.Position(line=0, character=13)
+    )
