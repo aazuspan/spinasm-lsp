@@ -188,23 +188,18 @@ async def definition(
     document = ls.workspace.get_text_document(params.text_document.uri)
     pos = params.position
 
-    # TODO: Probably switch to token registry. Note that when I do, it might break
-    # definitions for addresses with # and ^, maybe?
-    try:
-        word = document.word_at_position(pos).upper()
-    except IndexError:
+    token = parser.token_registry.get_token_at_position(pos.line, pos.character)
+
+    if str(token) not in parser.definitions:
         return None
 
-    if word in parser.definitions:
-        return lsp.Location(
-            uri=document.uri,
-            range=lsp.Range(
-                start=parser.definitions[word],
-                end=parser.definitions[word],
-            ),
-        )
-
-    return None
+    return lsp.Location(
+        uri=document.uri,
+        range=lsp.Range(
+            start=parser.definitions[str(token)],
+            end=parser.definitions[str(token)],
+        ),
+    )
 
 
 @server.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
