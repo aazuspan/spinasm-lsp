@@ -34,7 +34,7 @@ show-fixes = true
 path = "src/spinasm_lsp/__init__.py"
 
 [tool.ruff.lint]
-select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF",]
+select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF", "ERA"]
 
 [tool.hatch.envs.default]
 dependencies = [ "pre-commit",]
