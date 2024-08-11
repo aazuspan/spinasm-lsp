@@ -186,16 +186,19 @@ async def definition(
     document = ls.workspace.get_text_document(params.text_document.uri)
 
     token = parser.token_registry.get_token_at_position(params.position)
+    if token is None:
+        return None
 
-    if str(token) not in parser.definitions:
+    # Definitions should be checked against the base token name, ignoring address
+    # modifiers.
+    base_token = token.without_address_modifier()
+
+    if str(base_token) not in parser.definitions:
         return None
 
     return lsp.Location(
         uri=document.uri,
-        range=lsp.Range(
-            start=parser.definitions[str(token)],
-            end=parser.definitions[str(token)],
-        ),
+        range=parser.definitions[str(base_token)],
     )
 
 
@@ -210,9 +213,13 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
         ls.info(f"No token to rename at {params.position}.")
         return None
 
+    # Renaming should be checked against the base token name, ignoring address
+    # modifiers.
+    base_token = token.without_address_modifier()
+
     # Only user-defined labels should support renaming
-    if str(token) not in parser.definitions:
-        ls.info(f"Can't rename non-user defined token {token}.")
+    if str(base_token) not in parser.definitions:
+        ls.info(f"Can't rename non-user defined token {base_token}.")
         return None
 
     return lsp.PrepareRenameResult_Type2(default_behavior=True)
@@ -230,8 +237,8 @@ async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
 
     # For renaming purposes, we ignore address modifiers so that e.g. we can rename
     # `Delay` by renaming `Delay#`
-    token = token.without_address_modifier()
-    matching_tokens = parser.token_registry.get_matching_tokens(str(token))
+    base_token = token.without_address_modifier()
+    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
 
     edits = [
         lsp.TextEdit(

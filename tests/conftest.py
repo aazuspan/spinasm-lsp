@@ -54,7 +54,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=23, character=4),
-                end=lsp.Position(line=23, character=4),
+                end=lsp.Position(line=23, character=8),
             ),
         ),
     },
@@ -66,7 +66,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=16, character=4),
-                end=lsp.Position(line=16, character=4),
+                end=lsp.Position(line=16, character=8),
             ),
         ),
     },
@@ -79,7 +79,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=16, character=4),
-                end=lsp.Position(line=16, character=4),
+                end=lsp.Position(line=16, character=8),
             ),
         ),
     },
@@ -91,7 +91,7 @@ ASSIGNMENTS: list[AssignmentDict] = [
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
                 start=lsp.Position(line=41, character=0),
-                end=lsp.Position(line=41, character=0),
+                end=lsp.Position(line=41, character=5),
             ),
         ),
     },
@@ -166,6 +166,7 @@ PREPARE_RENAMES: list[PrepareRenameDict] = [
         "message": None,
     },
 ]
+
 
 RENAMES: list[RenameDict] = [
     {

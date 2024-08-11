@@ -3,15 +3,17 @@ from __future__ import annotations
 from asfv1 import fv1parse
 from lsprotocol import types as lsp
 
-from spinasm_lsp.utils import CallbackDict, Token, TokenRegistry
+from spinasm_lsp.utils import Symbol, Token, TokenRegistry
 
 
 class SPINAsmParser(fv1parse):
     """A modified version of fv1parse optimized for use with LSP."""
 
+    sym: Symbol | None
+
     def __init__(self, source: str):
         self.diagnostics: list[lsp.Diagnostic] = []
-        self.definitions: dict[str, lsp.Position] = {}
+        self.definitions: dict[str, lsp.Range] = {}
         self.col: int = 0
         self.prevcol: int = 0
         self.token_registry = TokenRegistry()
@@ -27,39 +29,6 @@ class SPINAsmParser(fv1parse):
 
         # Keep an unchanged copy of the original source
         self._source: list[str] = self.source.copy()
-
-        # Wrap the dictionaries to record whenever a definition is added
-        self.jmptbl: CallbackDict = CallbackDict(
-            self.jmptbl, callback=self._on_definition
-        )
-        self.symtbl: CallbackDict = CallbackDict(
-            self.symtbl, callback=self._on_definition
-        )
-
-    def _on_definition(self, label: str):
-        """Record the program location when a definition is added."""
-        # Don't record the position of constants that are defined at program
-        # initialization.
-        if self.current_line == -1:
-            return
-
-        # Due to the parsing order, the current line will be correct for labels but
-        # incorrect for assignments, which need to use previous line instead.
-        line = self.current_line if label in self.jmptbl else self.previous_line
-
-        # Try to find the position of the label on the definition line. Remove address
-        # modifiers from the label name, since those are defined implicitly by the
-        # parser rather than in the source.
-        try:
-            col = (
-                self._source[line]
-                .upper()
-                .index(label.replace("#", "").replace("^", ""))
-            )
-        except ValueError:
-            col = 0
-
-        self.definitions[label] = lsp.Position(line, col)
 
     def __mkopcodes__(self):
         """
@@ -134,7 +103,7 @@ class SPINAsmParser(fv1parse):
         return self.prevline - 1
 
     def __next__(self):
-        """Parse the next symbol and update the column."""
+        """Parse the next symbol and update the column and definitions."""
         super().__next__()
         self._update_column()
 
@@ -145,6 +114,19 @@ class SPINAsmParser(fv1parse):
         )
         token = Token(self.sym, range=token_range)
         self.token_registry.register_token(token)
+
+        base_token = token.without_address_modifier()
+        is_user_definable = base_token.symbol["type"] in ("LABEL", "TARGET")
+        is_defined = str(base_token) in self.jmptbl or str(base_token) in self.symtbl
+
+        if (
+            is_user_definable
+            and not is_defined
+            # Labels appear before their target definition, so override when the target
+            # is defined.
+            or base_token.symbol["type"] == "TARGET"
+        ):
+            self.definitions[str(base_token)] = base_token.range
 
     def _update_column(self):
         """Set the current column based on the last parsed symbol."""

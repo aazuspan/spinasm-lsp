@@ -38,19 +38,6 @@ def sentence_token_registry() -> tuple[str, utils.TokenRegistry]:
     return sentence, utils.TokenRegistry(tokens)
 
 
-def test_callback_dict():
-    """Test that a CallbackDict calls its callback function when values are set."""
-    key_store = []
-    items = {
-        "foo": 42,
-        "bar": 0,
-        "baz": 99,
-    }
-    d = utils.CallbackDict(items, callback=lambda k: key_store.append(k))
-    assert d == items
-    assert key_store == ["foo", "bar", "baz"]
-
-
 def test_get_token_from_registry(sentence_token_registry):
     """Test that tokens are correctly retrieved by position from a registry."""
     sentence, reg = sentence_token_registry

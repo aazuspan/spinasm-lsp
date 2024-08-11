@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import bisect
 import copy
-from collections import UserDict
 from dataclasses import dataclass
-from typing import Callable, Literal, TypedDict, cast
+from typing import Literal, TypedDict, cast
 
 import lsprotocol.types as lsp
 
@@ -20,18 +19,6 @@ TokenType = Literal[
     "FLOAT",
     "ARGSEP",
 ]
-
-
-class CallbackDict(UserDict):
-    """A dictionary that fires a callback when an item is set."""
-
-    def __init__(self, dict=None, /, callback: Callable | None = None, **kwargs):
-        self.callback = callback or (lambda key: None)
-        super().__init__(dict, **kwargs)
-
-    def __setitem__(self, key, value):
-        super().__setitem__(key, value)
-        self.callback(key)
 
 
 class Symbol(TypedDict):
