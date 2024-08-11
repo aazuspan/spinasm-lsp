@@ -23,7 +23,7 @@ class HoverDict(TypedDict):
 
     symbol: str
     position: lsp.Position
-    contains: str
+    contains: str | None
 
 
 class PrepareRenameDict(TypedDict):
@@ -113,17 +113,17 @@ HOVERS: list[HoverDict] = [
     {
         "symbol": "endclr",
         "position": lsp.Position(line=37, character=13),
-        "contains": "(label) ENDCLR: Offset[**4**]",
+        "contains": "(label) ENDCLR: Offset[4]",
     },
     {
         "symbol": "mono",
         "position": lsp.Position(line=47, character=5),
-        "contains": "(constant) MONO: Literal[**32**]",
+        "contains": "(constant) MONO: Literal[32]",
     },
     {
         "symbol": "lap2b#",
         "position": lsp.Position(line=73, character=4),
-        "contains": "(constant) LAP2B#: Literal[**9802**]",
+        "contains": "(constant) LAP2B#: Literal[9802]",
     },
     {
         # CHO RDA, hovering over CHO
@@ -136,6 +136,12 @@ HOVERS: list[HoverDict] = [
         "symbol": "cho_RDA",
         "position": lsp.Position(line=85, character=4),
         "contains": "## `CHO RDA N, C, D`",
+    },
+    {
+        # Hovering over an int, which should return no hover info
+        "symbol": "None",
+        "position": lsp.Position(line=8, character=8),
+        "contains": None,
     },
 ]
 

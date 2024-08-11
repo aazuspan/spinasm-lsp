@@ -49,6 +49,7 @@ async def test_definition(assignment: dict, client: LanguageClient):
 
 @pytest.mark.asyncio()
 async def test_completions(client: LanguageClient):
+    """Test that expected completions are shown with details and documentation."""
     patch = PATCH_DIR / "Basic.spn"
 
     results = await client.text_document_completion_async(
@@ -80,6 +81,16 @@ async def test_completions(client: LanguageClient):
 
     for completion in expected_completions:
         assert completion in completions, f"Expected completion {completion} not found"
+
+    # Completions for defined values should show their literal value
+    apout_completion = [item for item in results.items if item.label == "APOUT"][0]
+    assert apout_completion.detail == "(constant) APOUT: Literal[33]"
+    assert apout_completion.documentation is None
+
+    # Completions for opcodes should include their documentation
+    cho_rda_completion = [item for item in results.items if item.label == "CHO RDA"][0]
+    assert cho_rda_completion.detail == "(opcode)"
+    assert "## `CHO RDA N, C, D`" in str(cho_rda_completion.documentation)
 
 
 @pytest.mark.asyncio()
@@ -161,7 +172,11 @@ async def test_hover(hover: dict, client: LanguageClient):
         )
     )
 
-    assert hover["contains"] in result.contents.value
+    if hover["contains"] is None:
+        assert result is None, "Expected no hover result"
+    else:
+        msg = f"Hover does not contain `{hover['contains']}`"
+        assert hover["contains"] in result.contents.value, msg
 
 
 @pytest.mark.parametrize("prepare", PREPARE_RENAMES, ids=lambda x: x["symbol"])

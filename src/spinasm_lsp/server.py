@@ -92,6 +92,19 @@ def did_close(
     ls.publish_diagnostics(params.text_document.uri, [])
 
 
+def _get_defined_hover(stxt: str, parser: SPINAsmParser) -> str:
+    """Get a hover message with the value of a defined variable or label."""
+    # Check jmptbl first since labels are also defined in symtbl
+    if stxt in parser.jmptbl:
+        hover_definition = parser.jmptbl[stxt]
+        return f"(label) {stxt}: Offset[{hover_definition}]"
+    if stxt in parser.symtbl:
+        hover_definition = parser.symtbl[stxt]
+        return f"(constant) {stxt}: Literal[{hover_definition}]"
+
+    return ""
+
+
 @server.feature(lsp.TEXT_DOCUMENT_HOVER)
 async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | None:
     """Retrieve documentation from symbols on hover."""
@@ -100,22 +113,12 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
-    token_val = token.symbol["stxt"]
-    token_type = token.symbol["type"]
-
     hover_msg = None
-    if token_type in ("LABEL", "TARGET"):
-        # Label definitions and targets
-        if token_val in parser.jmptbl:
-            hover_definition = parser.jmptbl[token_val.upper()]
-            hover_msg = f"(label) {token_val}: Offset[**{hover_definition}**]"
-        # Variable and memory definitions
-        elif token_val in parser.symtbl:
-            hover_definition = parser.symtbl[token_val.upper()]
-            hover_msg = f"(constant) {token_val}: Literal[**{hover_definition}**]"
-    # Opcodes and assignments
-    elif token_type in ("ASSEMBLER", "MNEMONIC"):
-        hover_msg = ls.documentation.get(token_val, "")
+    if token.symbol["type"] in ("LABEL", "TARGET"):
+        hover_msg = _get_defined_hover(str(token), parser=parser)
+
+    elif token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
+        hover_msg = ls.documentation.get(str(token), "")
 
     return (
         None
@@ -133,36 +136,39 @@ async def completions(
     """Returns completion items."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    opcodes = [k.upper() for k in ls.documentation]
-    symbols = list(parser.symtbl.keys())
-    labels = list(parser.jmptbl.keys())
-    mem = list(parser.mem.keys())
-
-    opcode_items = [
+    symbol_completions = [
         lsp.CompletionItem(
-            label=k,
+            label=symbol,
+            kind=lsp.CompletionItemKind.Constant,
+            detail=_get_defined_hover(symbol, parser=parser),
+        )
+        for symbol in parser.symtbl
+    ]
+
+    label_completions = [
+        lsp.CompletionItem(
+            label=label,
+            kind=lsp.CompletionItemKind.Reference,
+            detail=_get_defined_hover(label, parser=parser),
+        )
+        for label in parser.jmptbl
+    ]
+
+    opcode_completions = [
+        lsp.CompletionItem(
+            label=opcode,
             kind=lsp.CompletionItemKind.Function,
+            detail="(opcode)",
             documentation=lsp.MarkupContent(
-                kind=lsp.MarkupKind.Markdown, value=ls.documentation[k.upper()]
+                kind=lsp.MarkupKind.Markdown, value=ls.documentation[opcode]
             ),
         )
-        for k in opcodes
-    ]
-    # TODO: Set details for all the completions below using the same info as the hover.
-    symbol_items = [
-        lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Constant)
-        for k in symbols
-    ]
-    label_items = [
-        lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Reference)
-        for k in labels
-    ]
-    mem_items = [
-        lsp.CompletionItem(label=k, kind=lsp.CompletionItemKind.Variable) for k in mem
+        for opcode in [k.upper() for k in ls.documentation]
     ]
 
     return lsp.CompletionList(
-        is_incomplete=False, items=opcode_items + mem_items + symbol_items + label_items
+        is_incomplete=False,
+        items=symbol_completions + label_completions + opcode_completions,
     )
 
 
