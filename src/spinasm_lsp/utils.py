@@ -58,6 +58,23 @@ class Token:
     def __repr__(self):
         return str(self)
 
+    def clone(self) -> Token:
+        """Return a clone of the token to avoid mutating the original."""
+        return copy.deepcopy(self)
+
+    def without_address_modifier(self) -> Token:
+        """
+        Create a clone of the token with the address modifier removed.
+        """
+        if not str(self).endswith("#") and not str(self).endswith("^"):
+            return self
+
+        token = self.clone()
+        token.value["stxt"] = cast(str, token.value["stxt"])[:-1]
+        token.range.end.character -= 1
+
+        return token
+
 
 class TokenRegistry:
     """A registry of tokens and their positions in a source file."""
@@ -66,10 +83,10 @@ class TokenRegistry:
         self._prev_token: Token | None = None
 
         """A dictionary mapping program lines to all Tokens on that line."""
-        self.lines: dict[int, list[Token]] = {}
+        self.tokens_by_line: dict[int, list[Token]] = {}
 
         """A dictionary mapping token names to all matching Tokens in the program."""
-        self.directory: dict[str, list[Token]] = {}
+        self.tokens_by_name: dict[str, list[Token]] = {}
 
         for token in tokens or []:
             self.register_token(token)
@@ -82,8 +99,8 @@ class TokenRegistry:
         # will break `get_token_at_position`. I could check if prev token was CHO when
         # I register RDAL, SOF, or RDA, and if so register them as one and unregister
         # the previous?
-        if token.range.start.line not in self.lines:
-            self.lines[token.range.start.line] = []
+        if token.range.start.line not in self.tokens_by_line:
+            self.tokens_by_line[token.range.start.line] = []
 
         # Record the previous and next token for each token to allow traversing
         if self._prev_token:
@@ -91,35 +108,32 @@ class TokenRegistry:
             self._prev_token.next_token = token
 
         # Store the token on its line
-        self.lines[token.range.start.line].append(token)
+        self.tokens_by_line[token.range.start.line].append(token)
         self._prev_token = token
 
-        # Store user-defined tokens in the directory. Other token types could be stored,
+        # Store user-defined tokens together by name. Other token types could be stored,
         # but currently there's no use case for retrieving their positions.
         if token.value["type"] in ("LABEL", "TARGET"):
-            # Remove address modifiers when storing tokens in the directory. This allows
-            # for renaming modified tokens along with the original.
-            if str(token).endswith("#") or str(token).endswith("^"):
-                token = copy.deepcopy(token)
-                token.value["stxt"] = cast(str, token.value["stxt"])[:-1]
-                # We need to truncate the range to exclude the modifier, or else it will
-                # be removed during renaming.
-                token.range.end.character -= 1
+            # Tokens are stored by name without address modifiers, so that e.g. Delay#
+            # and Delay can be retrieved with the same query. This allows for renaming
+            # all instances of a memory token.
+            token = token.without_address_modifier()
 
-            if str(token) not in self.directory:
-                self.directory[str(token)] = []
-            self.directory[str(token)].append(token)
+            if str(token) not in self.tokens_by_name:
+                self.tokens_by_name[str(token)] = []
+
+            self.tokens_by_name[str(token)].append(token)
 
     def get_matching_tokens(self, token_name: str) -> list[Token]:
         """Retrieve all tokens with a given name in the program."""
-        return self.directory.get(token_name.upper(), [])
+        return self.tokens_by_name.get(token_name.upper(), [])
 
     def get_token_at_position(self, position: lsp.Position) -> Token | None:
-        """Retrieve the token at the given line and column index."""
-        if position.line not in self.lines:
+        """Retrieve the token at the given position."""
+        if position.line not in self.tokens_by_line:
             return None
 
-        line_tokens = self.lines[position.line]
+        line_tokens = self.tokens_by_line[position.line]
         token_starts = [t.range.start.character for t in line_tokens]
         token_ends = [t.range.end.character for t in line_tokens]
 
