@@ -5,11 +5,15 @@ build-backend = "hatchling.build"
 [project]
 name = "spinasm-lsp"
 dynamic = [ "version",]
-description = "A Language Server Protocol implementation for SpinASM"
+description = "A Language Server Protocol implementation for SPINAsm"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = []
-dependencies = [ "pygls", "lsprotocol", "lark" ]
+dependencies = [ 
+    "pygls", 
+    "lsprotocol", 
+    "asfv1==1.2.7",
+]
 [[project.authors]]
 name = "Aaron Zuspan"
 
@@ -18,6 +22,9 @@ file = "LICENSE"
 
 [project.urls]
 Homepage = "https://github.com/aazuspan/spinasm-lsp"
+
+[project.scripts]
+spinasm-lsp = "spinasm_lsp.server:start"
 
 [tool.ruff]
 fix = true
@@ -33,7 +40,7 @@ select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF",]
 dependencies = [ "pre-commit",]
 
 [tool.hatch.envs.test]
-dependencies = [ "pytest", "pytest-cov", "mistletoe" ]
+dependencies = [ "pytest", "pytest-cov", "mistletoe", "pytest-lsp" ]
 
 [tool.hatch.envs.test_matrix]
 template = "test"

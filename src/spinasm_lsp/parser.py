@@ -1,213 +1,345 @@
+"""The SPINAsm language parser."""
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Literal
+import bisect
+import copy
+from typing import Literal, TypedDict
 
-from lark import Lark, Transformer, v_args
-from lark.exceptions import VisitError
-
-
-class ParsingError(Exception): ...
+import lsprotocol.types as lsp
+from asfv1 import fv1parse
 
 
-@dataclass
-class Expression:
-    expression: list[int | float | str]
+class Symbol(TypedDict):
+    """
+    The token specification used by asfv1.
 
-    def __eq__(self, other):
-        # If the expression has a single value, match against that
-        if len(self.expression) == 1:
-            return self.expression[0] == other
+    Note that we exclude EOF tokens, as they are ignored by the LSP.
+    """
 
-        # Otherwise, match the expression as a concated string of values and operators
-        return " ".join(map(str, self.expression)) == other
-
-
-@dataclass
-class Instruction:
-    opcode: str
-    args: list[Expression]
-
-
-@dataclass
-class Assignment:
-    type: Literal["equ", "mem"]
-    name: str
-    value: Expression
+    type: Literal[
+        "ASSEMBLER",
+        "INTEGER",
+        "LABEL",
+        "TARGET",
+        "MNEMONIC",
+        "OPERATOR",
+        "FLOAT",
+        "ARGSEP",
+    ]
+    txt: str
+    stxt: str
+    val: int | float | None
 
 
-@dataclass
-class Label:
-    name: str
+class Token:
+    """
+    A parsed token.
 
+    Parameters
+    ----------
+    symbol : Symbol
+        The symbol parsed by asfv1 representing the token.
+    start : lsp.Position
+        The start position of the token in the source file.
+    end : lsp.Position, optional
+        The end position of the token in the source file. If not provided, the end
+        position is calculated based on the width of the symbol's stxt.
 
-@v_args(inline=True)
-class FV1ProgramTransformer(Transformer):
-    local_vars: dict[str, float]
-    memory: dict[str, float]
+    Attributes
+    ----------
+    symbol : Symbol
+        The symbol parsed by asfv1 representing the token.
+    range : lsp.Range
+        The location range of the token in the source file.
+    next_token : Token | None
+        The token that follows this token in the source file.
+    prev_token : Token | None
+        The token that precedes this token in the source file.
+    """
 
     def __init__(
-        self,
-        local_vars: dict[str, float],
-        memory: dict[str, float],
-        visit_tokens: bool = True,
-    ) -> None:
-        self.local_vars = local_vars
-        self.memory = memory
-        super().__init__(visit_tokens=visit_tokens)
+        self, symbol: Symbol, start: lsp.Position, end: lsp.Position | None = None
+    ):
+        if end is None:
+            width = len(symbol["stxt"])
+            end = lsp.Position(line=start.line, character=start.character + width - 1)
 
-    def instruction(self, opcode: str, args: list | None, _) -> Instruction:
-        return Instruction(opcode, args or [])
+        self.symbol: Symbol = symbol
+        self.range: lsp.Range = lsp.Range(start=start, end=end)
+        self.next_token: Token | None = None
+        self.prev_token: Token | None = None
 
-    def assignment(self, mapping, _):
-        return mapping
+    def __repr__(self) -> str:
+        return self.symbol["stxt"]
 
-    def label(self, name) -> Label:
-        return Label(name)
+    def concatenate(self, other: Token) -> Token:
+        """
+        Concatenate by merging with another token, in place.
 
-    def equ(self, name: str, value) -> Assignment:
-        self.local_vars[name] = value
-        return Assignment(type="equ", name=name, value=value)
+        In practice, this is used for the multi-word opcodes that are parsed as separate
+        tokens: CHO RDA, CHO RDAL, and CHO SOF.
+        """
+        if any(
+            symbol_type not in ("MNEMONIC", "LABEL")
+            for symbol_type in (self.symbol["type"], other.symbol["type"])
+        ):
+            raise TypeError("Only MNEMONIC and LABEL symbols can be concatenated.")
 
-    def mem(self, name: str, value) -> Assignment:
-        self.memory[name] = value
-        return Assignment(type="mem", name=name, value=value)
+        self.symbol["txt"] += f" {other.symbol['txt']}"
+        self.symbol["stxt"] += f" {other.symbol['stxt']}"
+        self.range.end = other.range.end
+        return self
 
-    def value(self, negative: str | None, value: float) -> float:
-        """A negated value."""
-        if negative:
-            value *= -1
+    def _clone(self) -> Token:
+        """Return a clone of the token to avoid mutating the original."""
+        return copy.deepcopy(self)
 
-        return value
+    def without_address_modifier(self) -> Token:
+        """
+        Create a clone of the token with the address modifier removed.
+        """
+        if not str(self).endswith("#") and not str(self).endswith("^"):
+            return self
 
-    def DEC_NUM(self, token) -> int | float:
-        if "." in token:
-            return float(token)
-        return int(token)
+        token = self._clone()
+        token.symbol["stxt"] = token.symbol["stxt"][:-1]
+        token.range.end.character -= 1
 
-    def HEX_NUM(self, token) -> int:
-        # Hex numbers can be written with either $ or 0x prefix
-        token = token.replace("$", "0x")
-        return int(token, base=16)
-
-    def BIT_VECTOR(self, token) -> int:
-        # Remove the % prefix and optional underscores
-        return int(token[1:].replace("_", ""), base=2)
-
-    def IDENT(self, token) -> str:
-        # Identifiers are case-insensitive and are stored in uppercase for consistency
-        # with the FV-1 assembler.
-        return token.upper()
-
-    @v_args(inline=False)
-    def args(self, tokens):
-        return tokens
-
-    @v_args(inline=False)
-    def expr(self, tokens):
-        return Expression(tokens)
-
-    @v_args(inline=False)
-    def program(self, tokens):
-        return list(tokens)
+        return token
 
 
-class FV1Program:
-    constants = {
-        "SIN0_RATE": 0x00,
-        "SIN0_RANGE": 0x01,
-        "SIN1_RATE": 0x02,
-        "SIN1_RANGE": 0x03,
-        "RMP0_RATE": 0x04,
-        "RMP0_RANGE": 0x05,
-        "RMP1_RATE": 0x06,
-        "RMP1_RANGE": 0x07,
-        "POT0": 0x10,
-        "POT1": 0x11,
-        "POT2": 0x12,
-        "ADCL": 0x14,
-        "ADCR": 0x15,
-        "DACL": 0x16,
-        "DACR": 0x17,
-        "ADDR_PTR": 0x18,
-        "REG0": 0x20,
-        "REG1": 0x21,
-        "REG2": 0x22,
-        "REG3": 0x23,
-        "REG4": 0x24,
-        "REG5": 0x25,
-        "REG6": 0x26,
-        "REG7": 0x27,
-        "REG8": 0x28,
-        "REG9": 0x29,
-        "REG10": 0x2A,
-        "REG11": 0x2B,
-        "REG12": 0x2C,
-        "REG13": 0x2D,
-        "REG14": 0x2E,
-        "REG15": 0x2F,
-        "REG16": 0x30,
-        "REG17": 0x31,
-        "REG18": 0x32,
-        "REG19": 0x33,
-        "REG20": 0x34,
-        "REG21": 0x35,
-        "REG22": 0x36,
-        "REG23": 0x37,
-        "REG24": 0x38,
-        "REG25": 0x39,
-        "REG26": 0x3A,
-        "REG27": 0x3B,
-        "REG28": 0x3C,
-        "REG29": 0x3D,
-        "REG30": 0x3E,
-        "REG31": 0x3F,
-        "SIN0": 0x00,
-        "SIN1": 0x01,
-        "RMP0": 0x02,
-        "RMP1": 0x03,
-        "RDA": 0x00,
-        "SOF": 0x02,
-        "RDAL": 0x03,
-        "SIN": 0x00,
-        "COS": 0x01,
-        "REG": 0x02,
-        "COMPC": 0x04,
-        "COMPA": 0x08,
-        "RPTR2": 0x10,
-        "NA": 0x20,
-        "RUN": 0x10,
-        "ZRC": 0x08,
-        "ZRO": 0x04,
-        "GEZ": 0x02,
-        "NEG": 0x01,
-    }
-    local_vars: dict[str, float] = {**constants}
-    memory: dict[str, float] = {}
+class TokenRegistry:
+    """A registry of tokens and their positions in a source file."""
 
-    def __init__(self, code: str):
-        self.transformer = FV1ProgramTransformer(
-            local_vars=self.local_vars, memory=self.memory
+    def __init__(self, tokens: list[Token] | None = None) -> None:
+        self._prev_token: Token | None = None
+
+        """A dictionary mapping program lines to all Tokens on that line."""
+        self._tokens_by_line: dict[int, list[Token]] = {}
+
+        """A dictionary mapping token names to all matching Tokens in the program."""
+        self._tokens_by_name: dict[str, list[Token]] = {}
+
+        for token in tokens or []:
+            self.register_token(token)
+
+    def register_token(self, token: Token) -> None:
+        """Add a token to the registry."""
+        # Handle multi-word CHO instructions by merging the second token with the first
+        # and skipping the second token.
+        if str(self._prev_token) == "CHO" and str(token) in ("RDA", "RDAL", "SOF"):
+            self._prev_token.concatenate(token)  # type: ignore
+            return
+
+        if token.range.start.line not in self._tokens_by_line:
+            self._tokens_by_line[token.range.start.line] = []
+
+        # Record the previous and next token for each token to allow traversing
+        if self._prev_token:
+            token.prev_token = self._prev_token
+            self._prev_token.next_token = token
+
+        # Store the token on its line
+        self._tokens_by_line[token.range.start.line].append(token)
+        self._prev_token = token
+
+        # Store user-defined tokens together by name. Other token types could be stored,
+        # but currently there's no use case for retrieving their positions.
+        if token.symbol["type"] in ("LABEL", "TARGET"):
+            # Tokens are stored by name without address modifiers, so that e.g. Delay#
+            # and Delay can be retrieved with the same query. This allows for renaming
+            # all instances of a memory token.
+            token = token.without_address_modifier()
+
+            if str(token) not in self._tokens_by_name:
+                self._tokens_by_name[str(token)] = []
+
+            self._tokens_by_name[str(token)].append(token)
+
+    def get_matching_tokens(self, token_name: str) -> list[Token]:
+        """Retrieve all tokens with a given name in the program."""
+        return self._tokens_by_name.get(token_name.upper(), [])
+
+    def get_token_at_position(self, position: lsp.Position) -> Token | None:
+        """Retrieve the token at the given position."""
+        if position.line not in self._tokens_by_line:
+            return None
+
+        line_tokens = self._tokens_by_line[position.line]
+        token_starts = [t.range.start.character for t in line_tokens]
+        token_ends = [t.range.end.character for t in line_tokens]
+
+        idx = bisect.bisect_left(token_starts, position.character)
+
+        # The index returned by bisect_left points to the start value >= character. This
+        # will either be the first character of the token or the start of the next
+        # token. First check if we're out of bounds, then shift left unless we're at the
+        # first character of the token.
+        if idx == len(line_tokens) or token_starts[idx] != position.character:
+            idx -= 1
+
+        # If the col falls after the end of the token, we're not inside a token.
+        if position.character > token_ends[idx]:
+            return None
+
+        return line_tokens[idx]
+
+
+class SPINAsmParser(fv1parse):
+    """A modified version of fv1parse optimized for use with LSP."""
+
+    sym: Symbol | None
+
+    def __init__(self, source: str):
+        self.diagnostics: list[lsp.Diagnostic] = []
+        self.definitions: dict[str, lsp.Range] = {}
+        self.current_character: int = 0
+        self.previous_character: int = 0
+        self.token_registry = TokenRegistry()
+
+        super().__init__(
+            source=source,
+            clamp=True,
+            spinreals=False,
+            # Ignore the callbacks in favor of overriding their callers
+            wfunc=lambda *args, **kwargs: None,
+            efunc=lambda *args, **kwargs: None,
         )
 
-        self.parser = Lark.open_from_package(
-            package="spinasm_lsp",
-            grammar_path="spinasm.lark",
-            start="program",
-            parser="lalr",
-            strict=False,
-            transformer=self.transformer,
+        # Keep an unchanged copy of the original source
+        self._source: list[str] = self.source.copy()
+
+    def __mkopcodes__(self):
+        """
+        No-op.
+
+        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
+        """
+
+    def _record_diagnostic(
+        self, msg: str, line: int, character: int, severity: lsp.DiagnosticSeverity
+    ):
+        """Record a diagnostic message for the LSP."""
+        self.diagnostics.append(
+            lsp.Diagnostic(
+                range=lsp.Range(
+                    start=lsp.Position(line, character=character),
+                    end=lsp.Position(line, character=character),
+                ),
+                message=msg,
+                severity=severity,
+                source="SPINAsm",
+            )
         )
 
-        # Make sure the code ends with a newline to properly parse the last line
-        if not code.endswith("\n"):
-            code += "\n"
+    def parseerror(self, msg: str, line: int | None = None):
+        """Override to record parsing errors as LSP diagnostics."""
+        if line is None:
+            line = self.prevline
 
+        # Offset the line from the parser's 1-indexed line to the 0-indexed line
+        self._record_diagnostic(
+            msg,
+            line=line - 1,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Error,
+        )
+
+    def scanerror(self, msg: str):
+        """Override to record scanning errors as LSP diagnostics."""
+        self._record_diagnostic(
+            msg,
+            line=self.current_line,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Error,
+        )
+
+    def parsewarn(self, msg: str, line: int | None = None):
+        """Override to record parsing warnings as LSP diagnostics."""
+        if line is None:
+            line = self.prevline
+
+        # Offset the line from the parser's 1-indexed line to the 0-indexed line
+        self._record_diagnostic(
+            msg,
+            line=line - 1,
+            character=self.current_character,
+            severity=lsp.DiagnosticSeverity.Warning,
+        )
+
+    @property
+    def sline(self):
+        return self._sline
+
+    @sline.setter
+    def sline(self, value):
+        """Update the current line and reset the column."""
+        self._sline = value
+
+        # Reset the column to 0 when we move to a new line
+        self.previous_character = self.current_character
+        self.current_character = 0
+
+    @property
+    def current_line(self):
+        """Get the zero-indexed current line."""
+        return self.sline - 1
+
+    @property
+    def previous_line(self):
+        """Get the zero-indexed previous line."""
+        return self.prevline - 1
+
+    def __next__(self):
+        """Parse the next symbol and update the column and definitions."""
+        super().__next__()
+        if self.sym["type"] == "EOF":
+            return
+
+        self._update_column()
+
+        token_start = lsp.Position(
+            line=self.current_line, character=self.current_character
+        )
+
+        token = Token(self.sym, start=token_start)
+        self.token_registry.register_token(token)
+
+        base_token = token.without_address_modifier()
+        is_user_definable = base_token.symbol["type"] in ("LABEL", "TARGET")
+        is_defined = str(base_token) in self.jmptbl or str(base_token) in self.symtbl
+
+        if (
+            is_user_definable
+            and not is_defined
+            # Labels appear before their target definition, so override when the target
+            # is defined.
+            or base_token.symbol["type"] == "TARGET"
+        ):
+            self.definitions[str(base_token)] = base_token.range
+
+    def _update_column(self):
+        """Set the current column based on the last parsed symbol."""
+        current_line_txt = self._source[self.current_line]
+        current_symbol = self.sym.get("txt", None) or ""
+
+        self.previous_character = self.current_character
         try:
-            self.statements = self.parser.parse(code)
-        except VisitError as e:
-            # Unwrap errors thrown by FV1ProgramTransformer
-            if wrapped_err := e.__context__:
-                raise wrapped_err from None
+            # Start at the current column to skip previous duplicates of the symbol
+            self.current_character = current_line_txt.index(
+                current_symbol, self.current_character
+            )
+        except ValueError:
+            self.current_character = 0
 
-            raise e
+    def parse(self) -> SPINAsmParser:
+        """Parse and return the parser."""
+        super().parse()
+        return self
+
+
+if __name__ == "__main__":
+    code = r"""cho rda,sin0,sin|reg|compc,0"""
+    parsed = SPINAsmParser(code).parse()
+    print(parsed.token_registry._tokens_by_line[0])

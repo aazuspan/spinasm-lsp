@@ -1,5 +1,7 @@
 """Test the formatting of the documentation files."""
 
+from __future__ import annotations
+
 import json
 
 import mistletoe
@@ -8,7 +10,8 @@ import pytest
 
 from spinasm_lsp.documentation import DocMap
 
-INSTRUCTIONS = DocMap("instructions")
+INSTRUCTIONS = DocMap(folders=["instructions"])
+ASSEMBLERS = DocMap(folders=["assemblers"])
 VALID_ENTRY_FORMATS = (
     "Decimal (0 - 63)",
     "Decimal (1 - 63)",
@@ -40,6 +43,47 @@ VALID_ENTRY_FORMATS = (
     "LFO select: SIN0,SIN1,RMP0,RMP1",
     "LFO select: SIN0,COS0,SIN1,COS1,RMP0,RMP1",
 )
+
+
+def find_content(d: dict):
+    """Eagerly grab the first content from the dictionary or its children."""
+    if "content" in d:
+        return d["content"]
+
+    if "children" in d:
+        return find_content(d["children"][0])
+
+    raise ValueError("No content found.")
+
+
+def validate_copyright(footnote: dict) -> None:
+    """Validate a Markdown footnote contains a correctly formatted copyright."""
+    copyright = (
+        "Adapted from Spin Semiconductor SPINAsm & FV-1 Instruction Set reference "
+        "manual. Copyright 2008 by Spin Semiconductor."
+    )
+    assert footnote["type"] == "Emphasis", "Copyright is missing or incorrect."
+    assert find_content(footnote) == copyright, "Copyright does not match."
+
+
+def validate_title(title: dict, expected_name: str | None = None) -> None:
+    """
+    Validate a Markdown title is correctly formatted and optionally matches an expected
+    name.
+    """
+    if expected_name is not None:
+        assert find_content(title) == expected_name, "Title should match name"
+
+    assert title["level"] == 2, "Title heading should be level 2"
+    assert title["children"][0]["type"] == "InlineCode"
+    assert title["children"][0]["children"][0]["type"] == "RawText"
+
+
+def validate_example(example: dict) -> None:
+    """Validate a Markdown example contains an assembly code block."""
+    assert example["type"] == "CodeFence"
+    assert example["language"] == "assembly", "Language should be 'assembly'"
+    assert len(example["children"]) == 1
 
 
 def test_instructions_are_unique():
@@ -94,15 +138,36 @@ def test_instructions_are_unique():
         assert not duplicate_keys, f"Example duplicated between {duplicate_keys}"
 
 
-def find_content(d: dict):
-    """Eagerly grab the first content from the dictionary or it's children."""
-    if "content" in d:
-        return d["content"]
+@pytest.mark.parametrize("assembler", ASSEMBLERS.items(), ids=lambda x: x[0])
+def test_assembler_formatting(assembler):
+    """Test that all assembler markdown files follow the correct format."""
+    assembler_name, content = assembler
 
-    if "children" in d:
-        return find_content(d["children"][0])
+    ast = json.loads(
+        mistletoe.markdown(content, renderer=mistletoe.ast_renderer.ASTRenderer)
+    )
+    children = ast["children"]
+    headings = [child for child in children if child["type"] == "Heading"]
+    title = headings[0]
 
-    raise ValueError("No content found.")
+    # Check title heading
+    validate_title(title, expected_name=assembler_name.upper())
+    assert children[1]["type"] == "ThematicBreak", "Missing break after title"
+
+    # Check all headings are the correct level
+    for heading in headings[1:]:
+        name = find_content(heading)
+        assert heading["level"] == 3, f"Subheading {name} should be level 3"
+
+    # Check the Example heading exists and contains a code block
+    example = [h for h in headings if find_content(h) == "Example"]
+    assert len(example) == 1
+    example_content = children[children.index(example[0]) + 1]
+    validate_example(example_content)
+
+    # Check copyright footnote
+    footnote = children[-1]["children"][0]
+    validate_copyright(footnote)
 
 
 @pytest.mark.parametrize("instruction", INSTRUCTIONS.items(), ids=lambda x: x[0])
@@ -117,10 +182,9 @@ def test_instruction_formatting(instruction):
     headings = [child for child in children if child["type"] == "Heading"]
     title = headings[0]
 
-    # Check title heading
-    assert title["level"] == 2, "Title heading should be level 2"
-    assert title["children"][0]["type"] == "InlineCode"
-    assert title["children"][0]["children"][0]["type"] == "RawText"
+    # Check title heading. The heading title won't match the instruction name because
+    # it also includes args.
+    validate_title(title, expected_name=None)
     assert children[1]["type"] == "ThematicBreak", "Missing break after title"
 
     # Parse the parameters
@@ -193,15 +257,8 @@ def test_instruction_formatting(instruction):
 
     # Check example code block
     example_content = children[children.index(example) + 1]
-    assert example_content["type"] == "CodeFence"
-    assert example_content["language"] == "assembly", "Language should be 'assembly'"
-    assert len(example_content["children"]) == 1
+    validate_example(example_content)
 
     # Check copyright footnote
     footnote = children[-1]["children"][0]
-    copyright = (
-        "Adapted from Spin Semiconductor SPINAsm & FV-1 Instruction Set reference "
-        "manual. Copyright 2008 by Spin Semiconductor."
-    )
-    assert footnote["type"] == "Emphasis", "Copyright is missing or incorrect."
-    assert find_content(footnote) == copyright, "Copyright does not match."
+    validate_copyright(footnote)
