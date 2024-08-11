@@ -125,6 +125,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         if not hover_msg
         else lsp.Hover(
             contents=lsp.MarkupContent(kind=lsp.MarkupKind.Markdown, value=hover_msg),
+            range=token.range,
         )
     )
 
