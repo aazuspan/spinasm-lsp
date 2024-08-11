@@ -337,9 +337,3 @@ class SPINAsmParser(fv1parse):
         """Parse and return the parser."""
         super().parse()
         return self
-
-
-if __name__ == "__main__":
-    code = r"""cho rda,sin0,sin|reg|compc,0"""
-    parsed = SPINAsmParser(code).parse()
-    print(parsed.token_registry._tokens_by_line[0])
