@@ -58,7 +58,7 @@ class Token:
     def __repr__(self):
         return str(self)
 
-    def clone(self) -> Token:
+    def _clone(self) -> Token:
         """Return a clone of the token to avoid mutating the original."""
         return copy.deepcopy(self)
 
@@ -69,7 +69,7 @@ class Token:
         if not str(self).endswith("#") and not str(self).endswith("^"):
             return self
 
-        token = self.clone()
+        token = self._clone()
         token.symbol["stxt"] = cast(str, token.symbol["stxt"])[:-1]
         token.range.end.character -= 1
 
@@ -83,10 +83,10 @@ class TokenRegistry:
         self._prev_token: Token | None = None
 
         """A dictionary mapping program lines to all Tokens on that line."""
-        self.tokens_by_line: dict[int, list[Token]] = {}
+        self._tokens_by_line: dict[int, list[Token]] = {}
 
         """A dictionary mapping token names to all matching Tokens in the program."""
-        self.tokens_by_name: dict[str, list[Token]] = {}
+        self._tokens_by_name: dict[str, list[Token]] = {}
 
         for token in tokens or []:
             self.register_token(token)
@@ -99,8 +99,8 @@ class TokenRegistry:
         # will break `get_token_at_position`. I could check if prev token was CHO when
         # I register RDAL, SOF, or RDA, and if so register them as one and unregister
         # the previous?
-        if token.range.start.line not in self.tokens_by_line:
-            self.tokens_by_line[token.range.start.line] = []
+        if token.range.start.line not in self._tokens_by_line:
+            self._tokens_by_line[token.range.start.line] = []
 
         # Record the previous and next token for each token to allow traversing
         if self._prev_token:
@@ -108,7 +108,7 @@ class TokenRegistry:
             self._prev_token.next_token = token
 
         # Store the token on its line
-        self.tokens_by_line[token.range.start.line].append(token)
+        self._tokens_by_line[token.range.start.line].append(token)
         self._prev_token = token
 
         # Store user-defined tokens together by name. Other token types could be stored,
@@ -119,21 +119,21 @@ class TokenRegistry:
             # all instances of a memory token.
             token = token.without_address_modifier()
 
-            if str(token) not in self.tokens_by_name:
-                self.tokens_by_name[str(token)] = []
+            if str(token) not in self._tokens_by_name:
+                self._tokens_by_name[str(token)] = []
 
-            self.tokens_by_name[str(token)].append(token)
+            self._tokens_by_name[str(token)].append(token)
 
     def get_matching_tokens(self, token_name: str) -> list[Token]:
         """Retrieve all tokens with a given name in the program."""
-        return self.tokens_by_name.get(token_name.upper(), [])
+        return self._tokens_by_name.get(token_name.upper(), [])
 
     def get_token_at_position(self, position: lsp.Position) -> Token | None:
         """Retrieve the token at the given position."""
-        if position.line not in self.tokens_by_line:
+        if position.line not in self._tokens_by_line:
             return None
 
-        line_tokens = self.tokens_by_line[position.line]
+        line_tokens = self._tokens_by_line[position.line]
         token_starts = [t.range.start.character for t in line_tokens]
         token_ends = [t.range.end.character for t in line_tokens]
 
