@@ -228,6 +228,9 @@ async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
     if token is None:
         return None
 
+    # For renaming purposes, we ignore address modifiers so that e.g. we can rename
+    # `Delay` by renaming `Delay#`
+    token = token.without_address_modifier()
     matching_tokens = parser.token_registry.get_matching_tokens(str(token))
 
     edits = [

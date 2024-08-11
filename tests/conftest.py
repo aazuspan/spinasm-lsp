@@ -177,7 +177,7 @@ RENAMES: list[RenameDict] = [
                 range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 7)),
                 new_text="FOO",
             ),
-            # This symbol is ap1#, and should be matched when renaming ap1
+            # This symbol is `ap1#``, and should be matched when renaming `ap1`
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(51, 4), end=lsp.Position(51, 7)),
                 new_text="FOO",
@@ -200,6 +200,26 @@ RENAMES: list[RenameDict] = [
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(41, 0), end=lsp.Position(41, 6)),
                 new_text="END",
+            ),
+        ],
+    },
+    {
+        "symbol": "lap1a#",
+        "rename_to": "FOO",
+        "position": lsp.Position(line=61, character=4),
+        "changes": [
+            # Renaming `lap1a#` should also rename `lap1a`
+            lsp.TextEdit(
+                range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 9)),
+                new_text="FOO",
+            ),
+            lsp.TextEdit(
+                range=lsp.Range(start=lsp.Position(61, 4), end=lsp.Position(61, 9)),
+                new_text="FOO",
+            ),
+            lsp.TextEdit(
+                range=lsp.Range(start=lsp.Position(62, 5), end=lsp.Position(62, 10)),
+                new_text="FOO",
             ),
         ],
     },
