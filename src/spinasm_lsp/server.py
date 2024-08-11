@@ -97,8 +97,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     """Retrieve documentation from symbols on hover."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    token = parser.token_registry.get_token_at_position(params.position)
-    if token is None:
+    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
     token_val = token.symbol["stxt"]
@@ -176,8 +175,7 @@ async def definition(
 
     document = ls.workspace.get_text_document(params.text_document.uri)
 
-    token = parser.token_registry.get_token_at_position(params.position)
-    if token is None:
+    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
     # Definitions should be checked against the base token name, ignoring address
@@ -199,13 +197,10 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
     is a valid operation."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    token = parser.token_registry.get_token_at_position(params.position)
-    if token is None:
-        ls.info(f"No token to rename at {params.position}.")
+    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
-    # Renaming should be checked against the base token name, ignoring address
-    # modifiers.
+    # Renaming is checked against the base token name, ignoring address modifiers.
     base_token = token.without_address_modifier()
 
     # Only user-defined labels should support renaming
@@ -222,23 +217,14 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
 async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
     parser = await ls.get_parser(params.text_document.uri)
 
-    token = parser.token_registry.get_token_at_position(params.position)
-    if token is None:
+    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
         return None
 
-    # For renaming purposes, we ignore address modifiers so that e.g. we can rename
-    # `Delay` by renaming `Delay#`
+    # Ignore address modifiers so that e.g. we can rename `Delay` by renaming `Delay#`
     base_token = token.without_address_modifier()
     matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
 
-    edits = [
-        lsp.TextEdit(
-            range=t.range,
-            new_text=params.new_name,
-        )
-        for t in matching_tokens
-    ]
-
+    edits = [lsp.TextEdit(t.range, new_text=params.new_name) for t in matching_tokens]
     return lsp.WorkspaceEdit(changes={params.text_document.uri: edits})
 
 
