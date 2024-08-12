@@ -193,10 +193,19 @@ class SPINAsmParser(fv1parse):
 
     def __init__(self, source: str):
         self.diagnostics: list[lsp.Diagnostic] = []
+        """A list of diagnostic messages generated during parsing."""
+
         self.definitions: dict[str, lsp.Range] = {}
+        """A dictionary mapping symbol names to their definition location."""
+
         self.current_character: int = 0
+        """The current column in the source file."""
+
         self.previous_character: int = 0
+        """The last visitied column in the source file."""
+
         self.token_registry = TokenRegistry()
+        """A registry of tokens and their positions in the source file."""
 
         super().__init__(
             source=source,
@@ -301,11 +310,12 @@ class SPINAsmParser(fv1parse):
 
         self._update_column()
 
-        token_start = lsp.Position(
-            line=self.current_line, character=self.current_character
+        token = Token(
+            symbol=self.sym,
+            start=lsp.Position(
+                line=self.current_line, character=self.current_character
+            ),
         )
-
-        token = Token(self.sym, start=token_start)
         self.token_registry.register_token(token)
 
         base_token = token.without_address_modifier()

@@ -8,10 +8,12 @@ from .conftest import (
     HOVERS,
     PATCH_DIR,
     PREPARE_RENAMES,
+    REFERENCES,
     RENAMES,
     SYMBOL_DEFINITIONS,
     DefinitionDict,
     PrepareRenameDict,
+    ReferenceDict,
     RenameDict,
     SymbolDefinitionDict,
 )
@@ -247,3 +249,20 @@ async def test_symbol_definitions(symbol: SymbolDefinitionDict, client: Language
     item = matching[0]
     assert item.kind == symbol["kind"]
     assert item.range == symbol["range"]
+
+
+@pytest.mark.parametrize("reference", REFERENCES, ids=lambda x: x["symbol"])
+@pytest.mark.asyncio()
+async def test_references(reference: ReferenceDict, client: LanguageClient):
+    """Test that references to a symbol are correctly found."""
+    patch = PATCH_DIR / "Basic.spn"
+
+    result = await client.text_document_references_async(
+        params=lsp.ReferenceParams(
+            context=lsp.ReferenceContext(include_declaration=False),
+            position=reference["position"],
+            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+        )
+    )
+
+    assert result == reference["references"]
