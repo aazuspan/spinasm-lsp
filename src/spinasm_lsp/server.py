@@ -213,7 +213,7 @@ async def definition(
 @server.feature(lsp.TEXT_DOCUMENT_DOCUMENT_SYMBOL)
 async def document_symbol_definitions(
     ls: SPINAsmLanguageServer, params: lsp.DocumentSymbolParams
-) -> lsp.DocumentSymbol | None:
+) -> list[lsp.DocumentSymbol]:
     """Returns the definitions of all symbols in the document."""
     parser = await ls.get_parser(params.text_document.uri)
 
@@ -255,7 +255,9 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
 @server.feature(
     lsp.TEXT_DOCUMENT_RENAME, options=lsp.RenameOptions(prepare_provider=True)
 )
-async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
+async def rename(
+    ls: SPINAsmLanguageServer, params: lsp.RenameParams
+) -> lsp.WorkspaceEdit:
     parser = await ls.get_parser(params.text_document.uri)
 
     if (token := parser.token_registry.get_token_at_position(params.position)) is None:
@@ -267,6 +269,26 @@ async def rename(ls: SPINAsmLanguageServer, params: lsp.RenameParams):
 
     edits = [lsp.TextEdit(t.range, new_text=params.new_name) for t in matching_tokens]
     return lsp.WorkspaceEdit(changes={params.text_document.uri: edits})
+
+
+@server.feature(lsp.TEXT_DOCUMENT_REFERENCES)
+async def references(
+    ls: SPINAsmLanguageServer, params: lsp.ReferenceParams
+) -> list[lsp.Location]:
+    parser = await ls.get_parser(params.text_document.uri)
+
+    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+        return []
+
+    # Ignore address modifiers so that e.g. we can find all variations of addresses,
+    # e.g. `Delay` and `Delay#`
+    base_token = token.without_address_modifier()
+    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
+
+    return [
+        lsp.Location(uri=params.text_document.uri, range=t.range)
+        for t in matching_tokens
+    ]
 
 
 def start() -> None:

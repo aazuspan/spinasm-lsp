@@ -43,6 +43,14 @@ class PrepareRenameDict(TypedDict):
     message: str | None
 
 
+class ReferenceDict(TypedDict):
+    """A dictionary to record reference locations for a symbol."""
+
+    symbol: str
+    position: lsp.Position
+    references: list[lsp.Location]
+
+
 class RenameDict(TypedDict):
     """A dictionary to record rename results for a symbol."""
 
@@ -50,6 +58,72 @@ class RenameDict(TypedDict):
     rename_to: str
     position: lsp.Position
     changes: list[lsp.TextEdit]
+
+
+REFERENCES: list[ReferenceDict] = [
+    {
+        # Variable
+        "symbol": "apout",
+        "position": lsp.Position(line=23, character=4),
+        "references": [
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=23, character=4),
+                    end=lsp.Position(line=23, character=9),
+                ),
+            ),
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=57, character=5),
+                    end=lsp.Position(line=57, character=10),
+                ),
+            ),
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=60, character=5),
+                    end=lsp.Position(line=60, character=10),
+                ),
+            ),
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=70, character=5),
+                    end=lsp.Position(line=70, character=10),
+                ),
+            ),
+        ],
+    },
+    {
+        "symbol": "ap1",
+        "position": lsp.Position(line=8, character=4),
+        "references": [
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=8, character=4),
+                    end=lsp.Position(line=8, character=7),
+                ),
+            ),
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=51, character=4),
+                    end=lsp.Position(line=51, character=7),
+                ),
+            ),
+            lsp.Location(
+                uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+                range=lsp.Range(
+                    start=lsp.Position(line=52, character=5),
+                    end=lsp.Position(line=52, character=8),
+                ),
+            ),
+        ],
+    },
+]
 
 
 SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
