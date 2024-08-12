@@ -86,12 +86,20 @@ async def test_completions(client: LanguageClient):
 
     # Completions for defined values should show their literal value
     apout_completion = [item for item in results.items if item.label == "APOUT"][0]
-    assert apout_completion.detail == "(constant) APOUT: Literal[33]"
+    assert apout_completion.detail == "(variable) APOUT: Literal[33]"
+    assert apout_completion.kind == lsp.CompletionItemKind.Variable
     assert apout_completion.documentation is None
+
+    # Completions for constant values should show their literal value
+    reg0_completion = [item for item in results.items if item.label == "REG0"][0]
+    assert reg0_completion.detail == "(constant) REG0: Literal[32]"
+    assert reg0_completion.kind == lsp.CompletionItemKind.Constant
+    assert reg0_completion.documentation is None
 
     # Completions for opcodes should include their documentation
     cho_rda_completion = [item for item in results.items if item.label == "CHO RDA"][0]
     assert cho_rda_completion.detail == "(opcode)"
+    assert cho_rda_completion.kind == lsp.CompletionItemKind.Function
     assert "## `CHO RDA N, C, D`" in str(cho_rda_completion.documentation)
 
 

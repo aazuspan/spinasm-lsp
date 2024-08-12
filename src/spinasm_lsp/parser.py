@@ -207,6 +207,8 @@ class SPINAsmParser(fv1parse):
             efunc=lambda *args, **kwargs: None,
         )
 
+        # Track which symbols were defined at initialization, e.g. registers and LFOs
+        self.constants: list[str] = list(self.symtbl.keys())
         # Keep an unchanged copy of the original source
         self._source: list[str] = self.source.copy()
 
