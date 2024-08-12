@@ -124,8 +124,9 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
             None
             if not hover_msg
             else lsp.Hover(
-                # Format as Python to get color coding for literals
-                contents={"language": "python", "value": f"{hover_msg}"},
+                # Java markdown formatting happens to give the best color-coding for
+                # hover messages
+                contents={"language": "java", "value": f"{hover_msg}"},
                 range=token.range,
             )
         )
