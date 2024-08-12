@@ -10,12 +10,20 @@ TEST_PATCHES = list(PATCH_DIR.glob("*.spn"))
 assert TEST_PATCHES, "No test patches found in the patches directory."
 
 
-class AssignmentDict(TypedDict):
+class DefinitionDict(TypedDict):
     """A dictionary track where a symbol is referenced and defined."""
 
     symbol: str
     referenced: lsp.Position
     defined: lsp.Location
+
+
+class SymbolDefinitionDict(TypedDict):
+    """A dictionary to record definition locations for a symbol."""
+
+    symbol: str
+    range: lsp.Range
+    kind: lsp.SymbolKind
 
 
 class HoverDict(TypedDict):
@@ -44,8 +52,39 @@ class RenameDict(TypedDict):
     changes: list[lsp.TextEdit]
 
 
+SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
+    {
+        # Variable
+        "symbol": "apout",
+        "kind": lsp.SymbolKind.Constant,
+        "range": lsp.Range(
+            start=lsp.Position(line=23, character=4),
+            end=lsp.Position(line=23, character=9),
+        ),
+    },
+    {
+        # Memory
+        "symbol": "lap2a",
+        "kind": lsp.SymbolKind.Constant,
+        "range": lsp.Range(
+            start=lsp.Position(line=16, character=4),
+            end=lsp.Position(line=16, character=9),
+        ),
+    },
+    {
+        # Label
+        "symbol": "endclr",
+        "kind": lsp.SymbolKind.Module,
+        "range": lsp.Range(
+            start=lsp.Position(line=41, character=0),
+            end=lsp.Position(line=41, character=6),
+        ),
+    },
+]
+
+
 # Example assignments from the "Basic.spn" patch, for testing definition locations
-DEFINITIONS: list[AssignmentDict] = [
+DEFINITIONS: list[DefinitionDict] = [
     {
         # Variable
         "symbol": "apout",

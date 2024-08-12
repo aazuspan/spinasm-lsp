@@ -153,19 +153,12 @@ async def completions(
     symbol_completions = [
         lsp.CompletionItem(
             label=symbol,
-            kind=lsp.CompletionItemKind.Constant,
+            kind=lsp.CompletionItemKind.Constant
+            if symbol in parser.symtbl
+            else lsp.CompletionItemKind.Module,
             detail=_get_defined_hover(symbol, parser=parser),
         )
-        for symbol in parser.symtbl
-    ]
-
-    label_completions = [
-        lsp.CompletionItem(
-            label=label,
-            kind=lsp.CompletionItemKind.Reference,
-            detail=_get_defined_hover(label, parser=parser),
-        )
-        for label in parser.jmptbl
+        for symbol in {**parser.symtbl, **parser.jmptbl}
     ]
 
     opcode_completions = [
@@ -182,7 +175,7 @@ async def completions(
 
     return lsp.CompletionList(
         is_incomplete=False,
-        items=symbol_completions + label_completions + opcode_completions,
+        items=symbol_completions + opcode_completions,
     )
 
 
@@ -209,6 +202,26 @@ async def definition(
         uri=document.uri,
         range=parser.definitions[str(base_token)],
     )
+
+
+@server.feature(lsp.TEXT_DOCUMENT_DOCUMENT_SYMBOL)
+async def document_symbol_definitions(
+    ls: SPINAsmLanguageServer, params: lsp.DocumentSymbolParams
+) -> lsp.DocumentSymbol | None:
+    """Returns the definitions of all symbols in the document."""
+    parser = await ls.get_parser(params.text_document.uri)
+
+    return [
+        lsp.DocumentSymbol(
+            name=symbol,
+            kind=lsp.SymbolKind.Module
+            if symbol in parser.jmptbl
+            else lsp.SymbolKind.Constant,
+            range=definition,
+            selection_range=definition,
+        )
+        for symbol, definition in parser.definitions.items()
+    ]
 
 
 @server.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
