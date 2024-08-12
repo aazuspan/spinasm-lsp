@@ -9,8 +9,11 @@ from .conftest import (
     PATCH_DIR,
     PREPARE_RENAMES,
     RENAMES,
+    SYMBOL_DEFINITIONS,
+    DefinitionDict,
     PrepareRenameDict,
     RenameDict,
+    SymbolDefinitionDict,
 )
 
 
@@ -32,18 +35,18 @@ async def client(request, lsp_client: LanguageClient):
 
 
 @pytest.mark.asyncio()
-@pytest.mark.parametrize("assignment", DEFINITIONS, ids=lambda x: x["symbol"])
-async def test_definition(assignment: dict, client: LanguageClient):
+@pytest.mark.parametrize("definition", DEFINITIONS, ids=lambda x: x["symbol"])
+async def test_definition(definition: DefinitionDict, client: LanguageClient):
     """Test that the definition location of different assignments is correct."""
-    uri = assignment["defined"].uri
+    uri = definition["defined"].uri
     result = await client.text_document_definition_async(
         params=lsp.DefinitionParams(
-            position=assignment["referenced"],
+            position=definition["referenced"],
             text_document=lsp.TextDocumentIdentifier(uri=uri),
         )
     )
 
-    assert result == assignment["defined"]
+    assert result == definition["defined"]
 
 
 @pytest.mark.asyncio()
@@ -216,3 +219,23 @@ async def test_rename(rename: RenameDict, client: LanguageClient):
     )
 
     assert result.changes[uri] == rename["changes"]
+
+
+@pytest.mark.parametrize("symbol", SYMBOL_DEFINITIONS, ids=lambda x: x["symbol"])
+@pytest.mark.asyncio()
+async def test_symbol_definitions(symbol: SymbolDefinitionDict, client: LanguageClient):
+    """Test that the definitions of all symbols in the document are returned."""
+    patch = PATCH_DIR / "Basic.spn"
+
+    result = await client.text_document_document_symbol_async(
+        params=lsp.DocumentSymbolParams(
+            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+        )
+    )
+
+    matching = [item for item in result if item.name == symbol["symbol"].upper()]
+    assert matching, f"Symbol {symbol['symbol'].upper()} not in document symbols"
+
+    item = matching[0]
+    assert item.kind == symbol["kind"]
+    assert item.range == symbol["range"]
