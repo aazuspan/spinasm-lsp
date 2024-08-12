@@ -98,9 +98,13 @@ def _get_defined_hover(stxt: str, parser: SPINAsmParser) -> str:
     if stxt in parser.jmptbl:
         hover_definition = parser.jmptbl[stxt]
         return f"(label) {stxt}: Offset[{hover_definition}]"
-    if stxt in parser.symtbl:
+    # Check constants next since they are also defined in symtbl
+    if stxt in parser.constants:
         hover_definition = parser.symtbl[stxt]
         return f"(constant) {stxt}: Literal[{hover_definition}]"
+    if stxt in parser.symtbl:
+        hover_definition = parser.symtbl[stxt]
+        return f"(variable) {stxt}: Literal[{hover_definition}]"
 
     return ""
 
@@ -154,6 +158,8 @@ async def completions(
         lsp.CompletionItem(
             label=symbol,
             kind=lsp.CompletionItemKind.Constant
+            if symbol in parser.constants
+            else lsp.CompletionItemKind.Variable
             if symbol in parser.symtbl
             else lsp.CompletionItemKind.Module,
             detail=_get_defined_hover(symbol, parser=parser),
@@ -216,7 +222,9 @@ async def document_symbol_definitions(
             name=symbol,
             kind=lsp.SymbolKind.Module
             if symbol in parser.jmptbl
-            else lsp.SymbolKind.Constant,
+            # There's no need to check for constants here since they aren't included
+            # in the parser definitions.
+            else lsp.SymbolKind.Variable,
             range=definition,
             selection_range=definition,
         )

@@ -56,7 +56,7 @@ SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
     {
         # Variable
         "symbol": "apout",
-        "kind": lsp.SymbolKind.Constant,
+        "kind": lsp.SymbolKind.Variable,
         "range": lsp.Range(
             start=lsp.Position(line=23, character=4),
             end=lsp.Position(line=23, character=9),
@@ -65,7 +65,7 @@ SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
     {
         # Memory
         "symbol": "lap2a",
-        "kind": lsp.SymbolKind.Constant,
+        "kind": lsp.SymbolKind.Variable,
         "range": lsp.Range(
             start=lsp.Position(line=16, character=4),
             end=lsp.Position(line=16, character=9),
@@ -157,12 +157,17 @@ HOVERS: list[HoverDict] = [
     {
         "symbol": "mono",
         "position": lsp.Position(line=47, character=5),
-        "contains": "(constant) MONO: Literal[32]",
+        "contains": "(variable) MONO: Literal[32]",
+    },
+    {
+        "symbol": "reg0",
+        "position": lsp.Position(line=22, character=9),
+        "contains": "(constant) REG0: Literal[32]",
     },
     {
         "symbol": "lap2b#",
         "position": lsp.Position(line=73, character=4),
-        "contains": "(constant) LAP2B#: Literal[9802]",
+        "contains": "(variable) LAP2B#: Literal[9802]",
     },
     {
         # CHO RDA, hovering over CHO
