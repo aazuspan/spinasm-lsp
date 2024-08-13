@@ -14,7 +14,7 @@ from .conftest import PATCH_DIR, TEST_PATCHES
 def test_example_patches(patch):
     """Test that the example patches from SPINAsm are parsable."""
     with open(patch, encoding="utf-8") as f:
-        assert SPINAsmParser(f.read())
+        assert SPINAsmParser(f.read()).parse()
 
 
 @pytest.fixture()

@@ -52,10 +52,6 @@ class Token:
         The symbol parsed by asfv1 representing the token.
     range : lsp.Range
         The location range of the token in the source file.
-    next_token : Token | None
-        The token that follows this token in the source file.
-    prev_token : Token | None
-        The token that precedes this token in the source file.
     """
 
     def __init__(
@@ -67,8 +63,6 @@ class Token:
 
         self.symbol: Symbol = symbol
         self.range: lsp.Range = lsp.Range(start=start, end=end)
-        self.next_token: Token | None = None
-        self.prev_token: Token | None = None
 
     def __repr__(self) -> str:
         return self.symbol["stxt"]
@@ -134,11 +128,6 @@ class TokenRegistry:
 
         if token.range.start.line not in self._tokens_by_line:
             self._tokens_by_line[token.range.start.line] = []
-
-        # Record the previous and next token for each token to allow traversing
-        if self._prev_token:
-            token.prev_token = self._prev_token
-            self._prev_token.next_token = token
 
         # Store the token on its line
         self._tokens_by_line[token.range.start.line].append(token)
