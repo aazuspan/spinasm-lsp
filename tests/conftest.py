@@ -221,7 +221,7 @@ HOVERS: list[HoverDict] = [
     {
         "symbol": "skp",
         "position": lsp.Position(line=37, character=2),
-        "contains": "## `SKP CMASK,N`",
+        "contains": "## `SKP CMASK, N`",
     },
     {
         "symbol": "endclr",

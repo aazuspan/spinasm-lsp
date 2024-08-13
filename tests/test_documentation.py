@@ -8,10 +8,8 @@ import mistletoe
 import mistletoe.ast_renderer
 import pytest
 
-from spinasm_lsp.documentation import DocMap
+from spinasm_lsp.docs import ASSEMBLERS, INSTRUCTIONS
 
-INSTRUCTIONS = DocMap(folders=["instructions"])
-ASSEMBLERS = DocMap(folders=["assemblers"])
 VALID_ENTRY_FORMATS = (
     "Decimal (0 - 63)",
     "Decimal (1 - 63)",
@@ -94,6 +92,7 @@ def test_instructions_are_unique():
     titles = {}
 
     for name, content in INSTRUCTIONS.items():
+        content = content.markdown
         ast = json.loads(
             mistletoe.markdown(content, renderer=mistletoe.ast_renderer.ASTRenderer)
         )
@@ -142,6 +141,7 @@ def test_instructions_are_unique():
 def test_assembler_formatting(assembler):
     """Test that all assembler markdown files follow the correct format."""
     assembler_name, content = assembler
+    content = content.markdown
 
     ast = json.loads(
         mistletoe.markdown(content, renderer=mistletoe.ast_renderer.ASTRenderer)
@@ -174,6 +174,7 @@ def test_assembler_formatting(assembler):
 def test_instruction_formatting(instruction):
     """Test that all instruction markdown files follow the correct format."""
     instruction_name, content = instruction
+    content = content.markdown
 
     ast = json.loads(
         mistletoe.markdown(content, renderer=mistletoe.ast_renderer.ASTRenderer)

@@ -8,9 +8,9 @@ from typing import Any
 from lsprotocol import types as lsp
 from pygls.server import LanguageServer
 
-from . import __version__
-from .documentation import DocMap
-from .parser import SPINAsmParser
+from spinasm_lsp import __version__
+from spinasm_lsp.docs import DocumentationManager
+from spinasm_lsp.parser import SPINAsmParser
 
 
 @lru_cache(maxsize=1)
@@ -26,7 +26,7 @@ def _parse_document(source: str) -> SPINAsmParser:
 class SPINAsmLanguageServer(LanguageServer):
     def __init__(self, *args, **kwargs) -> None:
         self._prev_parser: SPINAsmParser | None = None
-        self.documentation = DocMap(folders=["instructions", "assemblers"])
+        self.documentation = DocumentationManager()
 
         super().__init__(*args, name="spinasm-lsp", version=__version__, **kwargs)
 
@@ -132,7 +132,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         )
 
     if token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
-        hover_msg = ls.documentation.get(str(token), "")
+        hover_msg = ls.documentation.get(str(token))
 
         return (
             None
@@ -174,7 +174,7 @@ async def completions(
             kind=lsp.CompletionItemKind.Function,
             detail="(opcode)",
             documentation=lsp.MarkupContent(
-                kind=lsp.MarkupKind.Markdown, value=ls.documentation[opcode]
+                kind=lsp.MarkupKind.Markdown, value=ls.documentation.get(opcode)
             ),
         )
         for opcode in [k.upper() for k in ls.documentation]
