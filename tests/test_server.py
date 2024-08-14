@@ -102,7 +102,7 @@ async def test_completions(client: LanguageClient):
     cho_rda_completion = [item for item in results.items if item.label == "CHO RDA"][0]
     assert cho_rda_completion.detail == "(opcode)"
     assert cho_rda_completion.kind == lsp.CompletionItemKind.Function
-    assert "## `CHO RDA N, C, D`" in str(cho_rda_completion.documentation)
+    assert "`CHO RDA, N, C, D`" in str(cho_rda_completion.documentation)
 
 
 @pytest.mark.asyncio()

@@ -216,12 +216,12 @@ HOVERS: list[HoverDict] = [
     {
         "symbol": "mem",
         "position": lsp.Position(line=8, character=0),
-        "contains": "## `MEM`",
+        "contains": "`MEM`",
     },
     {
         "symbol": "skp",
         "position": lsp.Position(line=37, character=2),
-        "contains": "## `SKP CMASK, N`",
+        "contains": "`SKP CMASK, N`",
     },
     {
         "symbol": "endclr",
@@ -247,13 +247,13 @@ HOVERS: list[HoverDict] = [
         # CHO RDA, hovering over CHO
         "symbol": "CHO_rda",
         "position": lsp.Position(line=85, character=0),
-        "contains": "## `CHO RDA N, C, D`",
+        "contains": "`CHO RDA, N, C, D`",
     },
     {
         # CHO RDA, hovering over RDA
         "symbol": "cho_RDA",
         "position": lsp.Position(line=85, character=4),
-        "contains": "## `CHO RDA N, C, D`",
+        "contains": "`CHO RDA, N, C, D`",
     },
     {
         # Hovering over an int, which should return no hover info

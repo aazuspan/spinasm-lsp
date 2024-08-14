@@ -2,50 +2,12 @@
 
 # ruff: noqa: E501
 
-from dataclasses import dataclass
-from functools import cached_property
+from spinasm_lsp.docs.markdown import Assembler
 
-from spinasm_lsp.docs.markdown import MarkdownDocumentationGenerator, MarkdownString
-
-
-@dataclass
-class AssemblerDocumentation(MarkdownDocumentationGenerator):
-    """Generatable Markdown documentation for a SPINAsm assembler."""
-
-    name: str
-    description: str
-    example: str
-    example_remarks: str = ""
-
-    @cached_property
-    def markdown(self) -> str:
-        """A markdown documentation string."""
-        md = MarkdownString()
-
-        md.add_heading(f"`{self.name}`", level=2)
-        md.add_horizontal_rule()
-
-        md.add_paragraph(self.description.strip())
-
-        md.add_heading("Example", level=3)
-        md.add_codeblock(self.example.strip(), language="assembly")
-
-        if self.example_remarks:
-            md.add_paragraph(self.example_remarks.strip())
-
-        md.add_horizontal_rule()
-        md.add_paragraph(
-            "*Adapted from Spin Semiconductor SPINAsm & FV-1 Instruction Set reference "
-            "manual. Copyright 2008 by Spin Semiconductor.*"
-        )
-
-        return str(md)
-
-
-ASSEMBLERS = {
-    "EQU": AssemblerDocumentation(
+ASSEMBLERS: dict[str, Assembler] = {
+    "EQU": Assembler(
         name="EQU",
-        description="""The `EQU` statement allows one to define symbolic operands in order to increase the readability of the source code. Technically an `EQU` statement such as:
+        description="""**`EQU`** allows one to define symbolic operands in order to increase the readability of the source code. Technically an `EQU` statement such as:
 
 ```assembly
 Name EQU Value [;Comment]
@@ -61,7 +23,7 @@ There is another, not syntax related, restriction when using symbolic operands d
 
 With the literal "Value" things are slightly more complicated since its format has to comply with the syntactical rules defined for the operand type it is to represent. Although it is suggested to place `EQU` statements at the beginning of the source code file, this is not mandatory. However, the `EQU` statement has to be defined before the literal "Name" can be used as a symbolical operand within an instruction line.
 
-### Remark
+#### Remark
 SPINAsm has no way of performing range checking while processing the EQU statement. This is because the operand type of value is not known to SPINAsm at the time the EQU statement is processed. As a result, range checking is performed when assembling the instruction line in which "Name" is to be replaced by "Value".
 """,
         example="""
@@ -79,9 +41,9 @@ wrax      DACL,0       ; Move ACC to DAC left (predefined symbol)
 """,
         example_remarks="""If `Tmp_Del` was accidentally replaced by `Tmp_Reg` within the `rda` instruction line, SPINAsm would not detect this semantic error – simply because using `Tmp_Reg` would be syntactically correct.""",
     ),
-    "MEM": AssemblerDocumentation(
+    "MEM": Assembler(
         name="MEM",
-        description="""The `MEM` Statement allows the user to partition the delay ram memory into individual blocks. A memory block declared by the statement
+        description="""**`MEM`** allows the user to partition the delay ram memory into individual blocks. A memory block declared by the statement
 
 ```assembly
 Name `MEM` Size [;Comment]
@@ -110,7 +72,7 @@ rdax      DelL#,0.25   ; Add sample from "end of the left delay
 rdax      DelL-512,0.25; Add sample from "start of the left delay
                        ; line - 512 samples" times 0.25 to ACC
 """,
-        example_remarks="""### Remark
+        example_remarks="""#### Remark
 At this point the result of the address calculation will reference a sample from outside the `DelL` memory block. While being syntactically correct, the instruction might not result in what the user intended. In order to make the user aware of that potential semantic error, a warning will be issued.
 
 ```assembly
@@ -127,7 +89,7 @@ rdax      DelR-512,0.25; Add sample from start of the right delay
                        ; line - 512 samples times 0.25 to ACC
 ```
 
-### Remark
+#### Remark
 At this point the result of the address calculation will reference a sample from outside the `DelR` memory block. And even worse than the previous case: This time the sample be fetched from delay ram address 32256 which will contain a sample that is apx. 1 second old!
 
 Again, syntactically correct but most likely a semantic error – warnings will be issued.

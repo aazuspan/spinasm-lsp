@@ -9,7 +9,7 @@ from lsprotocol import types as lsp
 from pygls.server import LanguageServer
 
 from spinasm_lsp import __version__
-from spinasm_lsp.docs import DocumentationManager
+from spinasm_lsp.docs import MULTI_WORD_INSTRUCTIONS, DocumentationManager
 from spinasm_lsp.parser import SPINAsmParser
 
 
@@ -132,7 +132,7 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         )
 
     if token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
-        hover_msg = ls.documentation.get(str(token))
+        hover_msg = ls.documentation.get_markdown(str(token))
 
         return (
             None
@@ -174,7 +174,8 @@ async def completions(
             kind=lsp.CompletionItemKind.Function,
             detail="(opcode)",
             documentation=lsp.MarkupContent(
-                kind=lsp.MarkupKind.Markdown, value=ls.documentation.get(opcode)
+                kind=lsp.MarkupKind.Markdown,
+                value=ls.documentation.get_markdown(opcode),
             ),
         )
         for opcode in [k.upper() for k in ls.documentation]
@@ -290,6 +291,77 @@ async def references(
         lsp.Location(uri=params.text_document.uri, range=t.range)
         for t in matching_tokens
     ]
+
+
+@server.feature(
+    lsp.TEXT_DOCUMENT_SIGNATURE_HELP,
+    options=lsp.SignatureHelpOptions(
+        trigger_characters=[" "], retrigger_characters=[","]
+    ),
+)
+async def signature_help(
+    ls: SPINAsmLanguageServer, params: lsp.SignatureHelpParams
+) -> lsp.SignatureHelp | None:
+    parser = await ls.get_parser(params.text_document.uri)
+
+    try:
+        line_tokens = parser.token_registry._tokens_by_line[params.position.line]
+    # Exit on empty line
+    except KeyError:
+        return None
+
+    # Find all opcodes on the line that could have triggered the signature help. Ignore
+    # opcodes that appear after the cursor, to avoid showing signature help prematurely.
+    opcodes = [
+        t
+        for t in line_tokens
+        if t.symbol["type"] == "MNEMONIC"
+        and t.range.start.character < params.position.character
+    ]
+    if not opcodes:
+        return None
+
+    # We should never have more than one opcode on a line, but just in case, grab the
+    # last one entered before the cursor.
+    triggered_opcode = opcodes[-1]
+    opcode = ls.documentation.get_instruction(str(triggered_opcode))
+    if opcode is None:
+        return None
+
+    remaining_tokens = line_tokens[line_tokens.index(triggered_opcode) + 1 :]
+
+    argseps = [t for t in remaining_tokens if t.symbol["type"] == "ARGSEP"]
+    # The first argument separator to the right of the cursor is the active arg index.
+    # If there are no separators right of the cursor, we either haven't entered an arg
+    # yet or we're on the last arg.
+    arg_idx = 0 if not argseps else len(opcode.args) - 1
+    for i, argsep in enumerate(argseps):
+        if argsep.range.end.character > params.position.character:
+            arg_idx = i
+            break
+
+    # Special case for multi-word instructions that treat the first argument as part of
+    # the instruction name. In that case, we need to shift to the previous argument to
+    # account for the extra arg separator.
+    if str(triggered_opcode) in MULTI_WORD_INSTRUCTIONS and arg_idx != -1:
+        arg_idx -= 1
+
+    signature = [lsp.ParameterInformation(label=arg.markdown) for arg in opcode.args]
+
+    return lsp.SignatureHelp(
+        signatures=[
+            lsp.SignatureInformation(
+                label=f"{opcode.name} {opcode.args.markdown}",
+                parameters=signature,
+                documentation=lsp.MarkupContent(
+                    kind=lsp.MarkupKind.Markdown,
+                    value=opcode.markdown,
+                ),
+            )
+        ],
+        active_signature=0,
+        active_parameter=arg_idx,
+    )
 
 
 def start() -> None:

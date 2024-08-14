@@ -5,11 +5,12 @@ A Language Server Protocol (LSP) server to provide language support for the [SPI
 ## Features
 
 - **Diagnostics**: Reports the location of syntax errors and warnings.
-- **Hover**: Shows opcode documentation and assigned values on hover.
+- **Signature help**: Shows parameter hints as instructions are entered.
+- **Hover**: Shows documentation and values on hover.
 - **Completion**: Provides suggestions for opcodes, labels, and variables.
-- **Renaming**: Allows renaming of labels and variables.
+- **Renaming**: Allows renaming labels and variables.
 - **Go to definition**: Jumps to the definition of a label, memory address, or variable.
 
 ------
 
-*This project is unaffiliated with Spin Semiconductor. Included documentation and examples are Copyright © 2018 Spin Semiconductor.*
+*This project is unaffiliated with Spin Semiconductor. Included documentation is Copyright © 2018 Spin Semiconductor.*
