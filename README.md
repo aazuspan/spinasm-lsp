@@ -1,7 +1,7 @@
 # SPINAsm LSP Server
 
 [![Build status](https://github.com/aazuspan/spinasm-lsp/actions/workflows/ci.yaml/badge.svg)](https://github.com/aazuspan/spinasm-lsp/actions/workflows/ci.yaml)
-[![PyPI version](https://badge.fury.io/py/spinasm-lsp.svg)](https://badge.fury.io/py/spinasm-lsp)
+[![PyPI version](https://img.shields.io/pypi/v/spinasm-lsp)](https://pypi.python.org/pypi/spinasm-lsp)
 [![Python versions](https://img.shields.io/pypi/pyversions/spinasm-lsp.svg)](https://pypi.python.org/pypi/spinasm-lsp)
 
 A Language Server Protocol (LSP) server to provide language support for the [SPINAsm assembly language](http://www.spinsemi.com/Products/datasheets/spn1001-dev/SPINAsmUserManual.pdf). The LSP is built on an extended version of the [asfv1](https://github.com/ndf-zz/asfv1) parser.
