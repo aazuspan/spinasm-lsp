@@ -8,12 +8,23 @@ dynamic = [ "version",]
 description = "A Language Server Protocol implementation for SPINAsm"
 readme = "README.md"
 requires-python = ">=3.8"
-keywords = []
+keywords = ["spinasm", "lsp"]
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+
 dependencies = [ 
     "pygls", 
     "lsprotocol", 
     "asfv1==1.2.7",
 ]
+
 [[project.authors]]
 name = "Aaron Zuspan"
 
