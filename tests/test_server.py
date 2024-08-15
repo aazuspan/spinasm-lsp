@@ -10,11 +10,13 @@ from .conftest import (
     PREPARE_RENAMES,
     REFERENCES,
     RENAMES,
+    SIGNATURE_HELPS,
     SYMBOL_DEFINITIONS,
     DefinitionDict,
     PrepareRenameDict,
     ReferenceDict,
     RenameDict,
+    SignatureHelpDict,
     SymbolDefinitionDict,
 )
 
@@ -37,18 +39,17 @@ async def client(request, lsp_client: LanguageClient):
 
 
 @pytest.mark.asyncio()
-@pytest.mark.parametrize("definition", DEFINITIONS, ids=lambda x: x["symbol"])
-async def test_definition(definition: DefinitionDict, client: LanguageClient):
+@pytest.mark.parametrize("test_case", DEFINITIONS, ids=lambda x: x["symbol"])
+async def test_definition(test_case: DefinitionDict, client: LanguageClient):
     """Test that the definition location of different assignments is correct."""
-    uri = definition["defined"].uri
     result = await client.text_document_definition_async(
         params=lsp.DefinitionParams(
-            position=definition["referenced"],
-            text_document=lsp.TextDocumentIdentifier(uri=uri),
+            position=test_case["referenced"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    assert result == definition["defined"]
+    assert result == test_case["defined"]
 
 
 @pytest.mark.asyncio()
@@ -172,97 +173,113 @@ MULX 100
         assert diag == returned[i], f"Diagnostic {i} does not match expected"
 
 
-@pytest.mark.parametrize("hover", HOVERS, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("test_case", HOVERS, ids=lambda x: x["symbol"])
 @pytest.mark.asyncio()
-async def test_hover(hover: dict, client: LanguageClient):
-    patch = PATCH_DIR / "Basic.spn"
-
+async def test_hover(test_case: dict, client: LanguageClient):
     result = await client.text_document_hover_async(
         params=lsp.CompletionParams(
-            position=hover["position"],
-            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+            position=test_case["position"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    if hover["contains"] is None:
+    if test_case["contains"] is None:
         assert result is None, "Expected no hover result"
     else:
-        msg = f"Hover does not contain `{hover['contains']}`"
-        assert hover["contains"] in result.contents.value, msg
+        msg = f"Hover does not contain `{test_case['contains']}`"
+        assert test_case["contains"] in result.contents.value, msg
 
 
-@pytest.mark.parametrize("prepare", PREPARE_RENAMES, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("test_case", PREPARE_RENAMES, ids=lambda x: x["symbol"])
 @pytest.mark.asyncio()
-async def test_prepare_rename(prepare: PrepareRenameDict, client: LanguageClient):
+async def test_prepare_rename(test_case: PrepareRenameDict, client: LanguageClient):
     """Test that prepare rename prevents renaming non-user defined tokens."""
-    patch = PATCH_DIR / "Basic.spn"
-
     result = await client.text_document_prepare_rename_async(
         params=lsp.PrepareRenameParams(
-            position=prepare["position"],
-            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+            position=test_case["position"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    assert result == prepare["result"]
+    assert result == test_case["result"]
 
-    if prepare["message"]:
-        assert prepare["message"] in client.log_messages[0].message
+    if test_case["message"]:
+        assert test_case["message"] in client.log_messages[0].message
         assert client.log_messages[0].type == lsp.MessageType.Info
     else:
         assert not client.log_messages
 
 
-@pytest.mark.parametrize("rename", RENAMES, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("test_case", RENAMES, ids=lambda x: x["symbol"])
 @pytest.mark.asyncio()
-async def test_rename(rename: RenameDict, client: LanguageClient):
+async def test_rename(test_case: RenameDict, client: LanguageClient):
     """Test that renaming a symbol suggests the correct edits."""
-    patch = PATCH_DIR / "Basic.spn"
-
-    uri = f"file:///{patch.absolute()}"
     result = await client.text_document_rename_async(
         params=lsp.RenameParams(
-            position=rename["position"],
-            new_name=rename["rename_to"],
-            text_document=lsp.TextDocumentIdentifier(uri=uri),
+            position=test_case["position"],
+            new_name=test_case["rename_to"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    assert result.changes[uri] == rename["changes"]
+    assert result.changes[test_case["uri"]] == test_case["changes"]
 
 
-@pytest.mark.parametrize("symbol", SYMBOL_DEFINITIONS, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("test_case", SYMBOL_DEFINITIONS, ids=lambda x: x["symbol"])
 @pytest.mark.asyncio()
-async def test_symbol_definitions(symbol: SymbolDefinitionDict, client: LanguageClient):
+async def test_symbol_definitions(
+    test_case: SymbolDefinitionDict, client: LanguageClient
+):
     """Test that the definitions of all symbols in the document are returned."""
-    patch = PATCH_DIR / "Basic.spn"
-
     result = await client.text_document_document_symbol_async(
         params=lsp.DocumentSymbolParams(
-            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    matching = [item for item in result if item.name == symbol["symbol"].upper()]
-    assert matching, f"Symbol {symbol['symbol'].upper()} not in document symbols"
+    matching = [item for item in result if item.name == test_case["symbol"].upper()]
+    assert matching, f"Symbol {test_case['symbol'].upper()} not in document symbols"
 
     item = matching[0]
-    assert item.kind == symbol["kind"]
-    assert item.range == symbol["range"]
+    assert item.kind == test_case["kind"]
+    assert item.range == test_case["range"]
 
 
-@pytest.mark.parametrize("reference", REFERENCES, ids=lambda x: x["symbol"])
+@pytest.mark.parametrize("test_case", REFERENCES, ids=lambda x: x["symbol"])
 @pytest.mark.asyncio()
-async def test_references(reference: ReferenceDict, client: LanguageClient):
+async def test_references(test_case: ReferenceDict, client: LanguageClient):
     """Test that references to a symbol are correctly found."""
-    patch = PATCH_DIR / "Basic.spn"
-
     result = await client.text_document_references_async(
         params=lsp.ReferenceParams(
             context=lsp.ReferenceContext(include_declaration=False),
-            position=reference["position"],
-            text_document=lsp.TextDocumentIdentifier(uri=f"file:///{patch.absolute()}"),
+            position=test_case["position"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
         )
     )
 
-    assert result == reference["references"]
+    assert result == test_case["references"]
+
+
+@pytest.mark.parametrize("test_case", SIGNATURE_HELPS, ids=lambda x: x["symbol"])
+@pytest.mark.asyncio()
+async def test_signature_help(test_case: SignatureHelpDict, client: LanguageClient):
+    result = await client.text_document_signature_help_async(
+        params=lsp.SignatureHelpParams(
+            context=lsp.SignatureHelpContext(
+                trigger_kind=lsp.SignatureHelpTriggerKind.Invoked, is_retrigger=False
+            ),
+            position=test_case["position"],
+            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
+        )
+    )
+
+    if test_case["active_parameter"] is None:
+        assert not result
+        return
+
+    sig: lsp.SignatureInformation = result.signatures[result.active_signature]
+    param: lsp.ParameterInformation = sig.parameters[result.active_parameter]
+
+    assert test_case["active_parameter"] == result.active_parameter
+    assert test_case["doc_contains"] in str(sig.documentation)
+    assert test_case["param_contains"] in param.label

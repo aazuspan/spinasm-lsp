@@ -16,6 +16,7 @@ class DefinitionDict(TypedDict):
     symbol: str
     referenced: lsp.Position
     defined: lsp.Location
+    uri: str
 
 
 class SymbolDefinitionDict(TypedDict):
@@ -24,6 +25,7 @@ class SymbolDefinitionDict(TypedDict):
     symbol: str
     range: lsp.Range
     kind: lsp.SymbolKind
+    uri: str
 
 
 class HoverDict(TypedDict):
@@ -32,6 +34,7 @@ class HoverDict(TypedDict):
     symbol: str
     position: lsp.Position
     contains: str | None
+    uri: str
 
 
 class PrepareRenameDict(TypedDict):
@@ -41,6 +44,7 @@ class PrepareRenameDict(TypedDict):
     position: lsp.Position
     result: bool
     message: str | None
+    uri: str
 
 
 class ReferenceDict(TypedDict):
@@ -49,6 +53,7 @@ class ReferenceDict(TypedDict):
     symbol: str
     position: lsp.Position
     references: list[lsp.Location]
+    uri: str
 
 
 class RenameDict(TypedDict):
@@ -58,6 +63,18 @@ class RenameDict(TypedDict):
     rename_to: str
     position: lsp.Position
     changes: list[lsp.TextEdit]
+    uri: str
+
+
+class SignatureHelpDict(TypedDict):
+    """A dictionary to record signature help information for at a position."""
+
+    symbol: str
+    position: lsp.Position
+    active_parameter: int | None
+    param_contains: str | None
+    doc_contains: str | None
+    uri: str
 
 
 REFERENCES: list[ReferenceDict] = [
@@ -65,6 +82,7 @@ REFERENCES: list[ReferenceDict] = [
         # Variable
         "symbol": "apout",
         "position": lsp.Position(line=23, character=4),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "references": [
             lsp.Location(
                 uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
@@ -99,6 +117,7 @@ REFERENCES: list[ReferenceDict] = [
     {
         "symbol": "ap1",
         "position": lsp.Position(line=8, character=4),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "references": [
             lsp.Location(
                 uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
@@ -131,6 +150,7 @@ SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
         # Variable
         "symbol": "apout",
         "kind": lsp.SymbolKind.Variable,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "range": lsp.Range(
             start=lsp.Position(line=23, character=4),
             end=lsp.Position(line=23, character=9),
@@ -140,6 +160,7 @@ SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
         # Memory
         "symbol": "lap2a",
         "kind": lsp.SymbolKind.Variable,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "range": lsp.Range(
             start=lsp.Position(line=16, character=4),
             end=lsp.Position(line=16, character=9),
@@ -149,6 +170,7 @@ SYMBOL_DEFINITIONS: list[SymbolDefinitionDict] = [
         # Label
         "symbol": "endclr",
         "kind": lsp.SymbolKind.Module,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "range": lsp.Range(
             start=lsp.Position(line=41, character=0),
             end=lsp.Position(line=41, character=6),
@@ -163,6 +185,7 @@ DEFINITIONS: list[DefinitionDict] = [
         # Variable
         "symbol": "apout",
         "referenced": lsp.Position(line=57, character=7),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "defined": lsp.Location(
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
@@ -175,6 +198,7 @@ DEFINITIONS: list[DefinitionDict] = [
         # Memory
         "symbol": "lap2a",
         "referenced": lsp.Position(line=72, character=7),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "defined": lsp.Location(
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
@@ -188,6 +212,7 @@ DEFINITIONS: list[DefinitionDict] = [
         # original definition.
         "symbol": "lap2a#",
         "referenced": lsp.Position(line=71, character=7),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "defined": lsp.Location(
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
@@ -200,6 +225,7 @@ DEFINITIONS: list[DefinitionDict] = [
         # Label
         "symbol": "endclr",
         "referenced": lsp.Position(line=37, character=9),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "defined": lsp.Location(
             uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
             range=lsp.Range(
@@ -217,49 +243,58 @@ HOVERS: list[HoverDict] = [
         "symbol": "mem",
         "position": lsp.Position(line=8, character=0),
         "contains": "`MEM`",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "skp",
         "position": lsp.Position(line=37, character=2),
         "contains": "`SKP CMASK, N`",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "endclr",
         "position": lsp.Position(line=37, character=13),
         "contains": "(label) ENDCLR: Offset[4]",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "mono",
         "position": lsp.Position(line=47, character=5),
         "contains": "(variable) MONO: Literal[32]",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "reg0",
         "position": lsp.Position(line=22, character=9),
         "contains": "(constant) REG0: Literal[32]",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "lap2b#",
         "position": lsp.Position(line=73, character=4),
         "contains": "(variable) LAP2B#: Literal[9802]",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         # CHO RDA, hovering over CHO
         "symbol": "CHO_rda",
         "position": lsp.Position(line=85, character=0),
         "contains": "`CHO RDA, N, C, D`",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         # CHO RDA, hovering over RDA
         "symbol": "cho_RDA",
         "position": lsp.Position(line=85, character=4),
         "contains": "`CHO RDA, N, C, D`",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         # Hovering over an int, which should return no hover info
         "symbol": "None",
         "position": lsp.Position(line=8, character=8),
         "contains": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
 ]
 
@@ -270,24 +305,28 @@ PREPARE_RENAMES: list[PrepareRenameDict] = [
         "position": lsp.Position(line=8, character=0),
         "result": None,
         "message": "Can't rename non-user defined token MEM.",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "reg0",
         "position": lsp.Position(line=22, character=10),
         "result": None,
         "message": "Can't rename non-user defined token REG0.",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "ap1",
         "position": lsp.Position(line=8, character=4),
         "result": lsp.PrepareRenameResult_Type2(default_behavior=True),
         "message": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
     {
         "symbol": "endclr",
         "position": lsp.Position(line=37, character=10),
         "result": lsp.PrepareRenameResult_Type2(default_behavior=True),
         "message": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
 ]
 
@@ -297,6 +336,7 @@ RENAMES: list[RenameDict] = [
         "symbol": "ap1",
         "rename_to": "FOO",
         "position": lsp.Position(line=8, character=4),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "changes": [
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 7)),
@@ -317,6 +357,7 @@ RENAMES: list[RenameDict] = [
         "symbol": "endclr",
         "rename_to": "END",
         "position": lsp.Position(line=41, character=0),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "changes": [
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 14)),
@@ -332,6 +373,7 @@ RENAMES: list[RenameDict] = [
         "symbol": "lap1a#",
         "rename_to": "FOO",
         "position": lsp.Position(line=61, character=4),
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
         "changes": [
             # Renaming `lap1a#` should also rename `lap1a`
             lsp.TextEdit(
@@ -347,5 +389,60 @@ RENAMES: list[RenameDict] = [
                 new_text="FOO",
             ),
         ],
+    },
+]
+
+SIGNATURE_HELPS: list[SignatureHelpDict] = [
+    {
+        # No opcode on this line, so the signature help should be None
+        "symbol": "no_opcode",
+        "position": lsp.Position(line=8, character=3),
+        "active_parameter": None,
+        "doc_contains": None,
+        "param_contains": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        "symbol": "skp_first_arg",
+        "position": lsp.Position(line=37, character=3),
+        "active_parameter": 0,
+        "doc_contains": "**`SKP CMASK, N`** allows conditional program execution",
+        "param_contains": "CMASK: Binary | Hex ($00-$1F) | Symbolic",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        "symbol": "skp_second_arg",
+        "position": lsp.Position(line=37, character=8),
+        "active_parameter": 1,
+        "doc_contains": "**`SKP CMASK, N`** allows conditional program execution",
+        "param_contains": "N: Decimal (1-63) | Label",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        # You should still get the last argument even if you're well beyond it
+        "symbol": "skp_out_of_bounds",
+        "position": lsp.Position(line=37, character=45),
+        "active_parameter": 1,
+        "doc_contains": "**`SKP CMASK, N`** allows conditional program execution",
+        "param_contains": "N: Decimal (1-63) | Label",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        # The "first" argument of CHO RDA should be N, not RDA
+        "symbol": "cho_rda",
+        "position": lsp.Position(line=85, character=8),
+        "active_parameter": 0,
+        "doc_contains": "**`CHO RDA, N, C, D`**, like the `RDA` instruction",
+        "param_contains": "N: LFO select: SIN0,SIN1,RMP0,RMP1",
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        # Triggering signature help before finishing the opcode should return None
+        "symbol": "cho_rda",
+        "position": lsp.Position(line=85, character=0),
+        "active_parameter": None,
+        "doc_contains": None,
+        "param_contains": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },
 ]
