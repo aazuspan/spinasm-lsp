@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections import UserList
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Literal
+from typing import List, Literal
 
 
 class MarkdownGenerator(ABC):
@@ -34,15 +33,12 @@ class Arg(MarkdownGenerator):
         return f"{self.name}: {' | '.join(self.formats)}"
 
 
-@dataclass
-class ArgList(MarkdownGenerator, UserList[Arg]):
+class ArgList(MarkdownGenerator, List[Arg]):
     """A collection of arguments for a SPINAsm instruction."""
-
-    data: list[Arg]
 
     @property
     def markdown(self) -> str:
-        return ", ".join([arg.markdown for arg in self.data])
+        return ", ".join([arg.markdown for arg in self])
 
 
 @dataclass

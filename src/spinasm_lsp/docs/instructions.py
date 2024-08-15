@@ -2,6 +2,8 @@
 
 # ruff: noqa: E501
 
+from __future__ import annotations
+
 from spinasm_lsp.docs.markdown import Arg, ArgList, Instruction
 
 INSTRUCTIONS: dict[str, Instruction] = {
