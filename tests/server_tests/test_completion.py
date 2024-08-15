@@ -45,8 +45,8 @@ COMPLETIONS: list[CompletionTestCase] = [
     {
         "name": "EQU",
         "label": "EQU",
-        "detail": "(opcode)",
-        "kind": lsp.CompletionItemKind.Function,
+        "detail": "(assembler)",
+        "kind": lsp.CompletionItemKind.Operator,
         "doc_contains": "**`EQU`** allows one to define symbolic operands",
         "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
     },

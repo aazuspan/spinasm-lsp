@@ -178,12 +178,25 @@ async def completions(
                 value=ls.documentation.get_markdown(opcode),
             ),
         )
-        for opcode in [k.upper() for k in ls.documentation]
+        for opcode in [k.upper() for k in ls.documentation.instructions]
+    ]
+
+    assembler_completions = [
+        lsp.CompletionItem(
+            label=assembler,
+            kind=lsp.CompletionItemKind.Operator,
+            detail="(assembler)",
+            documentation=lsp.MarkupContent(
+                kind=lsp.MarkupKind.Markdown,
+                value=ls.documentation.get_markdown(assembler),
+            ),
+        )
+        for assembler in [k.upper() for k in ls.documentation.assemblers]
     ]
 
     return lsp.CompletionList(
         is_incomplete=False,
-        items=symbol_completions + opcode_completions,
+        items=symbol_completions + opcode_completions + assembler_completions,
     )
 
 

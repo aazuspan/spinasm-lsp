@@ -12,7 +12,8 @@ MULTI_WORD_INSTRUCTIONS = ("CHO RDA", "CHO RDAL", "CHO SOF")
 class DocumentationManager:
     """A manager for case-insensitive documentation lookups."""
 
-    _instructions = INSTRUCTIONS
+    instructions = INSTRUCTIONS
+    assemblers = ASSEMBLERS
     data: dict[str, MarkdownGenerator] = {**INSTRUCTIONS, **ASSEMBLERS}
 
     def __getitem__(self, key: str) -> str:
@@ -22,7 +23,7 @@ class DocumentationManager:
         return str(self.data.get(key.upper(), default))
 
     def get_instruction(self, key: str) -> Instruction | None:
-        return self._instructions.get(key.upper(), None)
+        return self.instructions.get(key.upper(), None)
 
     def __contains__(self, key: str) -> bool:
         return self.data.__contains__(key.upper())
