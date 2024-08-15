@@ -1,10 +1,17 @@
+"""Tools for generating Markdown documentation."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections import UserList
+from dataclasses import dataclass
+from functools import cached_property
 from typing import Literal
 
 
-class MarkdownDocumentationGenerator(ABC):
+class MarkdownGenerator(ABC):
+    """An abstract class for dataclasses that can be converted into markdown strings."""
+
     @property
     @abstractmethod
     def markdown(self) -> str:
@@ -14,7 +21,110 @@ class MarkdownDocumentationGenerator(ABC):
         return self.markdown
 
 
-class MarkdownTable:
+@dataclass
+class Arg(MarkdownGenerator):
+    """Metadata for an argument to a SPINAsm instruction."""
+
+    name: str
+    width: int
+    formats: list[str]
+
+    @property
+    def markdown(self) -> str:
+        return f"{self.name}: {' | '.join(self.formats)}"
+
+
+@dataclass
+class ArgList(MarkdownGenerator, UserList[Arg]):
+    """A collection of arguments for a SPINAsm instruction."""
+
+    data: list[Arg]
+
+    @property
+    def markdown(self) -> str:
+        return ", ".join([arg.markdown for arg in self.data])
+
+
+@dataclass
+class Instruction(MarkdownGenerator):
+    """Generatable Markdown documentation for a SPINAsm instruction."""
+
+    name: str
+    args: ArgList
+    description: str
+    operation: str
+    coding: str
+    example: str
+    parameter_description: str | None = None
+
+    @cached_property
+    def markdown(self) -> str:
+        """A markdown documentation string."""
+        md = MarkdownString()
+
+        md.add_paragraph(self.description.strip())
+
+        md.add_heading("Operation", level=4)
+        md.add_paragraph(f"`{self.operation}`")
+
+        md.add_heading("Parameters", level=4)
+        if not self.args:
+            md.add_paragraph("None.")
+        else:
+            md.add_table(
+                cols=["Name", "Width", "Entry formats, range"],
+                rows=[
+                    [arg.name, f"{arg.width} Bit", "<br>".join(arg.formats)]
+                    for arg in self.args
+                ],
+            )
+        if self.parameter_description:
+            md.add_paragraph(self.parameter_description)
+
+        md.add_heading("Example", level=4)
+        md.add_codeblock(self.example.strip(), language="assembly")
+
+        md.add_horizontal_rule()
+        md.add_paragraph(
+            "*Adapted from Spin Semiconductor SPINAsm & FV-1 Instruction Set reference "
+            "manual. Copyright 2008 by Spin Semiconductor.*"
+        )
+
+        return str(md)
+
+
+@dataclass
+class Assembler(MarkdownGenerator):
+    """Generatable Markdown documentation for a SPINAsm assembler."""
+
+    name: str
+    description: str
+    example: str
+    example_remarks: str = ""
+
+    @cached_property
+    def markdown(self) -> str:
+        """A markdown documentation string."""
+        md = MarkdownString()
+
+        md.add_paragraph(self.description.strip())
+
+        md.add_heading("Example", level=4)
+        md.add_codeblock(self.example.strip(), language="assembly")
+
+        if self.example_remarks:
+            md.add_paragraph(self.example_remarks.strip())
+
+        md.add_horizontal_rule()
+        md.add_paragraph(
+            "*Adapted from Spin Semiconductor SPINAsm & FV-1 Instruction Set reference "
+            "manual. Copyright 2008 by Spin Semiconductor.*"
+        )
+
+        return str(md)
+
+
+class MarkdownTable(MarkdownGenerator):
     def __init__(
         self,
         cols: list[str],
@@ -32,7 +142,8 @@ class MarkdownTable:
         self.cols = cols
         self.rows = rows
 
-    def __str__(self) -> str:
+    @property
+    def markdown(self) -> str:
         header = " | ".join(self.cols)
 
         separators = []
