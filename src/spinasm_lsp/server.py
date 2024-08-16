@@ -308,28 +308,21 @@ async def references(
 
 @server.feature(
     lsp.TEXT_DOCUMENT_SIGNATURE_HELP,
-    options=lsp.SignatureHelpOptions(
-        trigger_characters=[" "], retrigger_characters=[","]
-    ),
+    options=lsp.SignatureHelpOptions(trigger_characters=[" ", ","]),
 )
 async def signature_help(
     ls: SPINAsmLanguageServer, params: lsp.SignatureHelpParams
 ) -> lsp.SignatureHelp | None:
     parser = await ls.get_parser(params.text_document.uri)
 
-    try:
-        line_tokens = parser.token_registry._tokens_by_line[params.position.line]
-    # Exit on empty line
-    except KeyError:
-        return None
-
     # Find all opcodes on the line that could have triggered the signature help. Ignore
     # opcodes that appear after the cursor, to avoid showing signature help prematurely.
+    line_tokens = parser.token_registry._tokens_by_line.get(params.position.line, [])
     opcodes = [
         t
         for t in line_tokens
         if t.symbol["type"] == "MNEMONIC"
-        and t.range.start.character < params.position.character
+        and t.range.end.character < params.position.character
     ]
     if not opcodes:
         return None
@@ -341,23 +334,24 @@ async def signature_help(
     if opcode is None:
         return None
 
+    # Get all argument separators after the opcode
     remaining_tokens = line_tokens[line_tokens.index(triggered_opcode) + 1 :]
-
     argseps = [t for t in remaining_tokens if t.symbol["type"] == "ARGSEP"]
-    # The first argument separator to the right of the cursor is the active arg index.
-    # If there are no separators right of the cursor, we either haven't entered an arg
-    # yet or we're on the last arg.
-    arg_idx = 0 if not argseps else len(opcode.args) - 1
-    for i, argsep in enumerate(argseps):
-        if argsep.range.end.character > params.position.character:
-            arg_idx = i
-            break
 
-    # Special case for multi-word instructions that treat the first argument as part of
-    # the instruction name. In that case, we need to shift to the previous argument to
-    # account for the extra arg separator.
-    if str(triggered_opcode) in MULTI_WORD_INSTRUCTIONS and arg_idx != -1:
-        arg_idx -= 1
+    # The first argument of multi-word instructions like CHO RDAL is treated as part of
+    # the opcode, so we should skip the first separator when counting arguments.
+    if str(triggered_opcode) in MULTI_WORD_INSTRUCTIONS:
+        argseps = argseps[1:]
+
+    # Count how many parameters are left of the cursor to see which argument we're
+    # currently entering.
+    arg_idx = len(
+        [
+            argsep
+            for argsep in argseps
+            if params.position.character > argsep.range.start.character
+        ]
+    )
 
     signature = [lsp.ParameterInformation(label=arg.markdown) for arg in opcode.args]
 
