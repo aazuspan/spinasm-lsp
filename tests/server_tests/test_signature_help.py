@@ -29,7 +29,7 @@ SIGNATURE_HELPS: list[SignatureHelpTestCase] = [
     },
     {
         "name": "skp_first_arg",
-        "position": lsp.Position(line=37, character=3),
+        "position": lsp.Position(line=37, character=4),
         "active_parameter": 0,
         "doc_contains": "**`SKP CMASK, N`** allows conditional program execution",
         "param_contains": "CMASK: Binary | Hex ($00-$1F) | Symbolic",
@@ -79,7 +79,8 @@ async def test_signature_help(test_case: SignatureHelpTestCase, client: Language
     result = await client.text_document_signature_help_async(
         params=lsp.SignatureHelpParams(
             context=lsp.SignatureHelpContext(
-                trigger_kind=lsp.SignatureHelpTriggerKind.Invoked, is_retrigger=False
+                trigger_kind=lsp.SignatureHelpTriggerKind.TriggerCharacter,
+                is_retrigger=False,
             ),
             position=test_case["position"],
             text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
