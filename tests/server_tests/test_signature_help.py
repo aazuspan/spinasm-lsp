@@ -63,8 +63,18 @@ SIGNATURE_HELPS: list[SignatureHelpTestCase] = [
     },
     {
         # Triggering signature help before finishing the opcode should return None
-        "name": "cho_rda",
+        "name": "cho_rda_unfinished",
         "position": lsp.Position(line=85, character=0),
+        "active_parameter": None,
+        "doc_contains": None,
+        "param_contains": None,
+        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
+    },
+    {
+        # Triggering signature help after finishing, before the comma in a multi-word
+        # instruction should return none
+        "name": "cho_rda_before_comma",
+        "position": lsp.Position(line=85, character=7),
         "active_parameter": None,
         "doc_contains": None,
         "param_contains": None,
