@@ -247,16 +247,13 @@ class SPINAsmParser(fv1parse):
     def __init__(self, source: str):
         self.diagnostics: list[lsp.Diagnostic] = []
         """A list of diagnostic messages generated during parsing."""
-        # Mapping of token names to where they're defined
+        # Intermediate token definitions and lookups set during parsing
         self._definitions: dict[str, lsp.Range] = {}
-        # Intermediate lookup for tokens that are parsed but not evaluated yet
         self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
 
-        self.current_character: int = 0
-        """The current column in the source file."""
-
-        self.previous_character: int = 0
-        """The last visitied column in the source file."""
+        # Current position during parsing
+        self._current_character: int = 0
+        self._previous_character: int = 0
 
         self.evaluated_tokens: TokenLookup[EvaluatedToken] = TokenLookup()
         """Tokens with additional metadata after evaluation."""
@@ -307,7 +304,7 @@ class SPINAsmParser(fv1parse):
         self._record_diagnostic(
             msg,
             line=line - 1,
-            character=self.current_character,
+            character=self._current_character,
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -315,8 +312,8 @@ class SPINAsmParser(fv1parse):
         """Override to record scanning errors as LSP diagnostics."""
         self._record_diagnostic(
             msg,
-            line=self.current_line,
-            character=self.current_character,
+            line=self._current_line,
+            character=self._current_character,
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -329,7 +326,7 @@ class SPINAsmParser(fv1parse):
         self._record_diagnostic(
             msg,
             line=line - 1,
-            character=self.current_character,
+            character=self._current_character,
             severity=lsp.DiagnosticSeverity.Warning,
         )
 
@@ -343,18 +340,13 @@ class SPINAsmParser(fv1parse):
         self._sline = value
 
         # Reset the column to 0 when we move to a new line
-        self.previous_character = self.current_character
-        self.current_character = 0
+        self._previous_character = self._current_character
+        self._current_character = 0
 
     @property
-    def current_line(self):
+    def _current_line(self):
         """Get the zero-indexed current line."""
         return self.sline - 1
-
-    @property
-    def previous_line(self):
-        """Get the zero-indexed previous line."""
-        return self.prevline - 1
 
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
@@ -366,7 +358,7 @@ class SPINAsmParser(fv1parse):
 
         token = ParsedToken.from_asfv1_token(
             self.sym,
-            start=lsp.Position(self.current_line, character=self.current_character),
+            start=lsp.Position(self._current_line, character=self._current_character),
         )
         self._parsed_tokens.add_token(token)
 
@@ -385,21 +377,20 @@ class SPINAsmParser(fv1parse):
 
     def _update_column(self):
         """Set the current column based on the last parsed symbol."""
-        current_line_txt = self._source[self.current_line]
+        current_line_txt = self._source[self._current_line]
         current_symbol = self.sym.get("txt", None) or ""
 
-        self.previous_character = self.current_character
+        self._previous_character = self._current_character
         try:
             # Start at the current column to skip previous duplicates of the symbol
-            self.current_character = current_line_txt.index(
-                current_symbol, self.current_character
+            self._current_character = current_line_txt.index(
+                current_symbol, self._current_character
             )
         except ValueError:
-            self.current_character = 0
+            self._current_character = 0
 
     def _evaluate_token(self, token: ParsedToken) -> EvaluatedToken:
         """Evaluate a parsed token to determine its value and semantics."""
-        print(f"Evaluating {token.stxt}")
         value = None
         semantic_type = None
         defined_range = None
