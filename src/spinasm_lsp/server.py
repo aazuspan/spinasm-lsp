@@ -114,11 +114,11 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
     """Retrieve documentation from symbols on hover."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
-    if token.symbol["type"] in ("LABEL", "TARGET"):
-        hover_msg = _get_defined_hover(str(token), parser=parser)
+    if token.type in ("LABEL", "TARGET"):
+        hover_msg = _get_defined_hover(token.stxt, parser=parser)
 
         return (
             None
@@ -131,8 +131,8 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
             )
         )
 
-    if token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
-        hover_msg = ls.documentation.get_markdown(str(token))
+    if token.type in ("ASSEMBLER", "MNEMONIC"):
+        hover_msg = ls.documentation.get_markdown(token.stxt)
 
         return (
             None
@@ -209,19 +209,19 @@ async def definition(
 
     document = ls.workspace.get_text_document(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
     # Definitions should be checked against the base token name, ignoring address
     # modifiers.
     base_token = token.without_address_modifier()
 
-    if str(base_token) not in parser.definitions:
+    if not base_token.defined:
         return None
 
     return lsp.Location(
         uri=document.uri,
-        range=parser.definitions[str(base_token)],
+        range=base_token.defined,
     )
 
 
@@ -229,21 +229,19 @@ async def definition(
 async def document_symbol_definitions(
     ls: SPINAsmLanguageServer, params: lsp.DocumentSymbolParams
 ) -> list[lsp.DocumentSymbol]:
-    """Returns the definitions of all symbols in the document."""
+    """Returns the definition location of all symbols in the document."""
     parser = await ls.get_parser(params.text_document.uri)
-
     return [
         lsp.DocumentSymbol(
-            name=symbol,
+            name=t.stxt,
             kind=lsp.SymbolKind.Module
-            if symbol in parser.jmptbl
-            # There's no need to check for constants here since they aren't included
-            # in the parser definitions.
+            if t.semantic_type is lsp.SemanticTokenTypes.Namespace
             else lsp.SymbolKind.Variable,
-            range=definition,
-            selection_range=definition,
+            range=t.defined,
+            selection_range=t.defined,
         )
-        for symbol, definition in parser.definitions.items()
+        for t in parser.evaluated_tokens
+        if t.defined
     ]
 
 
@@ -253,15 +251,15 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
     is a valid operation."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
     # Renaming is checked against the base token name, ignoring address modifiers.
     base_token = token.without_address_modifier()
 
     # Only user-defined labels should support renaming
-    if str(base_token) not in parser.definitions:
-        ls.info(f"Can't rename non-user defined token {base_token}.")
+    if not base_token.defined:
+        ls.info(f"Can't rename non-user defined token {base_token.stxt}.")
         return None
 
     return lsp.PrepareRenameResult_Type2(default_behavior=True)
@@ -275,12 +273,12 @@ async def rename(
 ) -> lsp.WorkspaceEdit:
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
     # Ignore address modifiers so that e.g. we can rename `Delay` by renaming `Delay#`
     base_token = token.without_address_modifier()
-    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
+    matching_tokens = parser.evaluated_tokens.get(name=base_token.stxt)
 
     edits = [lsp.TextEdit(t.range, new_text=params.new_name) for t in matching_tokens]
     return lsp.WorkspaceEdit(changes={params.text_document.uri: edits})
@@ -292,13 +290,13 @@ async def references(
 ) -> list[lsp.Location]:
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return []
 
     # Ignore address modifiers so that e.g. we can find all variations of addresses,
     # e.g. `Delay` and `Delay#`
     base_token = token.without_address_modifier()
-    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
+    matching_tokens = parser.evaluated_tokens.get(name=base_token.stxt)
 
     return [
         lsp.Location(uri=params.text_document.uri, range=t.range)
@@ -317,12 +315,11 @@ async def signature_help(
 
     # Find all opcodes on the line that could have triggered the signature help. Ignore
     # opcodes that appear after the cursor, to avoid showing signature help prematurely.
-    line_tokens = parser.token_registry._tokens_by_line.get(params.position.line, [])
+    line_tokens = parser.evaluated_tokens.get(line=params.position.line)
     opcodes = [
         t
         for t in line_tokens
-        if t.symbol["type"] == "MNEMONIC"
-        and t.range.end.character < params.position.character
+        if t.type == "MNEMONIC" and t.range.end.character < params.position.character
     ]
     if not opcodes:
         return None
@@ -330,17 +327,17 @@ async def signature_help(
     # We should never have more than one opcode on a line, but just in case, grab the
     # last one entered before the cursor.
     triggered_opcode = opcodes[-1]
-    opcode = ls.documentation.get_instruction(str(triggered_opcode))
+    opcode = ls.documentation.get_instruction(triggered_opcode.stxt)
     if opcode is None:
         return None
 
     # Get all argument separators after the opcode
     remaining_tokens = line_tokens[line_tokens.index(triggered_opcode) + 1 :]
-    argseps = [t for t in remaining_tokens if t.symbol["type"] == "ARGSEP"]
+    argseps = [t for t in remaining_tokens if t.type == "ARGSEP"]
 
     # The first argument of multi-word instructions like CHO RDAL is treated as part of
     # the opcode, so we should skip the first separator when counting arguments.
-    if str(triggered_opcode) in MULTI_WORD_INSTRUCTIONS:
+    if triggered_opcode.stxt in MULTI_WORD_INSTRUCTIONS:
         argseps = argseps[1:]
 
     # Count how many parameters are left of the cursor to see which argument we're

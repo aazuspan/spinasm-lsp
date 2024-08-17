@@ -5,7 +5,7 @@ from __future__ import annotations
 import lsprotocol.types as lsp
 import pytest
 
-from spinasm_lsp.parser import SPINAsmParser, Token, TokenRegistry
+from spinasm_lsp.parser import EvaluatedToken, ParsedToken, SPINAsmParser, TokenLookup
 
 from .conftest import PATCH_DIR, TEST_PATCHES
 
@@ -18,7 +18,7 @@ def test_example_patches(patch):
 
 
 @pytest.fixture()
-def sentence_token_registry() -> tuple[str, TokenRegistry]:
+def sentence_token_lookup() -> tuple[str, TokenLookup]:
     """A sentence with a token registry for each word."""
     sentence = "This   is a line    with words."
 
@@ -29,19 +29,25 @@ def sentence_token_registry() -> tuple[str, TokenRegistry]:
     tokens = []
     col = 0
 
+    lookup = TokenLookup()
     for t in token_vals:
         start = sentence.index(t["txt"], col)
-        token = Token(t, start=lsp.Position(line=0, character=start))
-        col = token.range.end.character + 1
+        parsed_token = ParsedToken.from_asfv1_token(
+            t, start=lsp.Position(line=0, character=start)
+        )
+        eval_token = EvaluatedToken.from_parsed_token(parsed_token)
 
-        tokens.append(token)
+        col = eval_token.range.end.character + 1
 
-    return sentence, TokenRegistry(tokens)
+        tokens.append(eval_token)
+        lookup.add_token(parsed_token)
+
+    return sentence, lookup
 
 
-def test_get_token_from_registry(sentence_token_registry):
+def test_get_token_from_registry(sentence_token_lookup: tuple[str, TokenLookup]):
     """Test that tokens are correctly retrieved by position from a registry."""
-    sentence, reg = sentence_token_registry
+    sentence, lookup = sentence_token_lookup
 
     # Manually build a mapping of column indexes to expected token words. Note that
     # each word includes the whitespace immediately after it, which is consistent with
@@ -61,17 +67,17 @@ def test_get_token_from_registry(sentence_token_registry):
         token_positions[i] = "words."
 
     for i, word in token_positions.items():
-        found_tok = reg.get_token_at_position(lsp.Position(line=0, character=i))
-        found_val = found_tok.symbol["txt"] if found_tok is not None else found_tok
+        found_tok = lookup.get(position=lsp.Position(line=0, character=i))
+        found_val = found_tok.stxt if found_tok is not None else found_tok
         msg = f"Expected token `{word}` at col {i}, found `{found_val}`"
         assert found_val == word, msg
 
 
-def test_get_token_at_invalid_position_returns_none(sentence_token_registry):
+def test_get_token_at_invalid_position_returns_none(sentence_token_lookup):
     """Test that retrieving tokens from out of bounds always returns None."""
-    _, reg = sentence_token_registry
+    _, lookup = sentence_token_lookup
 
-    assert reg.get_token_at_position(lsp.Position(line=99, character=99)) is None
+    assert lookup.get(position=lsp.Position(line=99, character=99)) is None
 
 
 def test_get_token_positions():
@@ -82,31 +88,27 @@ def test_get_token_positions():
 
     parser = SPINAsmParser(source).parse()
 
-    all_matches = parser.token_registry.get_matching_tokens("apout")
+    all_matches = parser.evaluated_tokens.get(name="apout")
     assert len(all_matches) == 4
     assert [t.range.start.line for t in all_matches] == [23, 57, 60, 70]
 
 
 def test_concatenate_cho_rdal_tokens():
     """Test that CHO and RDAL tokens are concatenated correctly into CHO RDAL."""
-    cho_rdal = Token(
-        symbol={"type": "MNEMONIC", "txt": "cho", "stxt": "CHO", "val": None},
+    cho = ParsedToken.from_asfv1_token(
+        {"type": "MNEMONIC", "txt": "CHO", "stxt": "CHO", "val": None},
         start=lsp.Position(line=0, character=0),
-    ).concatenate(
-        Token(
-            symbol={"type": "LABEL", "txt": "rdal", "stxt": "RDAL", "val": None},
-            # Put whitespace between CHO and RDAL to test that range is calculated
-            start=lsp.Position(line=0, character=10),
-        )
+    )
+    rdal = ParsedToken.from_asfv1_token(
+        {"type": "LABEL", "txt": "RDAL", "stxt": "RDAL", "val": None},
+        # Put whitespace between CHO and RDAL to test that range is calculated
+        start=lsp.Position(line=0, character=10),
     )
 
-    assert cho_rdal.symbol == {
-        "type": "MNEMONIC",
-        "txt": "cho rdal",
-        "stxt": "CHO RDAL",
-        "val": None,
-    }
+    cho_rdal = cho.concatenate(rdal)
 
+    assert cho_rdal.stxt == "CHO RDAL"
+    assert cho_rdal.type == "MNEMONIC"
     assert cho_rdal.range == lsp.Range(
         start=lsp.Position(line=0, character=0), end=lsp.Position(line=0, character=14)
     )

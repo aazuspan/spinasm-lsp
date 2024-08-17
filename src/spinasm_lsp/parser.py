@@ -4,158 +4,222 @@ from __future__ import annotations
 
 import bisect
 import copy
-from typing import Literal, TypedDict
+from typing import Generator, Generic, Literal, TypedDict, TypeVar, overload
 
 import lsprotocol.types as lsp
 from asfv1 import fv1parse
 
+T = TypeVar("T", bound="ParsedToken")
 
-class Symbol(TypedDict):
-    """
-    The token specification used by asfv1.
+# Token types assigned by asfv1. Note that we exclude EOF tokens, as they are ignored by
+# the LSP.
+TokenType = Literal[
+    "ASSEMBLER",
+    "INTEGER",
+    "LABEL",
+    "TARGET",
+    "MNEMONIC",
+    "OPERATOR",
+    "FLOAT",
+    "ARGSEP",
+]
 
-    Note that we exclude EOF tokens, as they are ignored by the LSP.
-    """
 
-    type: Literal[
-        "ASSEMBLER",
-        "INTEGER",
-        "LABEL",
-        "TARGET",
-        "MNEMONIC",
-        "OPERATOR",
-        "FLOAT",
-        "ARGSEP",
-    ]
+class ASFV1Token(TypedDict):
+    """Raw token metadata parsed by asfv1."""
+
+    type: TokenType
     txt: str
     stxt: str
     val: int | float | None
 
 
-class Token:
+class ParsedToken:
     """
-    A parsed token.
+    Token metadata including its position.
 
     Parameters
     ----------
-    symbol : Symbol
-        The symbol parsed by asfv1 representing the token.
-    start : lsp.Position
-        The start position of the token in the source file.
-    end : lsp.Position, optional
-        The end position of the token in the source file. If not provided, the end
-        position is calculated based on the width of the symbol's stxt.
-
-    Attributes
-    ----------
-    symbol : Symbol
-        The symbol parsed by asfv1 representing the token.
+    type : TokenType
+        The type of token identified by asfv1.
+    stxt : str
+        The name assigned to the token, always uppercase.
     range : lsp.Range
-        The location range of the token in the source file.
+        The position of the token in the source code.
     """
 
-    def __init__(
-        self, symbol: Symbol, start: lsp.Position, end: lsp.Position | None = None
-    ):
-        if end is None:
-            width = len(symbol["stxt"])
-            end = lsp.Position(line=start.line, character=start.character + width)
-
-        self.symbol: Symbol = symbol
-        self.range: lsp.Range = lsp.Range(start=start, end=end)
+    def __init__(self, type: TokenType, stxt: str, range: lsp.Range):
+        self.type = type
+        self.stxt = stxt
+        self.range = range
 
     def __repr__(self) -> str:
-        return self.symbol["stxt"]
+        return f"{self.stxt} [{self.type}] at {self.range}"
 
-    def concatenate(self, other: Token) -> Token:
+    def _clone(self: T) -> T:
+        """Return a clone of the token to avoid mutating the original."""
+        return copy.deepcopy(self)
+
+    def without_address_modifier(self: T) -> T:
+        """
+        Create a clone of the token with the address modifier removed.
+        """
+        if not self.stxt.endswith("#") and not self.stxt.endswith("^"):
+            return self
+
+        clone = self._clone()
+        clone.stxt = clone.stxt[:-1]
+        clone.range.end.character -= 1
+
+        return clone
+
+    def concatenate(self: T, other: T) -> T:
         """
         Concatenate by merging with another token, in place.
 
         In practice, this is used for the multi-word opcodes that are parsed as separate
         tokens: CHO RDA, CHO RDAL, and CHO SOF.
         """
-        if any(
-            symbol_type not in ("MNEMONIC", "LABEL")
-            for symbol_type in (self.symbol["type"], other.symbol["type"])
-        ):
-            raise TypeError("Only MNEMONIC and LABEL symbols can be concatenated.")
-
-        self.symbol["txt"] += f" {other.symbol['txt']}"
-        self.symbol["stxt"] += f" {other.symbol['stxt']}"
+        self.stxt += f" {other.stxt}"
         self.range.end = other.range.end
         return self
 
-    def _clone(self) -> Token:
-        """Return a clone of the token to avoid mutating the original."""
-        return copy.deepcopy(self)
+    @classmethod
+    def from_asfv1_token(
+        cls, token: ASFV1Token, start: lsp.Position, end: lsp.Position | None = None
+    ) -> ParsedToken:
+        if end is None:
+            width = len(token["stxt"])
+            end = lsp.Position(line=start.line, character=start.character + width)
 
-    def without_address_modifier(self) -> Token:
-        """
-        Create a clone of the token with the address modifier removed.
-        """
-        if not str(self).endswith("#") and not str(self).endswith("^"):
-            return self
-
-        token = self._clone()
-        token.symbol["stxt"] = token.symbol["stxt"][:-1]
-        token.range.end.character -= 1
-
-        return token
+        return cls(
+            type=token["type"],
+            stxt=token["stxt"],
+            range=lsp.Range(start=start, end=end),
+        )
 
 
-class TokenRegistry:
-    """A registry of tokens and their positions in a source file."""
+class EvaluatedToken(ParsedToken):
+    """
+    A parsed token with additional evaluated metadata like its value and semantic type.
+    """
 
-    def __init__(self, tokens: list[Token] | None = None) -> None:
-        self._prev_token: Token | None = None
+    def __init__(
+        self,
+        type: TokenType,
+        stxt: str,
+        range: lsp.Range,
+        value: float | int | None = None,
+        defined: lsp.Range | None = None,
+        semantic_modifiers: list[lsp.SemanticTokenModifiers] | None = None,
+        semantic_type: lsp.SemanticTokenTypes | None = None,
+    ):
+        super().__init__(type=type, stxt=stxt, range=range)
 
-        """A dictionary mapping program lines to all Tokens on that line."""
-        self._tokens_by_line: dict[int, list[Token]] = {}
+        self.defined = defined
+        """The range where the token is defined, if applicable."""
 
-        """A dictionary mapping token names to all matching Tokens in the program."""
-        self._tokens_by_name: dict[str, list[Token]] = {}
+        self.value = value
+        """The numeric value of the evaluated token, if applicable."""
 
-        for token in tokens or []:
-            self.register_token(token)
+        self.semantic_modifiers = semantic_modifiers or []
+        """The semantic modifiers relevant to the token."""
 
-    def register_token(self, token: Token) -> None:
-        """Add a token to the registry."""
+        self.semantic_type = semantic_type
+        """The semantic type of the token."""
+
+    @classmethod
+    def from_parsed_token(
+        cls,
+        token: ParsedToken,
+        value: float | int | None = None,
+        defined: lsp.Range | None = None,
+        semantic_modifiers: list[lsp.SemanticTokenModifiers] | None = None,
+        semantic_type: lsp.SemanticTokenTypes | None = None,
+    ) -> EvaluatedToken:
+        return EvaluatedToken(
+            type=token.type,
+            stxt=token.stxt,
+            range=token.range,
+            value=value,
+            defined=defined,
+            semantic_modifiers=semantic_modifiers,
+            semantic_type=semantic_type,
+        )
+
+
+class TokenLookup(Generic[T]):
+    """A lookup table for tokens by position and name."""
+
+    def __init__(self):
+        self._prev_token: T | None = None
+        self._line_lookup: dict[int, list[T]] = {}
+        self._name_lookup: dict[str, list[T]] = {}
+
+    def __iter__(self) -> Generator[T, None, None]:
+        """Yield all tokens."""
+        for line in self._line_lookup.values():
+            yield from line
+
+    @overload
+    def get(self, *, position: lsp.Position) -> T | None: ...
+    @overload
+    def get(self, *, name: str) -> list[T]: ...
+    @overload
+    def get(self, *, line: int) -> list[T]: ...
+
+    def get(
+        self,
+        *,
+        position: lsp.Position | None = None,
+        name: str | None = None,
+        line: int | None = None,
+    ) -> T | list[T] | None:
+        ...
+        """Retrieve a token by position, name, or line."""
+        # Raise if more than one argument is provided
+        if sum(arg is not None for arg in (position, name, line)) > 1:
+            raise ValueError("Only one of position, name, or line may be provided")
+
+        if position is not None:
+            return self._token_at_position(position)
+        if line is not None:
+            return self._line_lookup.get(line, [])
+        if name is not None:
+            return self._name_lookup.get(name.upper(), [])
+        raise ValueError("Either a position, name, or line must be provided.")
+
+    def add_token(self, token: T) -> None:
+        """Store a token for future lookup."""
         # Handle multi-word CHO instructions by merging the second token with the first
         # and skipping the second token.
-        if str(self._prev_token) == "CHO" and str(token) in ("RDA", "RDAL", "SOF"):
+        if (
+            self._prev_token
+            and self._prev_token.stxt == "CHO"
+            and token.stxt in ("RDA", "RDAL", "SOF")
+        ):
             self._prev_token.concatenate(token)  # type: ignore
             return
 
-        if token.range.start.line not in self._tokens_by_line:
-            self._tokens_by_line[token.range.start.line] = []
-
         # Store the token on its line
-        self._tokens_by_line[token.range.start.line].append(token)
+        self._line_lookup.setdefault(token.range.start.line, []).append(token)
         self._prev_token = token
 
         # Store user-defined tokens together by name. Other token types could be stored,
         # but currently there's no use case for retrieving their positions.
-        if token.symbol["type"] in ("LABEL", "TARGET"):
+        if token.type in ("LABEL", "TARGET"):
             # Tokens are stored by name without address modifiers, so that e.g. Delay#
             # and Delay can be retrieved with the same query. This allows for renaming
             # all instances of a memory token.
-            token = token.without_address_modifier()
+            base_token = token.without_address_modifier()
+            self._name_lookup.setdefault(base_token.stxt, []).append(base_token)
 
-            if str(token) not in self._tokens_by_name:
-                self._tokens_by_name[str(token)] = []
-
-            self._tokens_by_name[str(token)].append(token)
-
-    def get_matching_tokens(self, token_name: str) -> list[Token]:
-        """Retrieve all tokens with a given name in the program."""
-        return self._tokens_by_name.get(token_name.upper(), [])
-
-    def get_token_at_position(self, position: lsp.Position) -> Token | None:
+    def _token_at_position(self, position: lsp.Position) -> T | None:
         """Retrieve the token at the given position."""
-        if position.line not in self._tokens_by_line:
+        if position.line not in self._line_lookup:
             return None
 
-        line_tokens = self._tokens_by_line[position.line]
+        line_tokens = self._line_lookup[position.line]
         token_starts = [t.range.start.character for t in line_tokens]
         token_ends = [t.range.end.character for t in line_tokens]
 
@@ -178,14 +242,15 @@ class TokenRegistry:
 class SPINAsmParser(fv1parse):
     """A modified version of fv1parse optimized for use with LSP."""
 
-    sym: Symbol | None
+    sym: ASFV1Token | None
 
     def __init__(self, source: str):
         self.diagnostics: list[lsp.Diagnostic] = []
         """A list of diagnostic messages generated during parsing."""
-
-        self.definitions: dict[str, lsp.Range] = {}
-        """A dictionary mapping symbol names to their definition location."""
+        # Mapping of token names to where they're defined
+        self._definitions: dict[str, lsp.Range] = {}
+        # Intermediate lookup for tokens that are parsed but not evaluated yet
+        self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
 
         self.current_character: int = 0
         """The current column in the source file."""
@@ -193,8 +258,8 @@ class SPINAsmParser(fv1parse):
         self.previous_character: int = 0
         """The last visitied column in the source file."""
 
-        self.token_registry = TokenRegistry()
-        """A registry of tokens and their positions in the source file."""
+        self.evaluated_tokens: TokenLookup[EvaluatedToken] = TokenLookup()
+        """Tokens with additional metadata after evaluation."""
 
         super().__init__(
             source=source,
@@ -299,26 +364,24 @@ class SPINAsmParser(fv1parse):
 
         self._update_column()
 
-        token = Token(
-            symbol=self.sym,
-            start=lsp.Position(
-                line=self.current_line, character=self.current_character
-            ),
+        token = ParsedToken.from_asfv1_token(
+            self.sym,
+            start=lsp.Position(self.current_line, character=self.current_character),
         )
-        self.token_registry.register_token(token)
+        self._parsed_tokens.add_token(token)
 
         base_token = token.without_address_modifier()
-        is_user_definable = base_token.symbol["type"] in ("LABEL", "TARGET")
-        is_defined = str(base_token) in self.jmptbl or str(base_token) in self.symtbl
+        is_user_definable = base_token.type in ("LABEL", "TARGET")
+        is_defined = base_token.stxt in self.jmptbl or base_token.stxt in self.symtbl
 
         if (
             is_user_definable
             and not is_defined
             # Labels appear before their target definition, so override when the target
             # is defined.
-            or base_token.symbol["type"] == "TARGET"
+            or base_token.type == "TARGET"
         ):
-            self.definitions[str(base_token)] = base_token.range
+            self._definitions[base_token.stxt] = base_token.range
 
     def _update_column(self):
         """Set the current column based on the last parsed symbol."""
@@ -334,7 +397,56 @@ class SPINAsmParser(fv1parse):
         except ValueError:
             self.current_character = 0
 
+    def _evaluate_token(self, token: ParsedToken) -> EvaluatedToken:
+        """Evaluate a parsed token to determine its value and semantics."""
+        print(f"Evaluating {token.stxt}")
+        value = None
+        semantic_type = None
+        defined_range = None
+        semantic_modifiers = []
+
+        # Set semantic type and modifiers
+        if token.type == "MNEMONIC":
+            semantic_type = lsp.SemanticTokenTypes.Function
+        elif token.type in ("INTEGER", "FLOAT"):
+            semantic_type = lsp.SemanticTokenTypes.Number
+        elif token.type in ("OPERATOR", "ASSEMBLER", "ARGSEP"):
+            semantic_type = lsp.SemanticTokenTypes.Operator
+        elif token.type == "LABEL":
+            semantic_type = lsp.SemanticTokenTypes.Variable
+            if token.stxt in self.constants:
+                semantic_modifiers = [
+                    lsp.SemanticTokenModifiers.Readonly,
+                    lsp.SemanticTokenModifiers.DefaultLibrary,
+                ]
+
+        if token.stxt in self.jmptbl:
+            semantic_type = lsp.SemanticTokenTypes.Namespace
+            value = self.jmptbl[token.stxt]
+        elif token.stxt in self.symtbl:
+            value = self.symtbl[token.stxt]
+
+        # Definitions are based on the base token without address modifiers
+        base_token = token.without_address_modifier()
+        if base_token.stxt in self._definitions:
+            defined_range = self._definitions[base_token.stxt]
+            if defined_range == base_token.range:
+                semantic_modifiers = lsp.SemanticTokenModifiers.Definition
+
+        return EvaluatedToken.from_parsed_token(
+            token=token,
+            value=value,
+            defined=defined_range,
+            semantic_type=semantic_type,
+            semantic_modifiers=semantic_modifiers,
+        )
+
     def parse(self) -> SPINAsmParser:
-        """Parse and return the parser."""
+        """Parse and evaluate all tokens."""
         super().parse()
+
+        for token in self._parsed_tokens:
+            evaluated_token = self._evaluate_token(token)
+            self.evaluated_tokens.add_token(evaluated_token)
+
         return self
