@@ -181,16 +181,12 @@ async def definition(
     if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
-    # Definitions should be checked against the base token name, ignoring address
-    # modifiers.
-    base_token = token.without_address_modifier()
-
-    if not base_token.defined:
+    if not token.defined:
         return None
 
     return lsp.Location(
         uri=document.uri,
-        range=base_token.defined,
+        range=token.defined,
     )
 
 
@@ -200,18 +196,7 @@ async def document_symbol_definitions(
 ) -> list[lsp.DocumentSymbol]:
     """Returns the definition location of all symbols in the document."""
     parser = await ls.get_parser(params.text_document.uri)
-    return [
-        lsp.DocumentSymbol(
-            name=t.stxt,
-            kind=lsp.SymbolKind.Module
-            if t.semantic_type is lsp.SemanticTokenTypes.Namespace
-            else lsp.SymbolKind.Variable,
-            range=t.defined,
-            selection_range=t.defined,
-        )
-        for t in parser.evaluated_tokens
-        if t.defined
-    ]
+    return [t.document_symbol for t in parser.evaluated_tokens if t.defined]
 
 
 @server.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
@@ -288,7 +273,7 @@ async def signature_help(
     opcodes = [
         t
         for t in line_tokens
-        if t.type == "MNEMONIC" and t.range.end.character < params.position.character
+        if t.is_opcode and t.range.end.character < params.position.character
     ]
     if not opcodes:
         return None
@@ -353,6 +338,13 @@ async def semantic_tokens(
     prev_token_position = lsp.Position(0, 0)
     for token in parser.evaluated_tokens:
         token_encoding = token.semantic_encoding(prev_token_position)
+
+        # Tokens without semantic encoding (e.g. operators) should be ignored so that
+        # the next encoding is relative to the last encoded token. Otherwise, character
+        # offsets would be incorrect.
+        if not token_encoding:
+            continue
+
         encoding += token_encoding
         prev_token_position = token.range.start
 

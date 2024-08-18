@@ -280,6 +280,28 @@ class LSPTokenMixin(EvaluatedToken):
             documentation=None,
         )
 
+    @property
+    def symbol_kind(self) -> lsp.SymbolKind:
+        return (
+            lsp.SymbolKind.Function
+            if self.is_opcode
+            else lsp.SymbolKind.Constant
+            if self.is_constant
+            else lsp.SymbolKind.Module
+            if self.is_label
+            else lsp.SymbolKind.Variable
+        )
+
+    @property
+    def document_symbol(self) -> lsp.DocumentSymbol:
+        """Create a document symbol for the token."""
+        return lsp.DocumentSymbol(
+            name=self.stxt,
+            kind=self.symbol_kind,
+            range=self.defined,
+            selection_range=self.defined,
+        )
+
 
 class LSPToken(LSPTokenMixin, SemanticTokenMixin):
     """An evaluated token with semantic and LSP information."""
