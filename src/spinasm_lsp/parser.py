@@ -8,55 +8,82 @@ from asfv1 import fv1parse
 from spinasm_lsp.tokens import ASFV1Token, LSPToken, ParsedToken, TokenLookup
 
 
-class SPINAsmParser(fv1parse):
-    """A modified version of fv1parse optimized for use with LSP."""
+class SPINAsmPositionParser(fv1parse):
+    """An SPINAsm parser that tracks zero-indexed parsing position."""
 
-    def __init__(self, source: str):
-        # Intermediate token definitions and lookups set during parsing
-        self._definitions: dict[str, lsp.Range] = {}
-        self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
-
+    def __init__(self, *args, **kwargs):
         # Current position during parsing
         self._current_character: int = 0
         self._previous_character: int = 0
 
+        super().__init__(*args, **kwargs)
+
+        # Store an unmodified version of the source for future reference
+        self._source: list[str] = self.source.copy()
+
+    @property
+    def sline(self) -> int:
+        return self._sline
+
+    @sline.setter
+    def sline(self, value):
+        """Update the current line and reset the column."""
+        self._sline = value
+
+        # Reset the column to 0 when we move to a new line
+        self._previous_character = self._current_character
+        self._current_character = 0
+
+    @property
+    def _current_line(self) -> int:
+        """Get the zero-indexed current line."""
+        return self.sline - 1
+
+    @property
+    def position(self) -> lsp.Position:
+        """The current position of the parser in the source code."""
+        return lsp.Position(line=self._current_line, character=self._current_character)
+
+    @property
+    def parsed_symbol(self) -> ASFV1Token:
+        """Get the last parsed symbol."""
+        return ASFV1Token(**self.sym)
+
+    def __next__(self) -> None:
+        """Parse the next token and update the current character and line."""
+        super().__next__()
+        current_line_txt = self._source[self._current_line]
+        current_symbol = self.parsed_symbol.txt
+
+        self._previous_character = self._current_character
+        # Start at the current column to skip previous duplicates of the symbol
+        self._current_character = current_line_txt.index(
+            current_symbol, self._current_character
+        )
+
+
+class SPINAsmDiagnosticParser(SPINAsmPositionParser):
+    """An SPINAsm parser that logs warnings and errors as LSP diagnostics."""
+
+    def __init__(self, *args, **kwargs):
         super().__init__(
-            source=source,
-            clamp=True,
-            spinreals=False,
+            *args,
             # Ignore the callbacks in favor of overriding their callers
             wfunc=lambda *args, **kwargs: None,
             efunc=lambda *args, **kwargs: None,
+            **kwargs,
         )
-
-        # Store the unmodified source and a list of built-in constants that were defined
-        # at initialization.
-        self._source: list[str] = self.source.copy()
-        self._constants: list[str] = list(self.symtbl.keys())
 
         self.diagnostics: list[lsp.Diagnostic] = []
         """A list of diagnostic messages generated during parsing."""
 
-        self.evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
-        """Tokens with additional metadata after evaluation."""
-
-    def __mkopcodes__(self):
-        """
-        No-op.
-
-        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
-        """
-
     def _record_diagnostic(
-        self, msg: str, line: int, character: int, severity: lsp.DiagnosticSeverity
+        self, msg: str, *, position: lsp.Position, severity: lsp.DiagnosticSeverity
     ):
         """Record a diagnostic message for the LSP."""
         self.diagnostics.append(
             lsp.Diagnostic(
-                range=lsp.Range(
-                    start=lsp.Position(line, character=character),
-                    end=lsp.Position(line, character=character),
-                ),
+                range=lsp.Range(start=position, end=position),
                 message=msg,
                 severity=severity,
                 source="SPINAsm",
@@ -71,8 +98,7 @@ class SPINAsmParser(fv1parse):
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
             msg,
-            line=line - 1,
-            character=self._current_character,
+            position=lsp.Position(line=line - 1, character=self._current_character),
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -80,8 +106,9 @@ class SPINAsmParser(fv1parse):
         """Override to record scanning errors as LSP diagnostics."""
         self._record_diagnostic(
             msg,
-            line=self._current_line,
-            character=self._current_character,
+            position=lsp.Position(
+                line=self._current_line, character=self._current_character
+            ),
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -93,41 +120,43 @@ class SPINAsmParser(fv1parse):
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
             msg,
-            line=line - 1,
-            character=self._current_character,
+            position=lsp.Position(line=line - 1, character=self._current_character),
             severity=lsp.DiagnosticSeverity.Warning,
         )
 
-    @property
-    def sline(self):
-        return self._sline
 
-    @sline.setter
-    def sline(self, value):
-        """Update the current line and reset the column."""
-        self._sline = value
+class SPINAsmParser(SPINAsmDiagnosticParser):
+    """An SPINAsm parser with position, diagnostics, and additional LSP features."""
 
-        # Reset the column to 0 when we move to a new line
-        self._previous_character = self._current_character
-        self._current_character = 0
+    def __init__(self, source: str):
+        # Intermediate token definitions and lookups set during parsing
+        self._definitions: dict[str, lsp.Range] = {}
+        self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
 
-    @property
-    def parsed_symbol(self) -> ASFV1Token:
-        """Get the last parsed symbol."""
-        return ASFV1Token(**self.sym)
+        super().__init__(
+            source=source,
+            clamp=True,
+            spinreals=False,
+        )
 
-    @property
-    def _current_line(self):
-        """Get the zero-indexed current line."""
-        return self.sline - 1
+        # Store built-in constants that were defined at initialization.
+        self._constants: list[str] = list(self.symtbl.keys())
+
+        self.evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
+        """Tokens with additional metadata after evaluation."""
+
+    def __mkopcodes__(self):
+        """
+        No-op.
+
+        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
+        """
 
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
         super().__next__()
         if self.parsed_symbol.type == "EOF":
             return
-
-        self._update_column()
 
         token = self.parsed_symbol.at_position(
             start=lsp.Position(self._current_line, character=self._current_character),
@@ -146,20 +175,6 @@ class SPINAsmParser(fv1parse):
             or base_token.type == "TARGET"
         ):
             self._definitions[base_token.stxt] = base_token.range
-
-    def _update_column(self):
-        """Set the current column based on the last parsed symbol."""
-        current_line_txt = self._source[self._current_line]
-        current_symbol = self.parsed_symbol.txt
-
-        self._previous_character = self._current_character
-        try:
-            # Start at the current column to skip previous duplicates of the symbol
-            self._current_character = current_line_txt.index(
-                current_symbol, self._current_character
-            )
-        except ValueError:
-            self._current_character = 0
 
     def _evaluate_token(self, token: ParsedToken) -> LSPToken:
         """Evaluate a parsed token to determine its value and metadata."""
