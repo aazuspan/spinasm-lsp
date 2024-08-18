@@ -5,17 +5,13 @@ from __future__ import annotations
 import lsprotocol.types as lsp
 from asfv1 import fv1parse
 
-from spinasm_lsp.tokens import ASFV1Token, EvaluatedToken, ParsedToken, TokenLookup
+from spinasm_lsp.tokens import ASFV1Token, LSPToken, ParsedToken, TokenLookup
 
 
 class SPINAsmParser(fv1parse):
     """A modified version of fv1parse optimized for use with LSP."""
 
-    sym: ASFV1Token | None
-
     def __init__(self, source: str):
-        self.diagnostics: list[lsp.Diagnostic] = []
-        """A list of diagnostic messages generated during parsing."""
         # Intermediate token definitions and lookups set during parsing
         self._definitions: dict[str, lsp.Range] = {}
         self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
@@ -23,9 +19,6 @@ class SPINAsmParser(fv1parse):
         # Current position during parsing
         self._current_character: int = 0
         self._previous_character: int = 0
-
-        self.evaluated_tokens: TokenLookup[EvaluatedToken] = TokenLookup()
-        """Tokens with additional metadata after evaluation."""
 
         super().__init__(
             source=source,
@@ -36,10 +29,16 @@ class SPINAsmParser(fv1parse):
             efunc=lambda *args, **kwargs: None,
         )
 
-        # Track which symbols were defined at initialization, e.g. registers and LFOs
-        self.constants: list[str] = list(self.symtbl.keys())
-        # Keep an unchanged copy of the original source
+        # Store the unmodified source and a list of built-in constants that were defined
+        # at initialization.
         self._source: list[str] = self.source.copy()
+        self._constants: list[str] = list(self.symtbl.keys())
+
+        self.diagnostics: list[lsp.Diagnostic] = []
+        """A list of diagnostic messages generated during parsing."""
+
+        self.evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
+        """Tokens with additional metadata after evaluation."""
 
     def __mkopcodes__(self):
         """
@@ -113,6 +112,11 @@ class SPINAsmParser(fv1parse):
         self._current_character = 0
 
     @property
+    def parsed_symbol(self) -> ASFV1Token:
+        """Get the last parsed symbol."""
+        return ASFV1Token(**self.sym)
+
+    @property
     def _current_line(self):
         """Get the zero-indexed current line."""
         return self.sline - 1
@@ -120,13 +124,12 @@ class SPINAsmParser(fv1parse):
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
         super().__next__()
-        if self.sym["type"] == "EOF":
+        if self.parsed_symbol.type == "EOF":
             return
 
         self._update_column()
 
-        token = ParsedToken.from_asfv1_token(
-            self.sym,
+        token = self.parsed_symbol.at_position(
             start=lsp.Position(self._current_line, character=self._current_character),
         )
         self._parsed_tokens.add_token(token)
@@ -147,7 +150,7 @@ class SPINAsmParser(fv1parse):
     def _update_column(self):
         """Set the current column based on the last parsed symbol."""
         current_line_txt = self._source[self._current_line]
-        current_symbol = self.sym.get("txt", None) or ""
+        current_symbol = self.parsed_symbol.txt
 
         self._previous_character = self._current_character
         try:
@@ -158,47 +161,17 @@ class SPINAsmParser(fv1parse):
         except ValueError:
             self._current_character = 0
 
-    def _evaluate_token(self, token: ParsedToken) -> EvaluatedToken:
-        """Evaluate a parsed token to determine its value and semantics."""
-        value = None
-        semantic_type = None
-        defined_range = None
-        semantic_modifiers = []
+    def _evaluate_token(self, token: ParsedToken) -> LSPToken:
+        """Evaluate a parsed token to determine its value and metadata."""
+        value = self.jmptbl.get(token.stxt, self.symtbl.get(token.stxt, None))
+        defined_range = self._definitions.get(token.without_address_modifier().stxt)
 
-        # Set semantic type and modifiers
-        if token.type == "MNEMONIC":
-            semantic_type = lsp.SemanticTokenTypes.Function
-        elif token.type in ("INTEGER", "FLOAT"):
-            semantic_type = lsp.SemanticTokenTypes.Number
-        elif token.type in ("OPERATOR", "ASSEMBLER", "ARGSEP"):
-            semantic_type = lsp.SemanticTokenTypes.Operator
-        elif token.type == "LABEL":
-            semantic_type = lsp.SemanticTokenTypes.Variable
-            if token.stxt in self.constants:
-                semantic_modifiers = [
-                    lsp.SemanticTokenModifiers.Readonly,
-                    lsp.SemanticTokenModifiers.DefaultLibrary,
-                ]
-
-        if token.stxt in self.jmptbl:
-            semantic_type = lsp.SemanticTokenTypes.Namespace
-            value = self.jmptbl[token.stxt]
-        elif token.stxt in self.symtbl:
-            value = self.symtbl[token.stxt]
-
-        # Definitions are based on the base token without address modifiers
-        base_token = token.without_address_modifier()
-        if base_token.stxt in self._definitions:
-            defined_range = self._definitions[base_token.stxt]
-            if defined_range == base_token.range:
-                semantic_modifiers = [lsp.SemanticTokenModifiers.Definition]
-
-        return EvaluatedToken.from_parsed_token(
+        return LSPToken.from_parsed_token(
             token=token,
             value=value,
             defined=defined_range,
-            semantic_type=semantic_type,
-            semantic_modifiers=semantic_modifiers,
+            is_constant=token.stxt in self._constants,
+            is_label=token.stxt in self.jmptbl,
         )
 
     def parse(self) -> SPINAsmParser:

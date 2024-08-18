@@ -93,23 +93,6 @@ def did_close(
     ls.publish_diagnostics(params.text_document.uri, [])
 
 
-def _get_defined_hover(stxt: str, parser: SPINAsmParser) -> str:
-    """Get a hover message with the value of a defined variable or label."""
-    # Check jmptbl first since labels are also defined in symtbl
-    if stxt in parser.jmptbl:
-        hover_definition = parser.jmptbl[stxt]
-        return f"(label) {stxt}: Offset[{hover_definition}]"
-    # Check constants next since they are also defined in symtbl
-    if stxt in parser.constants:
-        hover_definition = parser.symtbl[stxt]
-        return f"(constant) {stxt}: Literal[{hover_definition}]"
-    if stxt in parser.symtbl:
-        hover_definition = parser.symtbl[stxt]
-        return f"(variable) {stxt}: Literal[{hover_definition}]"
-
-    return ""
-
-
 @server.feature(lsp.TEXT_DOCUMENT_HOVER)
 async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | None:
     """Retrieve documentation from symbols on hover."""
@@ -119,17 +102,11 @@ async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover
         return None
 
     if token.type in ("LABEL", "TARGET"):
-        hover_msg = _get_defined_hover(token.stxt, parser=parser)
-
-        return (
-            None
-            if not hover_msg
-            else lsp.Hover(
-                # Java markdown formatting happens to give the best color-coding for
-                # hover messages
-                contents={"language": "java", "value": f"{hover_msg}"},
-                range=token.range,
-            )
+        return lsp.Hover(
+            # Java markdown formatting happens to give the best color-coding for
+            # hover messages
+            contents={"language": "java", "value": token.completion_detail},
+            range=token.range,
         )
 
     if token.type in ("ASSEMBLER", "MNEMONIC"):
@@ -156,19 +133,10 @@ async def completions(
     """Returns completion items."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    symbol_completions = [
-        lsp.CompletionItem(
-            label=symbol,
-            kind=lsp.CompletionItemKind.Constant
-            if symbol in parser.constants
-            else lsp.CompletionItemKind.Variable
-            if symbol in parser.symtbl
-            else lsp.CompletionItemKind.Module,
-            detail=_get_defined_hover(symbol, parser=parser),
-        )
-        for symbol in {**parser.symtbl, **parser.jmptbl}
-    ]
+    symbol_completions = [token.completion_item for token in parser.evaluated_tokens]
 
+    # TODO: If possible, get this from the completion item itself. This will require
+    # tokens to be able to query documentation.
     opcode_completions = [
         lsp.CompletionItem(
             label=opcode,

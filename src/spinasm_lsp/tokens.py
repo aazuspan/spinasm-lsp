@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import bisect
 import copy
-from typing import Generator, Generic, Literal, TypedDict, TypeVar, cast, overload
+from dataclasses import dataclass
+from typing import Generator, Generic, Literal, TypeVar, cast, overload
 
 import lsprotocol.types as lsp
 
-T = TypeVar("T", bound="ParsedToken")
-
+_ParsedTokenT = TypeVar("_ParsedTokenT", bound="ParsedToken")
+_EvaluatedTokenT = TypeVar("_EvaluatedTokenT", bound="EvaluatedToken")
 
 # Token types assigned by asfv1. Note that we exclude EOF tokens, as they are ignored by
 # the LSP.
@@ -29,13 +30,28 @@ SEMANTIC_TYPE_LEGEND = {k: i for i, k in enumerate(lsp.SemanticTokenTypes)}
 SEMANTIC_MODIFIER_LEGEND = {k: i for i, k in enumerate(lsp.SemanticTokenModifiers)}
 
 
-class ASFV1Token(TypedDict):
+@dataclass
+class ASFV1Token:
     """Raw token metadata parsed by asfv1."""
 
     type: TokenType
     txt: str
     stxt: str
     val: int | float | None
+
+    def at_position(
+        self, start: lsp.Position, end: lsp.Position | None = None
+    ) -> ParsedToken:
+        """Create a parsed token with this token's metadata at a position."""
+        if end is None:
+            width = len(self.stxt)
+            end = lsp.Position(line=start.line, character=start.character + width)
+
+        return ParsedToken(
+            type=self.type,
+            stxt=self.stxt,
+            range=lsp.Range(start=start, end=end),
+        )
 
 
 class ParsedToken:
@@ -57,14 +73,11 @@ class ParsedToken:
         self.stxt = stxt
         self.range = range
 
-    def __repr__(self) -> str:
-        return f"{self.stxt} [{self.type}] at {self.range}"
-
-    def _clone(self: T) -> T:
+    def _clone(self: _ParsedTokenT) -> _ParsedTokenT:
         """Return a clone of the token to avoid mutating the original."""
         return copy.deepcopy(self)
 
-    def without_address_modifier(self: T) -> T:
+    def without_address_modifier(self: _ParsedTokenT) -> _ParsedTokenT:
         """
         Create a clone of the token with the address modifier removed.
         """
@@ -77,7 +90,7 @@ class ParsedToken:
 
         return clone
 
-    def concatenate(self: T, other: T) -> T:
+    def concatenate(self: _ParsedTokenT, other: _ParsedTokenT) -> _ParsedTokenT:
         """
         Concatenate by merging with another token, in place.
 
@@ -88,24 +101,10 @@ class ParsedToken:
         self.range.end = other.range.end
         return self
 
-    @classmethod
-    def from_asfv1_token(
-        cls, token: ASFV1Token, start: lsp.Position, end: lsp.Position | None = None
-    ) -> ParsedToken:
-        if end is None:
-            width = len(token["stxt"])
-            end = lsp.Position(line=start.line, character=start.character + width)
-
-        return cls(
-            type=token["type"],
-            stxt=token["stxt"],
-            range=lsp.Range(start=start, end=end),
-        )
-
 
 class EvaluatedToken(ParsedToken):
     """
-    A parsed token with additional evaluated metadata like its value and semantic type.
+    A parsed token that has been evaluated to determine its value and other metadata.
     """
 
     def __init__(
@@ -115,41 +114,83 @@ class EvaluatedToken(ParsedToken):
         range: lsp.Range,
         value: float | int | None = None,
         defined: lsp.Range | None = None,
-        semantic_modifiers: list[lsp.SemanticTokenModifiers] | None = None,
-        semantic_type: lsp.SemanticTokenTypes | None = None,
+        is_constant: bool = False,
+        is_label: bool = False,
     ):
         super().__init__(type=type, stxt=stxt, range=range)
-
-        self.defined = defined
-        """The range where the token is defined, if applicable."""
 
         self.value = value
         """The numeric value of the evaluated token, if applicable."""
 
-        self.semantic_modifiers = semantic_modifiers or []
-        """The semantic modifiers relevant to the token."""
+        self.defined = defined
+        """The range where the token is defined, if applicable."""
 
-        self.semantic_type = semantic_type
-        """The semantic type of the token."""
+        self.is_constant = is_constant
+        self.is_label = is_label
+        self.is_opcode = self.type == "MNEMONIC"
 
     @classmethod
     def from_parsed_token(
-        cls,
+        cls: type[_EvaluatedTokenT],
         token: ParsedToken,
+        *,
         value: float | int | None = None,
         defined: lsp.Range | None = None,
-        semantic_modifiers: list[lsp.SemanticTokenModifiers] | None = None,
-        semantic_type: lsp.SemanticTokenTypes | None = None,
-    ) -> EvaluatedToken:
-        return EvaluatedToken(
+        is_constant: bool = False,
+        is_label: bool = False,
+    ) -> _EvaluatedTokenT:
+        """Create an evaluated token from a parsed token."""
+        return cls(
             type=token.type,
             stxt=token.stxt,
             range=token.range,
             value=value,
             defined=defined,
-            semantic_modifiers=semantic_modifiers,
-            semantic_type=semantic_type,
+            is_constant=is_constant,
+            is_label=is_label,
         )
+
+
+class SemanticTokenMixin(EvaluatedToken):
+    """A mixin for evaluated tokens with semantic information."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.semantic_type, self.semantic_modifiers = self._infer_semantics()
+
+    def _infer_semantics(
+        self,
+    ) -> tuple[lsp.SemanticTokenTypes, list[lsp.SemanticTokenModifiers]]:
+        """Infer the semantic type and modifiers for the token."""
+        # Crosswalk asfv1 token types to LSP semantic token types
+        type_semantics = {
+            "MNEMONIC": lsp.SemanticTokenTypes.Function,
+            "INTEGER": lsp.SemanticTokenTypes.Number,
+            "FLOAT": lsp.SemanticTokenTypes.Number,
+            "ASSEMBLER": lsp.SemanticTokenTypes.Operator,
+            "ARGSEP": lsp.SemanticTokenTypes.Operator,
+            "LABEL": lsp.SemanticTokenTypes.Variable,
+            "TARGET": lsp.SemanticTokenTypes.Namespace,
+        }
+
+        semantic_type = type_semantics.get(self.type)
+        if self.is_label:
+            semantic_type = lsp.SemanticTokenTypes.Namespace
+
+        semantic_modifiers = []
+        if self.is_constant and self.type != "MNEMONIC":
+            semantic_modifiers += [
+                lsp.SemanticTokenModifiers.Readonly,
+                lsp.SemanticTokenModifiers.DefaultLibrary,
+            ]
+
+        if self.stxt.endswith("#") or self.stxt.endswith("^"):
+            semantic_modifiers.append(lsp.SemanticTokenModifiers.Modification)
+
+        if self.defined == self.range:
+            semantic_modifiers.append(lsp.SemanticTokenModifiers.Definition)
+
+        return semantic_type, semantic_modifiers
 
     def semantic_encoding(self, prev_token_start: lsp.Position) -> list[int]:
         """
@@ -193,25 +234,76 @@ class EvaluatedToken(ParsedToken):
         ]
 
 
-class TokenLookup(Generic[T]):
+class LSPTokenMixin(EvaluatedToken):
+    """A mixin for evaluated tokens with LSP information."""
+
+    @property
+    def completion_detail(self) -> str:
+        """A description of the token used in completions and hover."""
+        type_str = (
+            "opcode"
+            if self.is_opcode
+            else "label"
+            if self.is_label
+            else "constant"
+            if self.is_constant
+            else "variable"
+        )
+        value_type = "Offset" if self.is_label else "Literal"
+
+        return (
+            f"({type_str})" + f" {self.stxt}: {value_type}[{self.value}]"
+            if not self.is_opcode
+            else ""
+        )
+
+    @property
+    def completion_kind(self) -> lsp.CompletionItemKind:
+        return (
+            lsp.CompletionItemKind.Function
+            if self.is_opcode
+            else lsp.CompletionItemKind.Constant
+            if self.is_constant
+            else lsp.CompletionItemKind.Module
+            if self.is_label
+            else lsp.CompletionItemKind.Variable
+        )
+
+    @property
+    def completion_item(self) -> lsp.CompletionItem:
+        """Create a completion item for the token."""
+
+        return lsp.CompletionItem(
+            label=self.stxt,
+            kind=self.completion_kind,
+            detail=self.completion_detail,
+            documentation=None,
+        )
+
+
+class LSPToken(LSPTokenMixin, SemanticTokenMixin):
+    """An evaluated token with semantic and LSP information."""
+
+
+class TokenLookup(Generic[_ParsedTokenT]):
     """A lookup table for tokens by position and name."""
 
     def __init__(self):
-        self._prev_token: T | None = None
-        self._line_lookup: dict[int, list[T]] = {}
-        self._name_lookup: dict[str, list[T]] = {}
+        self._prev_token: _ParsedTokenT | None = None
+        self._line_lookup: dict[int, list[_ParsedTokenT]] = {}
+        self._name_lookup: dict[str, list[_ParsedTokenT]] = {}
 
-    def __iter__(self) -> Generator[T, None, None]:
+    def __iter__(self) -> Generator[_ParsedTokenT, None, None]:
         """Yield all tokens in order."""
         for line in self._line_lookup.values():
             yield from line
 
     @overload
-    def get(self, *, position: lsp.Position) -> T | None: ...
+    def get(self, *, position: lsp.Position) -> _ParsedTokenT | None: ...
     @overload
-    def get(self, *, name: str) -> list[T]: ...
+    def get(self, *, name: str) -> list[_ParsedTokenT]: ...
     @overload
-    def get(self, *, line: int) -> list[T]: ...
+    def get(self, *, line: int) -> list[_ParsedTokenT]: ...
 
     def get(
         self,
@@ -219,7 +311,7 @@ class TokenLookup(Generic[T]):
         position: lsp.Position | None = None,
         name: str | None = None,
         line: int | None = None,
-    ) -> T | list[T] | None:
+    ) -> _ParsedTokenT | list[_ParsedTokenT] | None:
         ...
         """Retrieve a token by position, name, or line."""
         # Raise if more than one argument is provided
@@ -234,7 +326,7 @@ class TokenLookup(Generic[T]):
             return self._name_lookup.get(name.upper(), [])
         raise ValueError("Either a position, name, or line must be provided.")
 
-    def add_token(self, token: T) -> None:
+    def add_token(self, token: _ParsedTokenT) -> None:
         """Store a token for future lookup."""
         # Handle multi-word CHO instructions by merging the second token with the first
         # and skipping the second token.
@@ -259,7 +351,7 @@ class TokenLookup(Generic[T]):
             base_token = token.without_address_modifier()
             self._name_lookup.setdefault(base_token.stxt, []).append(base_token)
 
-    def _token_at_position(self, position: lsp.Position) -> T | None:
+    def _token_at_position(self, position: lsp.Position) -> _ParsedTokenT | None:
         """Retrieve the token at the given position."""
         if position.line not in self._line_lookup:
             return None
