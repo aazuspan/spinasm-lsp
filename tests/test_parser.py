@@ -5,7 +5,8 @@ from __future__ import annotations
 import lsprotocol.types as lsp
 import pytest
 
-from spinasm_lsp.parser import EvaluatedToken, ParsedToken, SPINAsmParser, TokenLookup
+from spinasm_lsp.parser import SPINAsmParser
+from spinasm_lsp.tokens import EvaluatedToken, ParsedToken, TokenLookup
 
 from .conftest import PATCH_DIR, TEST_PATCHES
 

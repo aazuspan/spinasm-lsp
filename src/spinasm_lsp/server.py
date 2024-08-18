@@ -11,6 +11,7 @@ from pygls.server import LanguageServer
 from spinasm_lsp import __version__
 from spinasm_lsp.docs import MULTI_WORD_INSTRUCTIONS, DocumentationManager
 from spinasm_lsp.parser import SPINAsmParser
+from spinasm_lsp.tokens import SEMANTIC_MODIFIER_LEGEND, SEMANTIC_TYPE_LEGEND
 
 
 @lru_cache(maxsize=1)
@@ -366,6 +367,28 @@ async def signature_help(
         active_signature=0,
         active_parameter=arg_idx,
     )
+
+
+@server.feature(
+    lsp.TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
+    lsp.SemanticTokensLegend(
+        token_types=[x.value for x in SEMANTIC_TYPE_LEGEND],
+        token_modifiers=[x.value for x in SEMANTIC_MODIFIER_LEGEND],
+    ),
+)
+async def semantic_tokens(
+    ls: SPINAsmLanguageServer, params: lsp.SemanticTokensParams
+) -> lsp.SemanticTokens:
+    parser = await ls.get_parser(params.text_document.uri)
+
+    encoding: list[int] = []
+    prev_token_position = lsp.Position(0, 0)
+    for token in parser.evaluated_tokens:
+        token_encoding = token.semantic_encoding(prev_token_position)
+        encoding += token_encoding
+        prev_token_position = token.range.start
+
+    return lsp.SemanticTokens(data=encoding)
 
 
 def start() -> None:
