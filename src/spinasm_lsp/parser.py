@@ -52,6 +52,11 @@ class SPINAsmPositionParser(fv1parse):
     def __next__(self) -> None:
         """Parse the next token and update the current character and line."""
         super().__next__()
+
+        # Don't advance position on EOF token, since we're done parsing
+        if self.parsed_symbol.type == "EOF":
+            return
+
         current_line_txt = self._source[self._current_line]
         current_symbol = self.parsed_symbol.txt
 
@@ -155,6 +160,8 @@ class SPINAsmParser(SPINAsmDiagnosticParser):
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
         super().__next__()
+
+        # Don't store the EOF token
         if self.parsed_symbol.type == "EOF":
             return
 
