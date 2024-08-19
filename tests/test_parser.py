@@ -6,7 +6,7 @@ import lsprotocol.types as lsp
 import pytest
 
 from spinasm_lsp.parser import SPINAsmParser
-from spinasm_lsp.tokens import EvaluatedToken, ParsedToken, TokenLookup
+from spinasm_lsp.tokens import ASFV1Token, EvaluatedToken, TokenLookup
 
 from .conftest import PATCH_DIR, TEST_PATCHES
 
@@ -26,16 +26,14 @@ def sentence_token_lookup() -> tuple[str, TokenLookup]:
     # Build a list of word tokens, ignoring whitespace. We'll build the tokens
     # consistently with asfv1 parsed tokens.
     words = list(filter(lambda x: x, sentence.split(" ")))
-    token_vals = [{"type": "LABEL", "txt": w, "stxt": w, "val": None} for w in words]
+    token_vals = [ASFV1Token(type="LABEL", txt=w, stxt=w, val=None) for w in words]
     tokens = []
     col = 0
 
     lookup = TokenLookup()
     for t in token_vals:
-        start = sentence.index(t["txt"], col)
-        parsed_token = ParsedToken.from_asfv1_token(
-            t, start=lsp.Position(line=0, character=start)
-        )
+        start = sentence.index(t.txt, col)
+        parsed_token = t.at_position(lsp.Position(line=0, character=start))
         eval_token = EvaluatedToken.from_parsed_token(parsed_token)
 
         col = eval_token.range.end.character + 1
@@ -96,14 +94,13 @@ def test_get_token_positions():
 
 def test_concatenate_cho_rdal_tokens():
     """Test that CHO and RDAL tokens are concatenated correctly into CHO RDAL."""
-    cho = ParsedToken.from_asfv1_token(
-        {"type": "MNEMONIC", "txt": "CHO", "stxt": "CHO", "val": None},
-        start=lsp.Position(line=0, character=0),
+    cho = ASFV1Token(type="MNEMONIC", txt="CHO", stxt="CHO", val=None).at_position(
+        start=lsp.Position(line=0, character=0)
     )
-    rdal = ParsedToken.from_asfv1_token(
-        {"type": "LABEL", "txt": "RDAL", "stxt": "RDAL", "val": None},
-        # Put whitespace between CHO and RDAL to test that range is calculated
-        start=lsp.Position(line=0, character=10),
+
+    # Put whitespace between CHO and RDAL to test that range is calculated
+    rdal = ASFV1Token(type="LABEL", txt="RDAL", stxt="RDAL", val=None).at_position(
+        start=lsp.Position(line=0, character=10)
     )
 
     cho_rdal = cho.concatenate(rdal)

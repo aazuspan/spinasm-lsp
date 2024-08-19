@@ -133,7 +133,16 @@ async def completions(
     """Returns completion items."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    symbol_completions = [token.completion_item for token in parser.evaluated_tokens]
+    # Get completions for all unique tokens (by their stxt) in the document
+    seen_tokens = set()
+    symbol_completions = []
+    for token in parser.evaluated_tokens:
+        # Temporary fix until we can get completions for all tokens at once.
+        if token.type not in ("LABEL", "TARGET"):
+            continue
+        if token.stxt not in seen_tokens:
+            symbol_completions.append(token.completion_item)
+            seen_tokens.add(token.stxt)
 
     # TODO: If possible, get this from the completion item itself. This will require
     # tokens to be able to query documentation.

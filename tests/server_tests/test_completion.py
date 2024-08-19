@@ -69,7 +69,7 @@ async def test_completions(test_case: CompletionTestCase, client: LanguageClient
 
     assert (
         len(matches) == 1
-    ), f"Expected 1 matching label `{test_case['label']}, got {len(matches)}."
+    ), f"Expected 1 matching label `{test_case['label']}`, got {len(matches)}."
     match = matches[0]
 
     assert match.detail == test_case["detail"]
