@@ -51,7 +51,14 @@ select = [ "E", "I", "F", "B", "FA", "UP", "PT", "Q", "RET", "SIM", "PERF", "ERA
 dependencies = [ "pre-commit",]
 
 [tool.hatch.envs.test]
-dependencies = [ "pytest", "pytest-cov", "mistletoe", "pytest-lsp" ]
+dependencies = [ 
+    "pytest", 
+    "pytest-cov", 
+    "mistletoe", 
+    "pytest-lsp", 
+    "pytest-regressions", 
+    "jsonpickle"
+]
 
 [tool.hatch.envs.test_matrix]
 template = "test"
