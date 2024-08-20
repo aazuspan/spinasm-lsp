@@ -1,0 +1,9975 @@
+diagnostics: []
+evaluated_tokens:
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 7
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 7
+  semantic_modifiers: []
+  semantic_type:
+    py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenTypes
+    - py/tuple:
+      - operator
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 12
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 7
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 7
+  semantic_modifiers:
+  - py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenModifiers
+    - py/tuple:
+      - definition
+  semantic_type:
+    py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenTypes
+    - py/tuple:
+      - variable
+  stxt: AP1
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 7
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 7
+  semantic_modifiers: []
+  semantic_type:
+    py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenTypes
+    - py/tuple:
+      - number
+  stxt: '334'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 8
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 8
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 39
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 8
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 8
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: AP2
+  type: LABEL
+  value: 335
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 8
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 8
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '556'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 9
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 9
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 63
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 9
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 9
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: AP3
+  type: LABEL
+  value: 892
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 9
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 9
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '871'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 11
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 11
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 87
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 11
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 11
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LAP1A
+  type: LABEL
+  value: 1764
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 11
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 11
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '808'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 12
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 12
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 12
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 12
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B
+  type: LABEL
+  value: 2573
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 12
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 12
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1934'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 13
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 13
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 135
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 13
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 13
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: D1
+  type: LABEL
+  value: 4508
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 13
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 13
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '2489'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 15
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 15
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 159
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 15
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 15
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LAP2A
+  type: LABEL
+  value: 6998
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 15
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 15
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1016'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 16
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 16
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 16
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 16
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B
+  type: LABEL
+  value: 8015
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 16
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 16
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1787'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 17
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 17
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: MEM
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 207
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 17
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 17
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: D2
+  type: LABEL
+  value: 9803
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 17
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 17
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '2287'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 21
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 21
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 231
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 21
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 21
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: MONO
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 21
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 21
+  semantic_modifiers:
+  - py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenModifiers
+    - py/tuple:
+      - readonly
+  - py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenModifiers
+    - py/tuple:
+      - defaultLibrary
+  semantic_type:
+    py/id: 18
+  stxt: REG0
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 22
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 22
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 257
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 22
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 22
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: APOUT
+  type: LABEL
+  value: 33
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 22
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 22
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG1
+  type: LABEL
+  value: 33
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 23
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 23
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 281
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 23
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 23
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LP1
+  type: LABEL
+  value: 34
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 23
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 23
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG2
+  type: LABEL
+  value: 34
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 24
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 24
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 305
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 24
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 24
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: LP2
+  type: LABEL
+  value: 35
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 24
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 24
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG3
+  type: LABEL
+  value: 35
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 25
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 25
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 329
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 25
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 25
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: REVOUT
+  type: LABEL
+  value: 36
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 25
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 25
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG4
+  type: LABEL
+  value: 36
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 26
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 26
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 353
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 26
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 26
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: TREM
+  type: LABEL
+  value: 37
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 26
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 26
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG5
+  type: LABEL
+  value: 37
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 30
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 30
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 30
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 30
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 30
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 30
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.6'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 31
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 31
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 401
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 31
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 31
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: KRT
+  type: LABEL
+  value: 0.55
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 31
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 31
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.55'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 32
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 32
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 425
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 32
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 32
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: KRF
+  type: LABEL
+  value: 0.5
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 32
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 32
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 33
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 33
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: EQU
+  type: ASSEMBLER
+  value: null
+- defined:
+    py/id: 449
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 33
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 33
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 18
+  stxt: KRS
+  type: LABEL
+  value: -0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 33
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 33
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 33
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 33
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.6'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 37
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 37
+  semantic_modifiers: []
+  semantic_type:
+    py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenTypes
+    - py/tuple:
+      - function
+  stxt: SKP
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 37
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 37
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: RUN
+  type: LABEL
+  value: 16
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 37
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 37
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 42
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 42
+  is_constant: false
+  is_label: true
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 37
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 37
+  semantic_modifiers: []
+  semantic_type:
+    py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenTypes
+    - py/tuple:
+      - namespace
+  stxt: ENDCLR
+  type: LABEL
+  value: 5
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 38
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 38
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 281
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 38
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 38
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP1
+  type: LABEL
+  value: 34
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 38
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 38
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 38
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 38
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 39
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 39
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 305
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 39
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 39
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP2
+  type: LABEL
+  value: 35
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 39
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 39
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 39
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 39
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 40
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WLDS
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 40
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN0
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 40
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 40
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '12'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 40
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 40
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 40
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '100'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 41
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WLDS
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 41
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN1
+  type: LABEL
+  value: 1
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 41
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 41
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 41
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 41
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 41
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '16383'
+  type: INTEGER
+  value: null
+- defined:
+    py/id: 504
+  is_constant: false
+  is_label: true
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/id: 504
+  semantic_modifiers:
+  - py/id: 20
+  semantic_type:
+    py/id: 510
+  stxt: ENDCLR
+  type: TARGET
+  value: 5
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 46
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 46
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 46
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 46
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: ADCL
+  type: LABEL
+  value: 20
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 46
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 46
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 46
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 46
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 47
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 47
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 47
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 47
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: ADCR
+  type: LABEL
+  value: 21
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 47
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 47
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 47
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 47
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 48
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 48
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 231
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 48
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 48
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: MONO
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 48
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 48
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 48
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 48
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 52
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 52
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 12
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 52
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 52
+  semantic_modifiers:
+  - py/reduce:
+    - py/type: lsprotocol.types.SemanticTokenModifiers
+    - py/tuple:
+      - modification
+  semantic_type:
+    py/id: 18
+  stxt: AP1#
+  type: LABEL
+  value: 334
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 52
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 52
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 52
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 52
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 53
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 53
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 12
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 53
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 53
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: AP1
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 53
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 53
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 53
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 53
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 53
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 53
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 54
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 54
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 39
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 54
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 54
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: AP2#
+  type: LABEL
+  value: 891
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 54
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 54
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 54
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 54
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 55
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 55
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 39
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 55
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 55
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: AP2
+  type: LABEL
+  value: 335
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 55
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 55
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 55
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 55
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 55
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 55
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 56
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 56
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 63
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 56
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 56
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: AP3#
+  type: LABEL
+  value: 1763
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 56
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 56
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 56
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 56
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 57
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 57
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 63
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 57
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 57
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: AP3
+  type: LABEL
+  value: 892
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 57
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 57
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 57
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 57
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 57
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 57
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 58
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 58
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 257
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 58
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 58
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: APOUT
+  type: LABEL
+  value: 33
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 58
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 58
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 58
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 58
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 60
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 60
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 207
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 60
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 60
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: D2#
+  type: LABEL
+  value: 12090
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 60
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 60
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 401
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 60
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 60
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRT
+  type: LABEL
+  value: 0.55
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 61
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 61
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 257
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 61
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 61
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: APOUT
+  type: LABEL
+  value: 33
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 61
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 61
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 61
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 61
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 62
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 62
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 87
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 62
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 62
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: LAP1A#
+  type: LABEL
+  value: 2572
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 62
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 62
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 62
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 62
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 63
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 63
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 87
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 63
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 63
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP1A
+  type: LABEL
+  value: 1764
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 63
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 63
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 63
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 63
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 63
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 63
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 64
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 64
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 64
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 64
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B#
+  type: LABEL
+  value: 4507
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 64
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 64
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 64
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 64
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 65
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 65
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 65
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 65
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B
+  type: LABEL
+  value: 2573
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 65
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 65
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 65
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 65
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 65
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 65
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 66
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 66
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDFX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 281
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 66
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 66
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP1
+  type: LABEL
+  value: 34
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 66
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 66
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 425
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 66
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 66
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRF
+  type: LABEL
+  value: 0.5
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 67
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 67
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRLX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 281
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 67
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 67
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP1
+  type: LABEL
+  value: 34
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 67
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 67
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 449
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 67
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 67
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRS
+  type: LABEL
+  value: -0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 68
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 68
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRA
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 135
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 68
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 68
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: D1
+  type: LABEL
+  value: 4508
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 68
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 68
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 68
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 68
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 70
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 70
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 135
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 70
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 70
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: D1#
+  type: LABEL
+  value: 6997
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 70
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 70
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 401
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 70
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 70
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRT
+  type: LABEL
+  value: 0.55
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 71
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 71
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 257
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 71
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 71
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: APOUT
+  type: LABEL
+  value: 33
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 71
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 71
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 71
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 71
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 72
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 72
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 159
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 72
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 72
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: LAP2A#
+  type: LABEL
+  value: 8014
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 72
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 72
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 72
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 72
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 73
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 73
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 159
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 73
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 73
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP2A
+  type: LABEL
+  value: 6998
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 73
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 73
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 73
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 73
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 73
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 73
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 74
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 74
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 74
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 74
+  semantic_modifiers:
+  - py/id: 786
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B#
+  type: LABEL
+  value: 9802
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 74
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 74
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 74
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 74
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 75
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 75
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAP
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 75
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 75
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B
+  type: LABEL
+  value: 8015
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 75
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 75
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 75
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 75
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined:
+    py/id: 377
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 75
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 75
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KAP
+  type: LABEL
+  value: 0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 76
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 76
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDFX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 305
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 76
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 76
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP2
+  type: LABEL
+  value: 35
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 76
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 76
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 425
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 76
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 76
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRF
+  type: LABEL
+  value: 0.5
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 77
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 77
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRLX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 305
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 77
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 77
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LP2
+  type: LABEL
+  value: 35
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 77
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 77
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 449
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 77
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 77
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: KRS
+  type: LABEL
+  value: -0.6
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 78
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 78
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRA
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 207
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 78
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 78
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: D2
+  type: LABEL
+  value: 9803
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 78
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 78
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 78
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 78
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1.99'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 79
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 79
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDA
+  type: MNEMONIC
+  value: 0
+- defined:
+    py/id: 135
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 79
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 79
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: D1
+  type: LABEL
+  value: 4508
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 79
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 79
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 79
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 79
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1.99'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 80
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 80
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: MULX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 80
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 80
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: POT0
+  type: LABEL
+  value: 16
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 81
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 81
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: MULX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 81
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 81
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: POT0
+  type: LABEL
+  value: 16
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 82
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 82
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 329
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 82
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 82
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: REVOUT
+  type: LABEL
+  value: 36
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 82
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 82
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 82
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 82
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: CHO RDA
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 86
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN0
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 86
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 86
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '|'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 20
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 86
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG
+  type: LABEL
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 21
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 20
+          line: 86
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '|'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 21
+          line: 86
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: COMPC
+  type: LABEL
+  value: 4
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 27
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 32
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 27
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B
+  type: LABEL
+  value: 2573
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 33
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 32
+          line: 86
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 36
+          line: 86
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 33
+          line: 86
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '100'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: CHO RDA
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 87
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN0
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 87
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 22
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B
+  type: LABEL
+  value: 2573
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 23
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 22
+          line: 87
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 87
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 23
+          line: 87
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '101'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 88
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRA
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 111
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 88
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP1B
+  type: LABEL
+  value: 2573
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 88
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 88
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '200'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 88
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 88
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 88
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: CHO RDA
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 89
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN0
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 89
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 89
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '|'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 20
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 89
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: REG
+  type: LABEL
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 21
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 20
+          line: 89
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '|'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 21
+          line: 89
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: COMPC
+  type: LABEL
+  value: 4
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 27
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 32
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 27
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B
+  type: LABEL
+  value: 8015
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 33
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 32
+          line: 89
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 36
+          line: 89
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 33
+          line: 89
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '100'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: CHO RDA
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 90
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN0
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 90
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN
+  type: LABEL
+  value: 0
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 22
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 17
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B
+  type: LABEL
+  value: 8015
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 23
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 22
+          line: 90
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 26
+          line: 90
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 23
+          line: 90
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '101'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 91
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRA
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 183
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 91
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: LAP2B
+  type: LABEL
+  value: 8015
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 91
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: +
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 91
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '200'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 91
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 91
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 91
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 95
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 95
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 95
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 95
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: POT1
+  type: LABEL
+  value: 17
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 95
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 95
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 95
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 95
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 96
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 96
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: MULX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 96
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 96
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: POT1
+  type: LABEL
+  value: 17
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 97
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 97
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 97
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 97
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.4'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 97
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 97
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 97
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 97
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.1'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 98
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 98
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 98
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 98
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN1_RATE
+  type: LABEL
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 98
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 98
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 16
+          line: 98
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 15
+          line: 98
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 100
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 100
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: CHO RDAL
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 100
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 100
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 100
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 100
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: SIN1
+  type: LABEL
+  value: 1
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 101
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 101
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 101
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 101
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 101
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 101
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 101
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 101
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 102
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 102
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 353
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 102
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 102
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: TREM
+  type: LABEL
+  value: 37
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 102
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 102
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 102
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 102
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 106
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 106
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 231
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 106
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 106
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: MONO
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 106
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 106
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 106
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 106
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 107
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 107
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: MULX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 353
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 107
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 107
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: TREM
+  type: LABEL
+  value: 37
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 108
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 108
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 108
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 108
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.75'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 108
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 8
+          line: 108
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 108
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 108
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 109
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 109
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 231
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 109
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 109
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: MONO
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 109
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 109
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 109
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 109
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 14
+          line: 109
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 109
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 110
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 110
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: MULX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 110
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 110
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: POT2
+  type: LABEL
+  value: 18
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 111
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 111
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 231
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 111
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 111
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: MONO
+  type: LABEL
+  value: 32
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 111
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 111
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 111
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 111
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.5'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 112
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 112
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 112
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 112
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1.999'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 112
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 112
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 112
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 112
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 113
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 113
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: RDAX
+  type: MNEMONIC
+  value: null
+- defined:
+    py/id: 329
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 113
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 113
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 18
+  stxt: REVOUT
+  type: LABEL
+  value: 36
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 113
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 113
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 13
+          line: 113
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 12
+          line: 113
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 114
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 114
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 114
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 114
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 114
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 114
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 114
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 114
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.2'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 115
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 115
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 115
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 115
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: DACL
+  type: LABEL
+  value: 22
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 115
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 115
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 115
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 115
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 3
+          line: 116
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 116
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: SOF
+  type: MNEMONIC
+  value: 2
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 116
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 116
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '1'
+  type: INTEGER
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 116
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 116
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 116
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 6
+          line: 116
+  semantic_modifiers: []
+  semantic_type: null
+  stxt: '-'
+  type: OPERATOR
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 116
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 7
+          line: 116
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0.4'
+  type: FLOAT
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: true
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 4
+          line: 117
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 0
+          line: 117
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 479
+  stxt: WRAX
+  type: MNEMONIC
+  value: null
+- defined: null
+  is_constant: true
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 117
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 5
+          line: 117
+  semantic_modifiers:
+  - py/id: 246
+  - py/id: 247
+  semantic_type:
+    py/id: 18
+  stxt: DACR
+  type: LABEL
+  value: 23
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 117
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 9
+          line: 117
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 9
+  stxt: ','
+  type: ARGSEP
+  value: null
+- defined: null
+  is_constant: false
+  is_label: false
+  is_opcode: false
+  py/object: spinasm_lsp.tokens.LSPToken
+  range:
+    py/object: lsprotocol.types.Range
+    py/state:
+      end:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 11
+          line: 117
+      start:
+        py/object: lsprotocol.types.Position
+        py/state:
+          character: 10
+          line: 117
+  semantic_modifiers: []
+  semantic_type:
+    py/id: 28
+  stxt: '0'
+  type: INTEGER
+  value: null
+semantic_encoding:
+- 7
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 3
+- 19
+- 0
+- 2
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 5
+- 8
+- 2
+- 0
+- 6
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 5
+- 8
+- 2
+- 0
+- 6
+- 4
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 2
+- 8
+- 2
+- 0
+- 3
+- 4
+- 19
+- 0
+- 2
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 5
+- 8
+- 2
+- 0
+- 6
+- 4
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 5
+- 8
+- 2
+- 0
+- 6
+- 4
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 2
+- 8
+- 2
+- 0
+- 3
+- 4
+- 19
+- 0
+- 4
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 4
+- 8
+- 2
+- 0
+- 5
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 5
+- 8
+- 2
+- 0
+- 6
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 6
+- 8
+- 2
+- 0
+- 7
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 4
+- 8
+- 2
+- 0
+- 5
+- 4
+- 8
+- 516
+- 4
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 4
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 4
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 21
+- 0
+- 0
+- 4
+- 3
+- 8
+- 2
+- 0
+- 5
+- 3
+- 19
+- 0
+- 4
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 3
+- 8
+- 516
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 6
+- 0
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 2
+- 19
+- 0
+- 0
+- 2
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 0
+- 1
+- 1
+- 21
+- 0
+- 0
+- 1
+- 5
+- 19
+- 0
+- 1
+- 0
+- 6
+- 0
+- 2
+- 4
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 4
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 4
+- 8
+- 128
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 4
+- 8
+- 128
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 4
+- 8
+- 128
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 2
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 3
+- 8
+- 128
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 6
+- 8
+- 128
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 6
+- 8
+- 128
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 2
+- 8
+- 0
+- 0
+- 2
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 2
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 3
+- 8
+- 128
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 6
+- 8
+- 128
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 6
+- 8
+- 128
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 5
+- 8
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 3
+- 8
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 2
+- 8
+- 0
+- 0
+- 2
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 2
+- 8
+- 0
+- 0
+- 2
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 6
+- 8
+- 0
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 4
+- 0
+- 7
+- 12
+- 0
+- 0
+- 7
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 516
+- 0
+- 4
+- 3
+- 8
+- 516
+- 0
+- 4
+- 5
+- 8
+- 516
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 1
+- 0
+- 7
+- 12
+- 0
+- 0
+- 7
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 516
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 7
+- 12
+- 0
+- 0
+- 7
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 516
+- 0
+- 4
+- 3
+- 8
+- 516
+- 0
+- 4
+- 5
+- 8
+- 516
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 1
+- 0
+- 7
+- 12
+- 0
+- 0
+- 7
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 8
+- 516
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 5
+- 8
+- 0
+- 0
+- 6
+- 3
+- 19
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 4
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 3
+- 19
+- 0
+- 0
+- 3
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 9
+- 8
+- 516
+- 0
+- 9
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 2
+- 0
+- 8
+- 12
+- 0
+- 0
+- 8
+- 1
+- 21
+- 0
+- 0
+- 1
+- 4
+- 8
+- 516
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 1
+- 19
+- 0
+- 0
+- 1
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 4
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 4
+- 19
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 0
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 5
+- 19
+- 0
+- 0
+- 5
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 6
+- 8
+- 0
+- 0
+- 6
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 1
+- 19
+- 0
+- 0
+- 1
+- 1
+- 21
+- 0
+- 0
+- 1
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0
+- 1
+- 0
+- 3
+- 12
+- 0
+- 0
+- 4
+- 1
+- 19
+- 0
+- 0
+- 1
+- 1
+- 21
+- 0
+- 0
+- 2
+- 3
+- 19
+- 0
+- 1
+- 0
+- 4
+- 12
+- 0
+- 0
+- 5
+- 4
+- 8
+- 516
+- 0
+- 4
+- 1
+- 21
+- 0
+- 0
+- 1
+- 1
+- 19
+- 0

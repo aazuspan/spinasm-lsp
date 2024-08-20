@@ -147,8 +147,13 @@ class SPINAsmParser(SPINAsmDiagnosticParser):
         # Store built-in constants that were defined at initialization.
         self._constants: list[str] = list(self.symtbl.keys())
 
-        self.evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
+        super().parse()
+
+        self.evaluated_tokens: TokenLookup[LSPToken] = self._evaluate_tokens()
         """Tokens with additional metadata after evaluation."""
+
+        self.semantic_encoding: list[int] = self._encode_semantics()
+        """Integer-encoded token semantics for semantic highlighting."""
 
     def __mkopcodes__(self):
         """
@@ -183,25 +188,39 @@ class SPINAsmParser(SPINAsmDiagnosticParser):
         ):
             self._definitions[base_token.stxt] = base_token.range
 
-    def _evaluate_token(self, token: ParsedToken) -> LSPToken:
-        """Evaluate a parsed token to determine its value and metadata."""
-        value = self.jmptbl.get(token.stxt, self.symtbl.get(token.stxt, None))
-        defined_range = self._definitions.get(token.without_address_modifier().stxt)
-
-        return LSPToken.from_parsed_token(
-            token=token,
-            value=value,
-            defined=defined_range,
-            is_constant=token.stxt in self._constants,
-            is_label=token.stxt in self.jmptbl,
-        )
-
-    def parse(self) -> SPINAsmParser:
-        """Parse and evaluate all tokens."""
-        super().parse()
+    def _evaluate_tokens(self) -> TokenLookup[LSPToken]:
+        """Evaluate all parsed tokens to determine their values and metadata."""
+        evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
 
         for token in self._parsed_tokens:
-            evaluated_token = self._evaluate_token(token)
-            self.evaluated_tokens.add_token(evaluated_token)
+            value = self.jmptbl.get(token.stxt, self.symtbl.get(token.stxt, None))
+            defined_range = self._definitions.get(token.without_address_modifier().stxt)
+            evaluated_token = LSPToken.from_parsed_token(
+                token=token,
+                value=value,
+                defined=defined_range,
+                is_constant=token.stxt in self._constants,
+                is_label=token.stxt in self.jmptbl,
+            )
 
-        return self
+            evaluated_tokens.add_token(evaluated_token)
+
+        return evaluated_tokens
+
+    def _encode_semantics(self) -> list[int]:
+        """Encode the semantics of the parsed tokens for semantic highlighting."""
+        encoding: list[int] = []
+        prev_token_position = lsp.Position(0, 0)
+        for token in self.evaluated_tokens:
+            token_encoding = token.semantic_encoding(prev_token_position)
+
+            # Tokens without semantic encoding (e.g. operators) should be ignored so
+            # that the next encoding is relative to the last encoded token. Otherwise,
+            # character offsets would be incorrect.
+            if not token_encoding:
+                continue
+
+            encoding += token_encoding
+            prev_token_position = token.range.start
+
+        return encoding
