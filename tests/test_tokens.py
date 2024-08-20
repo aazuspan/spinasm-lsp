@@ -142,7 +142,7 @@ def test_get_token_positions():
     with open(patch) as fp:
         source = fp.read()
 
-    parser = SPINAsmParser(source).parse()
+    parser = SPINAsmParser(source)
 
     all_matches = parser.evaluated_tokens.get(name="apout")
     assert len(all_matches) == 4

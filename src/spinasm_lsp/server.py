@@ -21,7 +21,7 @@ def _parse_document(source: str) -> SPINAsmParser:
 
     Parser are cached based on the source code to speed up subsequent parsing.
     """
-    return SPINAsmParser(source).parse()
+    return SPINAsmParser(source)
 
 
 class SPINAsmLanguageServer(LanguageServer):
@@ -342,22 +342,7 @@ async def semantic_tokens(
     ls: SPINAsmLanguageServer, params: lsp.SemanticTokensParams
 ) -> lsp.SemanticTokens:
     parser = await ls.get_parser(params.text_document.uri)
-
-    encoding: list[int] = []
-    prev_token_position = lsp.Position(0, 0)
-    for token in parser.evaluated_tokens:
-        token_encoding = token.semantic_encoding(prev_token_position)
-
-        # Tokens without semantic encoding (e.g. operators) should be ignored so that
-        # the next encoding is relative to the last encoded token. Otherwise, character
-        # offsets would be incorrect.
-        if not token_encoding:
-            continue
-
-        encoding += token_encoding
-        prev_token_position = token.range.start
-
-    return lsp.SemanticTokens(data=encoding)
+    return lsp.SemanticTokens(data=parser.semantic_encoding)
 
 
 def start() -> None:
