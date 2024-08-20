@@ -19,7 +19,9 @@ class TokenSemanticsTestCase(TestCase):
     encoding: list[int]
     type: lsp.SemanticTokenTypes
     modifiers: list[lsp.SemanticTokenModifiers] = field(default_factory=list)
-    prev_token_start: lsp.Position = lsp.Position(line=0, character=0)
+    prev_token_start: lsp.Position = field(
+        default_factory=lambda: lsp.Position(line=0, character=0)
+    )
 
 
 TOKEN_SEMANTICS: list[TokenSemanticsTestCase] = [
