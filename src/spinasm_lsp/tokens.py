@@ -5,7 +5,7 @@ from __future__ import annotations
 import bisect
 import copy
 from dataclasses import dataclass
-from typing import Generator, Generic, Literal, TypeVar, cast, overload
+from typing import Generator, Generic, Literal, TypeVar, overload
 
 import lsprotocol.types as lsp
 
@@ -223,7 +223,7 @@ class SemanticTokenMixin(EvaluatedToken):
             return []
 
         # The index of each modifier is encoded into a bitmask
-        modifier_bitmask = sum(1 << i for i in cast(list[int], token_modifiers))
+        modifier_bitmask = sum(1 << i for i in token_modifiers)  # type: ignore
 
         return [
             delta_line,
