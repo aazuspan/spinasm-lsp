@@ -11,6 +11,7 @@ from pygls.server import LanguageServer
 from spinasm_lsp import __version__
 from spinasm_lsp.docs import MULTI_WORD_INSTRUCTIONS, DocumentationManager
 from spinasm_lsp.parser import SPINAsmParser
+from spinasm_lsp.tokens import SEMANTIC_MODIFIER_LEGEND, SEMANTIC_TYPE_LEGEND
 
 
 @lru_cache(maxsize=1)
@@ -92,47 +93,24 @@ def did_close(
     ls.publish_diagnostics(params.text_document.uri, [])
 
 
-def _get_defined_hover(stxt: str, parser: SPINAsmParser) -> str:
-    """Get a hover message with the value of a defined variable or label."""
-    # Check jmptbl first since labels are also defined in symtbl
-    if stxt in parser.jmptbl:
-        hover_definition = parser.jmptbl[stxt]
-        return f"(label) {stxt}: Offset[{hover_definition}]"
-    # Check constants next since they are also defined in symtbl
-    if stxt in parser.constants:
-        hover_definition = parser.symtbl[stxt]
-        return f"(constant) {stxt}: Literal[{hover_definition}]"
-    if stxt in parser.symtbl:
-        hover_definition = parser.symtbl[stxt]
-        return f"(variable) {stxt}: Literal[{hover_definition}]"
-
-    return ""
-
-
 @server.feature(lsp.TEXT_DOCUMENT_HOVER)
 async def hover(ls: SPINAsmLanguageServer, params: lsp.HoverParams) -> lsp.Hover | None:
     """Retrieve documentation from symbols on hover."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
-    if token.symbol["type"] in ("LABEL", "TARGET"):
-        hover_msg = _get_defined_hover(str(token), parser=parser)
-
-        return (
-            None
-            if not hover_msg
-            else lsp.Hover(
-                # Java markdown formatting happens to give the best color-coding for
-                # hover messages
-                contents={"language": "java", "value": f"{hover_msg}"},
-                range=token.range,
-            )
+    if token.type in ("LABEL", "TARGET"):
+        return lsp.Hover(
+            # Java markdown formatting happens to give the best color-coding for
+            # hover messages
+            contents={"language": "java", "value": token.completion_detail},
+            range=token.range,
         )
 
-    if token.symbol["type"] in ("ASSEMBLER", "MNEMONIC"):
-        hover_msg = ls.documentation.get_markdown(str(token))
+    if token.type in ("ASSEMBLER", "MNEMONIC"):
+        hover_msg = ls.documentation.get_markdown(token.stxt)
 
         return (
             None
@@ -155,19 +133,19 @@ async def completions(
     """Returns completion items."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    symbol_completions = [
-        lsp.CompletionItem(
-            label=symbol,
-            kind=lsp.CompletionItemKind.Constant
-            if symbol in parser.constants
-            else lsp.CompletionItemKind.Variable
-            if symbol in parser.symtbl
-            else lsp.CompletionItemKind.Module,
-            detail=_get_defined_hover(symbol, parser=parser),
-        )
-        for symbol in {**parser.symtbl, **parser.jmptbl}
-    ]
+    # Get completions for all unique tokens (by their stxt) in the document
+    seen_tokens = set()
+    symbol_completions = []
+    for token in parser.evaluated_tokens:
+        # Temporary fix until we can get completions for all tokens at once.
+        if token.type not in ("LABEL", "TARGET"):
+            continue
+        if token.stxt not in seen_tokens:
+            symbol_completions.append(token.completion_item)
+            seen_tokens.add(token.stxt)
 
+    # TODO: If possible, get this from the completion item itself. This will require
+    # tokens to be able to query documentation.
     opcode_completions = [
         lsp.CompletionItem(
             label=opcode,
@@ -209,19 +187,15 @@ async def definition(
 
     document = ls.workspace.get_text_document(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
-    # Definitions should be checked against the base token name, ignoring address
-    # modifiers.
-    base_token = token.without_address_modifier()
-
-    if str(base_token) not in parser.definitions:
+    if not token.defined:
         return None
 
     return lsp.Location(
         uri=document.uri,
-        range=parser.definitions[str(base_token)],
+        range=token.defined,
     )
 
 
@@ -229,22 +203,9 @@ async def definition(
 async def document_symbol_definitions(
     ls: SPINAsmLanguageServer, params: lsp.DocumentSymbolParams
 ) -> list[lsp.DocumentSymbol]:
-    """Returns the definitions of all symbols in the document."""
+    """Returns the definition location of all symbols in the document."""
     parser = await ls.get_parser(params.text_document.uri)
-
-    return [
-        lsp.DocumentSymbol(
-            name=symbol,
-            kind=lsp.SymbolKind.Module
-            if symbol in parser.jmptbl
-            # There's no need to check for constants here since they aren't included
-            # in the parser definitions.
-            else lsp.SymbolKind.Variable,
-            range=definition,
-            selection_range=definition,
-        )
-        for symbol, definition in parser.definitions.items()
-    ]
+    return [t.document_symbol for t in parser.evaluated_tokens if t.defined]
 
 
 @server.feature(lsp.TEXT_DOCUMENT_PREPARE_RENAME)
@@ -253,15 +214,15 @@ async def prepare_rename(ls: SPINAsmLanguageServer, params: lsp.PrepareRenamePar
     is a valid operation."""
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
     # Renaming is checked against the base token name, ignoring address modifiers.
     base_token = token.without_address_modifier()
 
     # Only user-defined labels should support renaming
-    if str(base_token) not in parser.definitions:
-        ls.info(f"Can't rename non-user defined token {base_token}.")
+    if not base_token.defined:
+        ls.info(f"Can't rename non-user defined token {base_token.stxt}.")
         return None
 
     return lsp.PrepareRenameResult_Type2(default_behavior=True)
@@ -275,12 +236,12 @@ async def rename(
 ) -> lsp.WorkspaceEdit:
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return None
 
     # Ignore address modifiers so that e.g. we can rename `Delay` by renaming `Delay#`
     base_token = token.without_address_modifier()
-    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
+    matching_tokens = parser.evaluated_tokens.get(name=base_token.stxt)
 
     edits = [lsp.TextEdit(t.range, new_text=params.new_name) for t in matching_tokens]
     return lsp.WorkspaceEdit(changes={params.text_document.uri: edits})
@@ -292,13 +253,13 @@ async def references(
 ) -> list[lsp.Location]:
     parser = await ls.get_parser(params.text_document.uri)
 
-    if (token := parser.token_registry.get_token_at_position(params.position)) is None:
+    if (token := parser.evaluated_tokens.get(position=params.position)) is None:
         return []
 
     # Ignore address modifiers so that e.g. we can find all variations of addresses,
     # e.g. `Delay` and `Delay#`
     base_token = token.without_address_modifier()
-    matching_tokens = parser.token_registry.get_matching_tokens(str(base_token))
+    matching_tokens = parser.evaluated_tokens.get(name=base_token.stxt)
 
     return [
         lsp.Location(uri=params.text_document.uri, range=t.range)
@@ -317,12 +278,11 @@ async def signature_help(
 
     # Find all opcodes on the line that could have triggered the signature help. Ignore
     # opcodes that appear after the cursor, to avoid showing signature help prematurely.
-    line_tokens = parser.token_registry._tokens_by_line.get(params.position.line, [])
+    line_tokens = parser.evaluated_tokens.get(line=params.position.line)
     opcodes = [
         t
         for t in line_tokens
-        if t.symbol["type"] == "MNEMONIC"
-        and t.range.end.character < params.position.character
+        if t.is_opcode and t.range.end.character < params.position.character
     ]
     if not opcodes:
         return None
@@ -330,17 +290,17 @@ async def signature_help(
     # We should never have more than one opcode on a line, but just in case, grab the
     # last one entered before the cursor.
     triggered_opcode = opcodes[-1]
-    opcode = ls.documentation.get_instruction(str(triggered_opcode))
+    opcode = ls.documentation.get_instruction(triggered_opcode.stxt)
     if opcode is None:
         return None
 
     # Get all argument separators after the opcode
     remaining_tokens = line_tokens[line_tokens.index(triggered_opcode) + 1 :]
-    argseps = [t for t in remaining_tokens if t.symbol["type"] == "ARGSEP"]
+    argseps = [t for t in remaining_tokens if t.type == "ARGSEP"]
 
     # The first argument of multi-word instructions like CHO RDAL is treated as part of
     # the opcode, so we should skip the first separator when counting arguments.
-    if str(triggered_opcode) in MULTI_WORD_INSTRUCTIONS:
+    if triggered_opcode.stxt in MULTI_WORD_INSTRUCTIONS:
         argseps = argseps[1:]
 
     # Count how many parameters are left of the cursor to see which argument we're
@@ -369,6 +329,35 @@ async def signature_help(
         active_signature=0,
         active_parameter=arg_idx,
     )
+
+
+@server.feature(
+    lsp.TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
+    lsp.SemanticTokensLegend(
+        token_types=[x.value for x in SEMANTIC_TYPE_LEGEND],
+        token_modifiers=[x.value for x in SEMANTIC_MODIFIER_LEGEND],
+    ),
+)
+async def semantic_tokens(
+    ls: SPINAsmLanguageServer, params: lsp.SemanticTokensParams
+) -> lsp.SemanticTokens:
+    parser = await ls.get_parser(params.text_document.uri)
+
+    encoding: list[int] = []
+    prev_token_position = lsp.Position(0, 0)
+    for token in parser.evaluated_tokens:
+        token_encoding = token.semantic_encoding(prev_token_position)
+
+        # Tokens without semantic encoding (e.g. operators) should be ignored so that
+        # the next encoding is relative to the last encoded token. Otherwise, character
+        # offsets would be incorrect.
+        if not token_encoding:
+            continue
+
+        encoding += token_encoding
+        prev_token_position = token.range.start
+
+    return lsp.SemanticTokens(data=encoding)
 
 
 def start() -> None:

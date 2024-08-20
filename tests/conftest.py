@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
-from typing import TypedDict
 
 import lsprotocol.types as lsp
+import pytest
 import pytest_lsp
 from pytest_lsp import ClientServerConfig, LanguageClient
 
@@ -28,10 +29,16 @@ async def client(request, lsp_client: LanguageClient):
     await lsp_client.shutdown_session()
 
 
-class TestCase(TypedDict):
+@dataclass
+class TestCase:
     """The inputs and outputs of a test case."""
 
     __test__ = False
 
     name: str
     """The name used to identify the test case."""
+
+
+def parametrize_cases(test_cases: list[TestCase]):
+    """A decorator to parametrize a test function with test cases."""
+    return pytest.mark.parametrize("test_case", test_cases, ids=lambda x: x.name)

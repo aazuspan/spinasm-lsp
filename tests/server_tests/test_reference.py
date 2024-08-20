@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import lsprotocol.types as lsp
 import pytest
 from pytest_lsp import LanguageClient
 
-from ..conftest import PATCH_DIR, TestCase
+from ..conftest import PATCH_DIR, TestCase, parametrize_cases
 
 
+@dataclass
 class ReferenceTestCase(TestCase):
     """A dictionary to record reference locations for a symbol."""
 
@@ -15,13 +18,12 @@ class ReferenceTestCase(TestCase):
     uri: str
 
 
-REFERENCES: list[ReferenceTestCase] = [
-    {
-        # Variable
-        "name": "apout",
-        "position": lsp.Position(line=23, character=4),
-        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
-        "references": [
+TEST_CASES: list[ReferenceTestCase] = [
+    ReferenceTestCase(
+        name="apout",
+        position=lsp.Position(line=23, character=4),
+        uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+        references=[
             lsp.Location(
                 uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
                 range=lsp.Range(
@@ -51,12 +53,12 @@ REFERENCES: list[ReferenceTestCase] = [
                 ),
             ),
         ],
-    },
-    {
-        "name": "ap1",
-        "position": lsp.Position(line=8, character=4),
-        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
-        "references": [
+    ),
+    ReferenceTestCase(
+        name="ap1",
+        position=lsp.Position(line=8, character=4),
+        uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+        references=[
             lsp.Location(
                 uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
                 range=lsp.Range(
@@ -79,20 +81,20 @@ REFERENCES: list[ReferenceTestCase] = [
                 ),
             ),
         ],
-    },
+    ),
 ]
 
 
-@pytest.mark.parametrize("test_case", REFERENCES, ids=lambda x: x["name"])
+@parametrize_cases(TEST_CASES)
 @pytest.mark.asyncio()
 async def test_references(test_case: ReferenceTestCase, client: LanguageClient):
     """Test that references to a symbol are correctly found."""
     result = await client.text_document_references_async(
         params=lsp.ReferenceParams(
             context=lsp.ReferenceContext(include_declaration=False),
-            position=test_case["position"],
-            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
+            position=test_case.position,
+            text_document=lsp.TextDocumentIdentifier(uri=test_case.uri),
         )
     )
 
-    assert result == test_case["references"]
+    assert result == test_case.references

@@ -2,231 +2,93 @@
 
 from __future__ import annotations
 
-import bisect
-import copy
-from typing import Literal, TypedDict
-
 import lsprotocol.types as lsp
 from asfv1 import fv1parse
 
-
-class Symbol(TypedDict):
-    """
-    The token specification used by asfv1.
-
-    Note that we exclude EOF tokens, as they are ignored by the LSP.
-    """
-
-    type: Literal[
-        "ASSEMBLER",
-        "INTEGER",
-        "LABEL",
-        "TARGET",
-        "MNEMONIC",
-        "OPERATOR",
-        "FLOAT",
-        "ARGSEP",
-    ]
-    txt: str
-    stxt: str
-    val: int | float | None
+from spinasm_lsp.tokens import ASFV1Token, LSPToken, ParsedToken, TokenLookup
 
 
-class Token:
-    """
-    A parsed token.
+class SPINAsmPositionParser(fv1parse):
+    """An SPINAsm parser that tracks zero-indexed parsing position."""
 
-    Parameters
-    ----------
-    symbol : Symbol
-        The symbol parsed by asfv1 representing the token.
-    start : lsp.Position
-        The start position of the token in the source file.
-    end : lsp.Position, optional
-        The end position of the token in the source file. If not provided, the end
-        position is calculated based on the width of the symbol's stxt.
+    def __init__(self, *args, **kwargs):
+        # Current position during parsing
+        self._current_character: int = 0
+        self._previous_character: int = 0
 
-    Attributes
-    ----------
-    symbol : Symbol
-        The symbol parsed by asfv1 representing the token.
-    range : lsp.Range
-        The location range of the token in the source file.
-    """
+        super().__init__(*args, **kwargs)
 
-    def __init__(
-        self, symbol: Symbol, start: lsp.Position, end: lsp.Position | None = None
-    ):
-        if end is None:
-            width = len(symbol["stxt"])
-            end = lsp.Position(line=start.line, character=start.character + width)
+        # Store an unmodified version of the source for future reference
+        self._source: list[str] = self.source.copy()
 
-        self.symbol: Symbol = symbol
-        self.range: lsp.Range = lsp.Range(start=start, end=end)
+    @property
+    def sline(self) -> int:
+        return self._sline
 
-    def __repr__(self) -> str:
-        return self.symbol["stxt"]
+    @sline.setter
+    def sline(self, value):
+        """Update the current line and reset the column."""
+        self._sline = value
 
-    def concatenate(self, other: Token) -> Token:
-        """
-        Concatenate by merging with another token, in place.
+        # Reset the column to 0 when we move to a new line
+        self._previous_character = self._current_character
+        self._current_character = 0
 
-        In practice, this is used for the multi-word opcodes that are parsed as separate
-        tokens: CHO RDA, CHO RDAL, and CHO SOF.
-        """
-        if any(
-            symbol_type not in ("MNEMONIC", "LABEL")
-            for symbol_type in (self.symbol["type"], other.symbol["type"])
-        ):
-            raise TypeError("Only MNEMONIC and LABEL symbols can be concatenated.")
+    @property
+    def _current_line(self) -> int:
+        """Get the zero-indexed current line."""
+        return self.sline - 1
 
-        self.symbol["txt"] += f" {other.symbol['txt']}"
-        self.symbol["stxt"] += f" {other.symbol['stxt']}"
-        self.range.end = other.range.end
-        return self
+    @property
+    def position(self) -> lsp.Position:
+        """The current position of the parser in the source code."""
+        return lsp.Position(line=self._current_line, character=self._current_character)
 
-    def _clone(self) -> Token:
-        """Return a clone of the token to avoid mutating the original."""
-        return copy.deepcopy(self)
+    @property
+    def parsed_symbol(self) -> ASFV1Token:
+        """Get the last parsed symbol."""
+        return ASFV1Token(**self.sym)
 
-    def without_address_modifier(self) -> Token:
-        """
-        Create a clone of the token with the address modifier removed.
-        """
-        if not str(self).endswith("#") and not str(self).endswith("^"):
-            return self
+    def __next__(self) -> None:
+        """Parse the next token and update the current character and line."""
+        super().__next__()
 
-        token = self._clone()
-        token.symbol["stxt"] = token.symbol["stxt"][:-1]
-        token.range.end.character -= 1
-
-        return token
-
-
-class TokenRegistry:
-    """A registry of tokens and their positions in a source file."""
-
-    def __init__(self, tokens: list[Token] | None = None) -> None:
-        self._prev_token: Token | None = None
-
-        """A dictionary mapping program lines to all Tokens on that line."""
-        self._tokens_by_line: dict[int, list[Token]] = {}
-
-        """A dictionary mapping token names to all matching Tokens in the program."""
-        self._tokens_by_name: dict[str, list[Token]] = {}
-
-        for token in tokens or []:
-            self.register_token(token)
-
-    def register_token(self, token: Token) -> None:
-        """Add a token to the registry."""
-        # Handle multi-word CHO instructions by merging the second token with the first
-        # and skipping the second token.
-        if str(self._prev_token) == "CHO" and str(token) in ("RDA", "RDAL", "SOF"):
-            self._prev_token.concatenate(token)  # type: ignore
+        # Don't advance position on EOF token, since we're done parsing
+        if self.parsed_symbol.type == "EOF":
             return
 
-        if token.range.start.line not in self._tokens_by_line:
-            self._tokens_by_line[token.range.start.line] = []
+        current_line_txt = self._source[self._current_line]
+        current_symbol = self.parsed_symbol.txt
 
-        # Store the token on its line
-        self._tokens_by_line[token.range.start.line].append(token)
-        self._prev_token = token
-
-        # Store user-defined tokens together by name. Other token types could be stored,
-        # but currently there's no use case for retrieving their positions.
-        if token.symbol["type"] in ("LABEL", "TARGET"):
-            # Tokens are stored by name without address modifiers, so that e.g. Delay#
-            # and Delay can be retrieved with the same query. This allows for renaming
-            # all instances of a memory token.
-            token = token.without_address_modifier()
-
-            if str(token) not in self._tokens_by_name:
-                self._tokens_by_name[str(token)] = []
-
-            self._tokens_by_name[str(token)].append(token)
-
-    def get_matching_tokens(self, token_name: str) -> list[Token]:
-        """Retrieve all tokens with a given name in the program."""
-        return self._tokens_by_name.get(token_name.upper(), [])
-
-    def get_token_at_position(self, position: lsp.Position) -> Token | None:
-        """Retrieve the token at the given position."""
-        if position.line not in self._tokens_by_line:
-            return None
-
-        line_tokens = self._tokens_by_line[position.line]
-        token_starts = [t.range.start.character for t in line_tokens]
-        token_ends = [t.range.end.character for t in line_tokens]
-
-        idx = bisect.bisect_left(token_starts, position.character)
-
-        # The index returned by bisect_left points to the start value >= character. This
-        # will either be the first character of the token or the start of the next
-        # token. First check if we're out of bounds, then shift left unless we're at the
-        # first character of the token.
-        if idx == len(line_tokens) or token_starts[idx] != position.character:
-            idx -= 1
-
-        # If the col falls after the end of the token, we're not inside a token.
-        if position.character > token_ends[idx]:
-            return None
-
-        return line_tokens[idx]
+        self._previous_character = self._current_character
+        # Start at the current column to skip previous duplicates of the symbol
+        self._current_character = current_line_txt.index(
+            current_symbol, self._current_character
+        )
 
 
-class SPINAsmParser(fv1parse):
-    """A modified version of fv1parse optimized for use with LSP."""
+class SPINAsmDiagnosticParser(SPINAsmPositionParser):
+    """An SPINAsm parser that logs warnings and errors as LSP diagnostics."""
 
-    sym: Symbol | None
-
-    def __init__(self, source: str):
-        self.diagnostics: list[lsp.Diagnostic] = []
-        """A list of diagnostic messages generated during parsing."""
-
-        self.definitions: dict[str, lsp.Range] = {}
-        """A dictionary mapping symbol names to their definition location."""
-
-        self.current_character: int = 0
-        """The current column in the source file."""
-
-        self.previous_character: int = 0
-        """The last visitied column in the source file."""
-
-        self.token_registry = TokenRegistry()
-        """A registry of tokens and their positions in the source file."""
-
+    def __init__(self, *args, **kwargs):
         super().__init__(
-            source=source,
-            clamp=True,
-            spinreals=False,
+            *args,
             # Ignore the callbacks in favor of overriding their callers
             wfunc=lambda *args, **kwargs: None,
             efunc=lambda *args, **kwargs: None,
+            **kwargs,
         )
 
-        # Track which symbols were defined at initialization, e.g. registers and LFOs
-        self.constants: list[str] = list(self.symtbl.keys())
-        # Keep an unchanged copy of the original source
-        self._source: list[str] = self.source.copy()
-
-    def __mkopcodes__(self):
-        """
-        No-op.
-
-        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
-        """
+        self.diagnostics: list[lsp.Diagnostic] = []
+        """A list of diagnostic messages generated during parsing."""
 
     def _record_diagnostic(
-        self, msg: str, line: int, character: int, severity: lsp.DiagnosticSeverity
+        self, msg: str, *, position: lsp.Position, severity: lsp.DiagnosticSeverity
     ):
         """Record a diagnostic message for the LSP."""
         self.diagnostics.append(
             lsp.Diagnostic(
-                range=lsp.Range(
-                    start=lsp.Position(line, character=character),
-                    end=lsp.Position(line, character=character),
-                ),
+                range=lsp.Range(start=position, end=position),
                 message=msg,
                 severity=severity,
                 source="SPINAsm",
@@ -241,8 +103,7 @@ class SPINAsmParser(fv1parse):
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
             msg,
-            line=line - 1,
-            character=self.current_character,
+            position=lsp.Position(line=line - 1, character=self._current_character),
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -250,8 +111,9 @@ class SPINAsmParser(fv1parse):
         """Override to record scanning errors as LSP diagnostics."""
         self._record_diagnostic(
             msg,
-            line=self.current_line,
-            character=self.current_character,
+            position=lsp.Position(
+                line=self._current_line, character=self._current_character
+            ),
             severity=lsp.DiagnosticSeverity.Error,
         )
 
@@ -263,78 +125,83 @@ class SPINAsmParser(fv1parse):
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
             msg,
-            line=line - 1,
-            character=self.current_character,
+            position=lsp.Position(line=line - 1, character=self._current_character),
             severity=lsp.DiagnosticSeverity.Warning,
         )
 
-    @property
-    def sline(self):
-        return self._sline
 
-    @sline.setter
-    def sline(self, value):
-        """Update the current line and reset the column."""
-        self._sline = value
+class SPINAsmParser(SPINAsmDiagnosticParser):
+    """An SPINAsm parser with position, diagnostics, and additional LSP features."""
 
-        # Reset the column to 0 when we move to a new line
-        self.previous_character = self.current_character
-        self.current_character = 0
+    def __init__(self, source: str):
+        # Intermediate token definitions and lookups set during parsing
+        self._definitions: dict[str, lsp.Range] = {}
+        self._parsed_tokens: TokenLookup[ParsedToken] = TokenLookup()
 
-    @property
-    def current_line(self):
-        """Get the zero-indexed current line."""
-        return self.sline - 1
+        super().__init__(
+            source=source,
+            clamp=True,
+            spinreals=False,
+        )
 
-    @property
-    def previous_line(self):
-        """Get the zero-indexed previous line."""
-        return self.prevline - 1
+        # Store built-in constants that were defined at initialization.
+        self._constants: list[str] = list(self.symtbl.keys())
+
+        self.evaluated_tokens: TokenLookup[LSPToken] = TokenLookup()
+        """Tokens with additional metadata after evaluation."""
+
+    def __mkopcodes__(self):
+        """
+        No-op.
+
+        Generating opcodes isn't needed for LSP functionality, so we'll skip it.
+        """
 
     def __next__(self):
         """Parse the next symbol and update the column and definitions."""
         super().__next__()
-        if self.sym["type"] == "EOF":
+
+        # Don't store the EOF token
+        if self.parsed_symbol.type == "EOF":
             return
 
-        self._update_column()
-
-        token = Token(
-            symbol=self.sym,
-            start=lsp.Position(
-                line=self.current_line, character=self.current_character
-            ),
+        token = self.parsed_symbol.at_position(
+            start=lsp.Position(self._current_line, character=self._current_character),
         )
-        self.token_registry.register_token(token)
+        self._parsed_tokens.add_token(token)
 
         base_token = token.without_address_modifier()
-        is_user_definable = base_token.symbol["type"] in ("LABEL", "TARGET")
-        is_defined = str(base_token) in self.jmptbl or str(base_token) in self.symtbl
+        is_user_definable = base_token.type in ("LABEL", "TARGET")
+        is_defined = base_token.stxt in self.jmptbl or base_token.stxt in self.symtbl
 
         if (
             is_user_definable
             and not is_defined
             # Labels appear before their target definition, so override when the target
             # is defined.
-            or base_token.symbol["type"] == "TARGET"
+            or base_token.type == "TARGET"
         ):
-            self.definitions[str(base_token)] = base_token.range
+            self._definitions[base_token.stxt] = base_token.range
 
-    def _update_column(self):
-        """Set the current column based on the last parsed symbol."""
-        current_line_txt = self._source[self.current_line]
-        current_symbol = self.sym.get("txt", None) or ""
+    def _evaluate_token(self, token: ParsedToken) -> LSPToken:
+        """Evaluate a parsed token to determine its value and metadata."""
+        value = self.jmptbl.get(token.stxt, self.symtbl.get(token.stxt, None))
+        defined_range = self._definitions.get(token.without_address_modifier().stxt)
 
-        self.previous_character = self.current_character
-        try:
-            # Start at the current column to skip previous duplicates of the symbol
-            self.current_character = current_line_txt.index(
-                current_symbol, self.current_character
-            )
-        except ValueError:
-            self.current_character = 0
+        return LSPToken.from_parsed_token(
+            token=token,
+            value=value,
+            defined=defined_range,
+            is_constant=token.stxt in self._constants,
+            is_label=token.stxt in self.jmptbl,
+        )
 
     def parse(self) -> SPINAsmParser:
-        """Parse and return the parser."""
+        """Parse and evaluate all tokens."""
         super().parse()
+
+        for token in self._parsed_tokens:
+            evaluated_token = self._evaluate_token(token)
+            self.evaluated_tokens.add_token(evaluated_token)
+
         return self

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import lsprotocol.types as lsp
 import pytest
 from pytest_lsp import LanguageClient
 
-from ..conftest import PATCH_DIR, TestCase
+from ..conftest import PATCH_DIR, TestCase, parametrize_cases
 
 
+@dataclass
 class RenameTestCase(TestCase):
     """A dictionary to record rename results for a symbol."""
 
@@ -16,13 +19,13 @@ class RenameTestCase(TestCase):
     uri: str
 
 
-RENAMES: list[RenameTestCase] = [
-    {
-        "name": "ap1",
-        "rename_to": "FOO",
-        "position": lsp.Position(line=8, character=4),
-        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
-        "changes": [
+TEST_CASES: list[RenameTestCase] = [
+    RenameTestCase(
+        name="ap1",
+        rename_to="FOO",
+        position=lsp.Position(line=8, character=4),
+        uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+        changes=[
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(8, 4), end=lsp.Position(8, 7)),
                 new_text="FOO",
@@ -37,13 +40,13 @@ RENAMES: list[RenameTestCase] = [
                 new_text="FOO",
             ),
         ],
-    },
-    {
-        "name": "endclr",
-        "rename_to": "END",
-        "position": lsp.Position(line=41, character=0),
-        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
-        "changes": [
+    ),
+    RenameTestCase(
+        name="endclr",
+        rename_to="END",
+        position=lsp.Position(line=41, character=0),
+        uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+        changes=[
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(37, 8), end=lsp.Position(37, 14)),
                 new_text="END",
@@ -53,13 +56,13 @@ RENAMES: list[RenameTestCase] = [
                 new_text="END",
             ),
         ],
-    },
-    {
-        "name": "lap1a#",
-        "rename_to": "FOO",
-        "position": lsp.Position(line=61, character=4),
-        "uri": f"file:///{PATCH_DIR / 'Basic.spn'}",
-        "changes": [
+    ),
+    RenameTestCase(
+        name="lap1a#",
+        rename_to="FOO",
+        position=lsp.Position(line=61, character=4),
+        uri=f"file:///{PATCH_DIR / 'Basic.spn'}",
+        changes=[
             # Renaming `lap1a#` should also rename `lap1a`
             lsp.TextEdit(
                 range=lsp.Range(start=lsp.Position(12, 4), end=lsp.Position(12, 9)),
@@ -74,20 +77,20 @@ RENAMES: list[RenameTestCase] = [
                 new_text="FOO",
             ),
         ],
-    },
+    ),
 ]
 
 
-@pytest.mark.parametrize("test_case", RENAMES, ids=lambda x: x["name"])
+@parametrize_cases(TEST_CASES)
 @pytest.mark.asyncio()
 async def test_rename(test_case: RenameTestCase, client: LanguageClient):
     """Test that renaming a symbol suggests the correct edits."""
     result = await client.text_document_rename_async(
         params=lsp.RenameParams(
-            position=test_case["position"],
-            new_name=test_case["rename_to"],
-            text_document=lsp.TextDocumentIdentifier(uri=test_case["uri"]),
+            position=test_case.position,
+            new_name=test_case.rename_to,
+            text_document=lsp.TextDocumentIdentifier(uri=test_case.uri),
         )
     )
 
-    assert result.changes[test_case["uri"]] == test_case["changes"]
+    assert result.changes[test_case.uri] == test_case.changes
