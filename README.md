@@ -10,10 +10,11 @@ A Language Server Protocol (LSP) server to provide language support for the [SPI
 
 - **Diagnostics**: Reports the location of syntax errors and warnings.
 - **Signature help**: Shows parameter hints as instructions are entered.
-- **Hover**: Shows documentation and values on hover.
+- **Hover**: Shows documentation and assigned values on hover.
 - **Completion**: Provides suggestions for opcodes, labels, and variables.
-- **Renaming**: Allows renaming labels and variables.
+- **Renaming**: Renames matching labels or variables.
 - **Go to definition**: Jumps to the definition of a label, memory address, or variable.
+- **Semantic highlighting**: Color codes variables, constants, instructions, etc. based on program semantics.
 
 ------
 
