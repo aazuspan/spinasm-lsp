@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2024-08-20
+
 ### Added
 
 - Semantic highlighting in [#29](https://github.com/aazuspan/spinasm-lsp/pull/29)
@@ -33,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renaming
 - Go to definition
 
-[unreleased]: https://github.com/aazuspan/spinasm-lsp/compare/0.1.1...HEAD
+[unreleased]: https://github.com/aazuspan/spinasm-lsp/compare/0.1.2...HEAD
+[0.1.2]: https://github.com/aazuspan/spinasm-lsp/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/aazuspan/spinasm-lsp/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/aazuspan/spinasm-lsp/releases/tag/0.1.0
