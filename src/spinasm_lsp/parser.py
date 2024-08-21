@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+
 import lsprotocol.types as lsp
 from asfv1 import fv1parse
 
@@ -64,10 +66,14 @@ class SPINAsmPositionParser(fv1parse):
         current_line_txt = self._source[self._current_line]
         current_symbol = self.parsed_symbol.txt
 
-        # Start at the current column to skip previous duplicates of the symbol
-        self._current_character = current_line_txt.index(
-            current_symbol, self._current_character
-        )
+        # Update the current parsed character. This can fail under rare circumstances,
+        # in which case we'll leave _current_character unchanged.
+        # See https://github.com/aazuspan/spinasm-lsp/issues/31
+        with contextlib.suppress(ValueError):
+            # Start at the current column to skip previous duplicates of the symbol
+            self._current_character = current_line_txt.index(
+                current_symbol, self._current_character
+            )
 
 
 class SPINAsmDiagnosticParser(SPINAsmPositionParser):

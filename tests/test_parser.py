@@ -46,3 +46,26 @@ def test_example_patches(patch, data_regression):
     encoded = serialize_parser_output(parser)
 
     data_regression.check(encoded)
+
+
+def test_parsing_as_typed():
+    """Test that the parser is fault tolerant for partially entered programs."""
+
+    # Example program from SPINAsm documentation. Iteratively parsing at each character
+    # is slow, so we use a small sample program here rather than parameterizing over the
+    # larger test patches.
+    source = """
+    ; Example program from SPINAsm documentation
+    Attn EQU 0.5
+    Tmp_Reg EQU 63
+    Tmp_Del EQU $2000
+
+    sof 0,0
+    rda Tmp_Del,Attn
+    wrax Tmp_Reg,1.0
+    wrax DACL
+    """
+    source_chars = list(source)
+    for i in range(len(source_chars)):
+        partial_source = "".join(source_chars[:i])
+        assert SPINAsmParser(partial_source)
