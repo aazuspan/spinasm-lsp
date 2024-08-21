@@ -30,8 +30,9 @@ class SPINAsmPositionParser(fv1parse):
         """Update the current line and reset the column."""
         self._sline = value
 
-        # Reset the column to 0 when we move to a new line
-        self._previous_character = self._current_character
+        # Reset the column to 0 when we move to a new line. Note that we do NOT update
+        # the previous character here, as that will be handled when the next token is
+        # parsed.
         self._current_character = 0
 
     @property
@@ -51,6 +52,9 @@ class SPINAsmPositionParser(fv1parse):
 
     def __next__(self) -> None:
         """Parse the next token and update the current character and line."""
+        # Store the current character before advancing to the next token.
+        self._previous_character = self._current_character
+
         super().__next__()
 
         # Don't advance position on EOF token, since we're done parsing
@@ -60,7 +64,6 @@ class SPINAsmPositionParser(fv1parse):
         current_line_txt = self._source[self._current_line]
         current_symbol = self.parsed_symbol.txt
 
-        self._previous_character = self._current_character
         # Start at the current column to skip previous duplicates of the symbol
         self._current_character = current_line_txt.index(
             current_symbol, self._current_character
@@ -99,11 +102,14 @@ class SPINAsmDiagnosticParser(SPINAsmPositionParser):
         """Override to record parsing errors as LSP diagnostics."""
         if line is None:
             line = self.prevline
+            character = self._previous_character
+        else:
+            character = self._current_character
 
         # Offset the line from the parser's 1-indexed line to the 0-indexed line
         self._record_diagnostic(
             msg,
-            position=lsp.Position(line=line - 1, character=self._current_character),
+            position=lsp.Position(line=line - 1, character=character),
             severity=lsp.DiagnosticSeverity.Error,
         )
 
