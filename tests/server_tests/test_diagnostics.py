@@ -54,8 +54,23 @@ TEST_CASES: list[DiagnosticTestCase] = [
         expected=[
             lsp.Diagnostic(
                 range=lsp.Range(
-                    start=lsp.Position(line=0, character=0),
-                    end=lsp.Position(line=0, character=0),
+                    start=lsp.Position(line=0, character=5),
+                    end=lsp.Position(line=0, character=5),
+                ),
+                message="Register 0x64 out of range for MULX",
+                severity=lsp.DiagnosticSeverity.Error,
+                source="SPINAsm",
+            ),
+        ],
+    ),
+    DiagnosticTestCase(
+        name="out of range (without newline)",
+        source="""MULX 100""",
+        expected=[
+            lsp.Diagnostic(
+                range=lsp.Range(
+                    start=lsp.Position(line=0, character=5),
+                    end=lsp.Position(line=0, character=5),
                 ),
                 message="Register 0x64 out of range for MULX",
                 severity=lsp.DiagnosticSeverity.Error,
