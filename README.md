@@ -16,6 +16,20 @@ A Language Server Protocol (LSP) server to provide language support for the [SPI
 - **Go to definition**: Jumps to the definition of a label, memory address, or variable.
 - **Semantic highlighting**: Color codes variables, constants, instructions, etc. based on program semantics.
 
+## Installation
+
+```bash
+pip install spinasm-lsp
+```
+
+## Usage
+
+Start the LSP server:
+
+```bash
+spinasm-lsp
+```
+
 ------
 
 *This project is unaffiliated with Spin Semiconductor. Included documentation is Copyright © 2018 Spin Semiconductor.*
